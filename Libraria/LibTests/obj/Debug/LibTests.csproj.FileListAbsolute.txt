@@ -1,0 +1,11 @@
+E:\Projects\Libraria\LibTests\bin\Debug\LibTests.exe.config
+E:\Projects\Libraria\bin\LibTests.exe.config
+E:\Projects\Libraria\bin\LibTests.exe
+E:\Projects\Libraria\bin\LibTests.pdb
+E:\Projects\Libraria\LibTests\obj\Debug\LibTests.csprojResolveAssemblyReference.cache
+E:\Projects\Libraria\LibTests\obj\Debug\LibTests.exe
+E:\Projects\Libraria\LibTests\obj\Debug\LibTests.pdb
+E:\Projects\Libraria\Libraria\bin\LibTests.exe.config
+E:\Projects\Libraria\Libraria\LibTests\obj\Debug\LibTests.exe
+E:\Projects\Libraria\Libraria\LibTests\obj\Debug\LibTests.pdb
+E:\Projects\Libraria\Libraria\LibTests\obj\Debug\LibTests.csprojResolveAssemblyReference.cache

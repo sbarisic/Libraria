@@ -1,0 +1,4 @@
+E:\Projects\Libraria\bin\Libraria.dll
+E:\Projects\Libraria\bin\Libraria.pdb
+E:\Projects\Libraria\Libraria\Libraria\obj\Release\Libraria.dll
+E:\Projects\Libraria\Libraria\Libraria\obj\Release\Libraria.pdb
