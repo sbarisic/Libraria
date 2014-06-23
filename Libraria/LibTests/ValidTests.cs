@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 using Libraria;
 
 namespace LibTests {
-	class ClassA : IIsValid {
+	class ClassA : IValid {
 		public int A;
 
 		public ClassA() {
 			A = 0;
 		}
 
-		public bool IsValid() {
+		public bool Valid() {
 			if (A == 0)
 				return false;
 			return true;
@@ -29,17 +29,17 @@ namespace LibTests {
 		}
 	}
 
-	class IsValidTests {
-		public IsValidTests() {
+	class ValidTests {
+		public ValidTests() {
 			ClassA A = new ClassA();
 			ClassB B = null;
 
-			Test.Assert(A.IsValid() == false);
+			Test.Assert(A.Valid() == false);
 			A.A = 1;
-			Test.Assert(A.IsValid() == true);
-			Test.Assert(B.IsValid() == false);
+			Test.Assert(A.Valid() == true);
+			Test.Assert(B.Valid() == false);
 			B = new ClassB();
-			Test.Assert(B.IsValid());
+			Test.Assert(B.Valid());
 		}
 	}
 }

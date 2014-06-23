@@ -19,7 +19,7 @@ namespace LibTests {
 			Console.Title = "LibTests";
 
 			new ValTests();
-			new IsValidTests();
+			new ValidTests();
 
 			Console.WriteLine("All tests passed");
 			Console.ReadLine();
