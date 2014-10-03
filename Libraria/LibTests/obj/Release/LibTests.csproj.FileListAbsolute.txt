@@ -4,3 +4,4 @@ E:\Projects\Libraria\bin\LibTests.pdb
 E:\Projects\Libraria\Libraria\LibTests\obj\Release\LibTests.csprojResolveAssemblyReference.cache
 E:\Projects\Libraria\Libraria\LibTests\obj\Release\LibTests.exe
 E:\Projects\Libraria\Libraria\LibTests\obj\Release\LibTests.pdb
+E:\Projects\Libraria\bin\xunit.execution.dll

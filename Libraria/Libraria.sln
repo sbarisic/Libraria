@@ -5,6 +5,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Libraria", "Libraria\Librar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibTests", "LibTests\LibTests.csproj", "{ABFFD0A3-CAAD-4C0B-BF95-9DF0E52D359C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6E1369D3-E5EE-453B-9AF7-549C347D39E7}"
+	ProjectSection(SolutionItems) = preProject
+		Rebracer.xml = Rebracer.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{ADB8ACA9-846F-4C15-8F04-C63F6609C69E}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
