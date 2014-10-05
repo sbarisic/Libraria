@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using System.Reflection;
+using System.Reflection.Emit;
 
 using Xunit;
 using Xunit.Extensions;
@@ -13,10 +14,24 @@ using Libraria;
 namespace LibTests {
 	public class Program {
 		static void Main(string[] args) {
+			CRAPI.HookJIT();
 			Console.Title = "LibTests";
-
-
+			new TestClass();
+			Console.WriteLine("Complete");
 			Console.ReadLine();
+		}
+	}
+
+	public class TestClass {
+		public TestClass() {
+			Test(2, 3);
+			Console.WriteLine("0x{0}", typeof(TestClass).GetMethod("Test").MethodHandle.Value.ToString("x"));
+			Test(2, 3);
+		}
+
+		public int Test(int A, int B) {
+			Console.WriteLine("A + B = {0}", A + B);
+			return A + B;
 		}
 	}
 

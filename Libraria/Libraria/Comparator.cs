@@ -12,13 +12,10 @@ namespace Libraria {
 		}
 
 		public static bool Is(this object O, Type T, bool CompareRaw = false) {
-			if (!CompareRaw)
-				return O.GetType() == T;
+			if (CompareRaw && T.IsAssignableFrom(O.GetType()))
+				return true;
 			else
-				if (T.IsAssignableFrom(O.GetType())) // FUCK YOU C#
-					return true;
-				else
-					return O.Is(T);
+				return O.GetType() == T;
 		}
 
 		public static T As<T>(this object O) {

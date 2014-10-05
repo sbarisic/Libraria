@@ -23,6 +23,10 @@ namespace Libraria {
 			public static Delegate CreateSetDelegate(this PropertyInfo PI, bool NonPublic = true) {
 				return PI.GetSetMethod(NonPublic).ToDelegate();
 			}
+
+			public static T ToDelegate<T>(this IntPtr FuncPtr) {
+				return Marshal.GetDelegateForFunctionPointer(FuncPtr, typeof(T)).As<T>();
+			}
 		}
 	}
 }

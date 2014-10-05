@@ -5,3 +5,5 @@ E:\Projects\Libraria\Libraria\LibTests\obj\Release\LibTests.csprojResolveAssembl
 E:\Projects\Libraria\Libraria\LibTests\obj\Release\LibTests.exe
 E:\Projects\Libraria\Libraria\LibTests\obj\Release\LibTests.pdb
 E:\Projects\Libraria\bin\xunit.execution.dll
+E:\Projects\Libraria\bin\EasyHook32.dll
+E:\Projects\Libraria\bin\EasyHook64.dll

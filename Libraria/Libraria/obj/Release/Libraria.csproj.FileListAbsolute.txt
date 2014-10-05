@@ -3,3 +3,5 @@ E:\Projects\Libraria\bin\Libraria.pdb
 E:\Projects\Libraria\Libraria\Libraria\obj\Release\Libraria.dll
 E:\Projects\Libraria\Libraria\Libraria\obj\Release\Libraria.pdb
 E:\Projects\Libraria\Libraria\Libraria\obj\Release\Libraria.csprojResolveAssemblyReference.cache
+E:\Projects\Libraria\bin\EasyHook32.dll
+E:\Projects\Libraria\bin\EasyHook64.dll

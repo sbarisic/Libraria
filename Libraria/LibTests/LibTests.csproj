@@ -72,7 +72,7 @@
     <PostBuildEvent>DEL $(TargetDir)*.pdb
 DEL $(TargetDir)*.config
 DEL $(TargetDir)*.manifest
-$(SolutionDir)packages\xunit.runners.2.0.0-beta4-build2738\tools\xunit.console.exe $(TargetDir)$(TargetFileName)</PostBuildEvent>
+REM $(SolutionDir)packages\xunit.runners.2.0.0-beta4-build2738\tools\xunit.console.exe $(TargetDir)$(TargetFileName)</PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

@@ -32,6 +32,9 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EasyHook">
+      <HintPath>C:\Users\cartm_000\Desktop\_Libraries\EasyHook\NetFX4.0\EasyHook.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -44,11 +47,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Comparator.cs" />
+    <Compile Include="CRAPI.cs" />
     <Compile Include="Reflection\RuntimeExtensions\Delegates.cs" />
     <Compile Include="Reflection\RuntimeExtensions\Events.cs" />
     <Compile Include="Reflection\RuntimeExtensions\Fields.cs" />
     <Compile Include="Reflection\RuntimeExtensions\Runtime.cs" />
     <Compile Include="Reflection\RuntimeExtensions\Names.cs" />
+    <Compile Include="Reflection\RuntimeExtensions\Structures.cs" />
     <Compile Include="Reflection\Runtime\Runtime.cs" />
     <Compile Include="Reflection\Runtime\Delegates.cs" />
     <Compile Include="Reflection\Runtime\Names.cs" />
@@ -57,6 +62,14 @@
     <Compile Include="Simplex.cs" />
     <Compile Include="Valid.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="EasyHook32.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="EasyHook64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
