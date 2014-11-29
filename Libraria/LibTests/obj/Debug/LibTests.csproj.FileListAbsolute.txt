@@ -10,5 +10,3 @@ E:\Projects\Libraria\Libraria\LibTests\obj\Debug\LibTests.csprojResolveAssemblyR
 E:\Projects\Libraria\Libraria\LibTests\obj\Debug\LibTests.exe
 E:\Projects\Libraria\Libraria\LibTests\obj\Debug\LibTests.pdb
 E:\Projects\Libraria\bin\xunit.execution.dll
-E:\Projects\Libraria\bin\EasyHook32.dll
-E:\Projects\Libraria\bin\EasyHook64.dll

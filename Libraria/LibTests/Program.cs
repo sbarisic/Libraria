@@ -11,29 +11,36 @@ using Xunit;
 using Xunit.Extensions;
 using Libraria;
 
+using Lib = Libraria.Libraria;
+
 namespace LibTests {
 	public class Program {
 		static void Main(string[] args) {
-			CRAPI.HookJIT();
 			Console.Title = "LibTests";
-			new TestClass();
+
+			Dictionary<string, int> Dict = Lib.Dict<string, int>(new {
+				Key = "SomeKey",
+				Value = 1337,
+				Nigger = 23123
+			}, new {
+				Key = "31",
+				Value = 69
+			});
+
+			foreach (var KVPair in Dict)
+				Console.WriteLine("Key: {0}, Value: {1}", KVPair.Key, KVPair.Value);
+
+			int[] Rng = Lib.Range(10, 20, -1);
+			for (int i = 0; i < Rng.Length; i++)
+				Console.Write("{0} ", Rng[i]);
+			Console.WriteLine();
+
+
 			Console.WriteLine("Complete");
 			Console.ReadLine();
 		}
 	}
-
-	public class TestClass {
-		public TestClass() {
-			Test(2, 3);
-			Console.WriteLine("0x{0}", typeof(TestClass).GetMethod("Test").MethodHandle.Value.ToString("x"));
-			Test(2, 3);
-		}
-
-		public int Test(int A, int B) {
-			Console.WriteLine("A + B = {0}", A + B);
-			return A + B;
-		}
-	}
+		
 
 	public class Tests {
 		[Theory]
