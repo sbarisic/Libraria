@@ -1,8 +1,0 @@
-E:\Projects\Libraria\Libraria\obj\Debug\Libraria.csprojResolveAssemblyReference.cache
-E:\Projects\Libraria\Libraria\obj\Debug\Libraria.dll
-E:\Projects\Libraria\Libraria\obj\Debug\Libraria.pdb
-E:\Projects\Libraria\bin\Libraria.dll
-E:\Projects\Libraria\bin\Libraria.pdb
-E:\Projects\Libraria\Libraria\Libraria\obj\Debug\Libraria.dll
-E:\Projects\Libraria\Libraria\Libraria\obj\Debug\Libraria.pdb
-E:\Projects\Libraria\Libraria\Libraria\obj\Debug\Libraria.csprojResolveAssemblyReference.cache

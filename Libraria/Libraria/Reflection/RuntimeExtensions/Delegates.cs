@@ -24,8 +24,11 @@ namespace Libraria {
 				return PI.GetSetMethod(NonPublic).ToDelegate();
 			}
 
-			public static T ToDelegate<T>(this IntPtr FuncPtr) {
-				return Marshal.GetDelegateForFunctionPointer(FuncPtr, typeof(T)).As<T>();
+			public static T ToDelegate<T>(this IntPtr FuncPtr) where T : class {
+				T Ret = Marshal.GetDelegateForFunctionPointer(FuncPtr, typeof(T)) as T;
+				if (Ret == null)
+					throw new Exception("Cannot convert to " + typeof(T));
+				return Ret;
 			}
 		}
 	}
