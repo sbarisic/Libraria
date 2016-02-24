@@ -12,21 +12,23 @@ namespace Libraria {
 		public static partial class RuntimeExtensions {
 			public static object GetFieldValue(this object O, string FieldName, BindingFlags BF = Runtime.DefaultFlags) {
 				FieldInfo FInfo = O.GetFieldInfo(FieldName, BF);
+				if (FInfo == null)
+					throw new Exception("Could not find field '" + FieldName + "'");
 				return FInfo.GetValue(O);
 			}
 
 			public static void SetFieldValue(this object O, string FieldName, object Val, BindingFlags BF = Runtime.DefaultFlags) {
 				FieldInfo FInfo = O.GetFieldInfo(FieldName, BF);
+				if (FInfo == null)
+					throw new Exception("Could not find field '" + FieldName + "' in " + O);
 				FInfo.SetValue(O, Val);
 			}
 
 			public static object SetFieldValue(this object O, object AnonType, BindingFlags BF = Runtime.DefaultFlags) {
-				FieldInfo[] AnonFields = AnonType.GetType().GetFields(BF);
+				PropertyInfo[] Props = AnonType.GetType().GetProperties(BF);
 
-				Type T = AnonType.GetType();
-
-				for (int i = 0; i < AnonFields.Length; i++)
-					O.SetFieldValue(AnonFields[i].Name, AnonFields[i].GetValue(AnonType));
+				for (int i = 0; i < Props.Length; i++)
+					O.SetFieldValue(Props[i].Name, Props[i].GetValue(AnonType));
 
 				return O;
 			}

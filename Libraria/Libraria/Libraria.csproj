@@ -43,6 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interop\NativeBinder.cs" />
+    <Compile Include="Native\Kernel32.cs" />
     <Compile Include="Reflection\RuntimeExtensions\Delegates.cs" />
     <Compile Include="Reflection\RuntimeExtensions\Events.cs" />
     <Compile Include="Reflection\RuntimeExtensions\Fields.cs" />
@@ -53,6 +55,7 @@
     <Compile Include="Reflection\Runtime\Names.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

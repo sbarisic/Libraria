@@ -10,6 +10,18 @@ using System.Runtime.InteropServices;
 namespace Libraria {
 	namespace Reflection {
 		public static partial class RuntimeExtensions {
+			public static object DynamicThisInvoke(this Delegate D, params object[] Args) {
+				if (Args.Length > 0)
+					Args[0] = Activator.CreateInstance(D.GetThisType()).SetFieldValue(Args[0]);
+				return D.DynamicInvoke(Args);
+			}
+
+			public static Type GetThisType(this Delegate D) {
+				if (D.Method.CallingConvention.HasFlag(CallingConventions.HasThis))
+					return D.Method.ReflectedType;
+				throw new Exception("Delegate method doesn't have 'this'");
+			}
+
 			public static Delegate CreateDelegate(this MethodInfo MI) {
 				if (MI == null)
 					throw new ArgumentException("MethodInfo MI cannot be null", "MI");
@@ -29,7 +41,7 @@ namespace Libraria {
 				return PI.GetSetMethod(NonPublic).CreateDelegate();
 			}
 
-			public static T ToDelegate<T>(this IntPtr FuncPtr) where T : class {
+			public static T CreateDelegate<T>(this IntPtr FuncPtr) where T : class {
 				T Ret = Marshal.GetDelegateForFunctionPointer(FuncPtr, typeof(T)) as T;
 				if (Ret == null)
 					throw new Exception("Cannot convert to " + typeof(T));
