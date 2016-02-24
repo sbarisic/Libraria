@@ -43,8 +43,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Comparator.cs" />
-    <Compile Include="Libraria.cs" />
     <Compile Include="Reflection\RuntimeExtensions\Delegates.cs" />
     <Compile Include="Reflection\RuntimeExtensions\Events.cs" />
     <Compile Include="Reflection\RuntimeExtensions\Fields.cs" />
@@ -54,10 +52,6 @@
     <Compile Include="Reflection\Runtime\Runtime.cs" />
     <Compile Include="Reflection\Runtime\Delegates.cs" />
     <Compile Include="Reflection\Runtime\Names.cs" />
-    <Compile Include="Random.cs" />
-    <Compile Include="Screen.cs" />
-    <Compile Include="Simplex.cs" />
-    <Compile Include="Valid.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
