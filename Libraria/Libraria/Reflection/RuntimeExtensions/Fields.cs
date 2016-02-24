@@ -9,14 +9,26 @@ using System.Runtime.InteropServices;
 
 namespace Libraria {
 	namespace Reflection {
-		public static partial class Runtime {
-			public static object GetFieldValue(this object O, string FieldName, BindingFlags BF) {
-				return O.GetType().GetField(FieldName, BF).GetValue(O);
+		public static partial class RuntimeExtensions {
+			public static object GetFieldValue(this object O, string FieldName, BindingFlags BF = Runtime.DefaultFlags) {
+				FieldInfo FInfo = O.GetFieldInfo(FieldName, BF);
+				return FInfo.GetValue(O);
 			}
 
-			public static object GetFieldValue(this Type T, string FieldName, BindingFlags BF) {
-				//return (T.GetMember(FieldName, MemberTypes.All, BF)[0]); TODO
-				return null;
+			public static void SetFieldValue(this object O, string FieldName, object Val, BindingFlags BF = Runtime.DefaultFlags) {
+				FieldInfo FInfo = O.GetFieldInfo(FieldName, BF);
+				FInfo.SetValue(O, Val);
+			}
+
+			public static object SetFieldValue(this object O, object AnonType, BindingFlags BF = Runtime.DefaultFlags) {
+				FieldInfo[] AnonFields = AnonType.GetType().GetFields(BF);
+
+				Type T = AnonType.GetType();
+
+				for (int i = 0; i < AnonFields.Length; i++)
+					O.SetFieldValue(AnonFields[i].Name, AnonFields[i].GetValue(AnonType));
+
+				return O;
 			}
 		}
 	}

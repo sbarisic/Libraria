@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 
 namespace Libraria {
 	namespace Reflection {
-		public static partial class Runtime {
+		public static partial class RuntimeExtensions {
 			public static T ToStruct<T>(this IntPtr StructPtr) where T : struct {
 				return (T)Marshal.PtrToStructure(StructPtr, typeof(T));
 			}

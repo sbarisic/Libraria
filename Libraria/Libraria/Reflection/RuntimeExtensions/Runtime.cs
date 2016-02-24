@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 
 namespace Libraria {
 	namespace Reflection {
-		public static partial class Runtime {
+		public static partial class RuntimeExtensions {
 			public static Type[] GetParamTypes(this MethodInfo MI) {
 				ParameterInfo[] PI = MI.GetParameters();
 				List<Type> Types = new List<Type>();

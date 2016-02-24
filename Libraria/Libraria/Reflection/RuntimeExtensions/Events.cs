@@ -9,41 +9,29 @@ using System.Runtime.InteropServices;
 
 namespace Libraria {
 	namespace Reflection {
-		public static partial class Runtime {
+		public static partial class RuntimeExtensions {
 			public static Delegate CreateRaiseDelegate(this EventInfo EI, bool NonPublic = true) {
-				return EI.GetRaiseMethod(NonPublic).ToDelegate();
-			}
-
-			public static Delegate CreateRaiseDelegate(this object O, string EventName, bool NonPublic = true) {
-				return O.GetEventInfo(EventName).CreateRaiseDelegate(NonPublic);
+				return EI.GetRaiseMethod(NonPublic).CreateDelegate();
 			}
 
 			public static Delegate CreateAddDelegate(this EventInfo EI, bool NonPublic = true) {
-				return EI.GetAddMethod(NonPublic).ToDelegate();
-			}
-
-			public static Delegate CreateAddDelegate(this object O, string EventName, bool NonPublic = true) {
-				return O.GetEventInfo(EventName).CreateAddDelegate(NonPublic);
+				return EI.GetAddMethod(NonPublic).CreateDelegate();
 			}
 
 			public static Delegate CreateRemoveDelegate(this EventInfo EI, bool NonPublic = true) {
-				return EI.GetRemoveMethod(NonPublic).ToDelegate();
-			}
-
-			public static Delegate CreateRemoveDelegate(this object O, string EventName, bool NonPublic = true) {
-				return O.GetEventInfo(EventName).CreateRemoveDelegate(NonPublic);
+				return EI.GetRemoveMethod(NonPublic).CreateDelegate();
 			}
 
 			public static Delegate CreateCallDelegate(this EventInfo EI, bool NonPublic = true) {
-				return EI.EventHandlerType.GetMethod("Invoke").ToDelegate();
+				return EI.EventHandlerType.GetMethod("Invoke").CreateDelegate();
 			}
 
-			public static Delegate CreateCallDelegate(this object O, string EventName, bool NonPublic = true) {
-				return O.GetEventInfo(EventName).CreateCallDelegate(NonPublic);
+			public static EventInfo GetEventInfo(this object O, string EventName, BindingFlags BF = Runtime.DefaultFlags) {
+				return O.GetType().GetEvent(EventName, BF);
 			}
 
-			public static EventInfo GetEventInfo(this object O, string EventName) {
-				return O.GetType().GetEvent(EventName);
+			public static FieldInfo GetFieldInfo(this object O, string FieldName, BindingFlags BF = Runtime.DefaultFlags) {
+				return O.GetType().GetField(FieldName, BF);
 			}
 
 			public static object CallEvent(this EventInfo EI, params object[] Params) {
@@ -52,7 +40,7 @@ namespace Libraria {
 
 			public static object CallEvent(this object O, string EventName, params object[] Params) {
 				List<object> Args = new List<object>();
-				Args.Add(O.GetFieldValue(EventName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField));
+				Args.Add(O.GetFieldValue(EventName));
 				Args.AddRange(Params);
 				return O.GetType().GetEvent(EventName).CallEvent(Args.ToArray());
 			}

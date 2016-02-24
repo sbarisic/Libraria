@@ -47,7 +47,6 @@
     <Compile Include="Reflection\RuntimeExtensions\Events.cs" />
     <Compile Include="Reflection\RuntimeExtensions\Fields.cs" />
     <Compile Include="Reflection\RuntimeExtensions\Runtime.cs" />
-    <Compile Include="Reflection\RuntimeExtensions\Names.cs" />
     <Compile Include="Reflection\RuntimeExtensions\Structures.cs" />
     <Compile Include="Reflection\Runtime\Runtime.cs" />
     <Compile Include="Reflection\Runtime\Delegates.cs" />

@@ -11,6 +11,10 @@ using CCnv = System.Runtime.InteropServices.CallingConvention;
 namespace Libraria {
 	namespace Reflection {
 		public static partial class Runtime {
+			public static Type CreateDelegateType(this Delegate D, CCnv CConv = CCnv.Cdecl) {
+				return CreateDelegateType(D.Method.ReturnType, D.Method.GetParamTypes(), CConv);
+			}
+			
 			public static Type CreateDelegateType(Type ReturnType, Type[] Args, CCnv CConv = CCnv.Cdecl) {
 				string DelegateName = CreateDelegateName(ReturnType, Args);
 				if (DelegateTypes.ContainsKey(DelegateName))
