@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Interop\NativeBinder.cs" />
     <Compile Include="Native\Kernel32.cs" />
+    <Compile Include="Patterns\Entity.cs" />
     <Compile Include="Reflection\RuntimeExtensions\Delegates.cs" />
     <Compile Include="Reflection\RuntimeExtensions\Events.cs" />
     <Compile Include="Reflection\RuntimeExtensions\Fields.cs" />
