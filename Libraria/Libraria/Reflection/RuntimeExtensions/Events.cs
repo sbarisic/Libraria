@@ -26,11 +26,11 @@ namespace Libraria {
 				return EI.EventHandlerType.GetMethod("Invoke").CreateDelegate();
 			}
 
-			public static EventInfo GetEventInfo(this object O, string EventName, BindingFlags BF = Runtime.DefaultFlags) {
+			public static EventInfo GetEventInfo(this object O, string EventName, BindingFlags BF = ReflectionRuntime.DefaultFlags) {
 				return O.GetType().GetEvent(EventName, BF);
 			}
 
-			public static FieldInfo GetFieldInfo(this object O, string FieldName, BindingFlags BF = Runtime.DefaultFlags) {
+			public static FieldInfo GetFieldInfo(this object O, string FieldName, BindingFlags BF = ReflectionRuntime.DefaultFlags) {
 				return O.GetType().GetField(FieldName, BF);
 			}
 

@@ -26,7 +26,7 @@ namespace Libraria {
 				if (MI == null)
 					throw new ArgumentException("MethodInfo MI cannot be null", "MI");
 
-				return Delegate.CreateDelegate(Runtime.CreateDelegateType(MI.ReturnType, MI.GetParamTypes()), MI);
+				return Delegate.CreateDelegate(ReflectionRuntime.CreateDelegateType(MI.ReturnType, MI.GetParamTypes()), MI);
 			}
 
 			public static Delegate CreateDelegate(this Delegate D) {

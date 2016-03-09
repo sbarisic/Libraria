@@ -10,7 +10,49 @@ using CCnv = System.Runtime.InteropServices.CallingConvention;
 
 namespace Libraria {
 	namespace Reflection {
-		public static partial class Runtime {
+		public static class ReflectionRuntime {
+			public const BindingFlags DefaultFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
+			internal static AssemblyBuilder AB;
+			internal static ModuleBuilder DefMod;
+			internal static Dictionary<string, Type> DelegateTypes;
+
+			static ReflectionRuntime() {
+				AB = AppDomain.CurrentDomain.DefineDynamicAssembly(new AssemblyName("Libraria.Test.dll"),
+						AssemblyBuilderAccess.RunAndSave);
+				DefMod = AB.DefineDynamicModule("Libraria.DefMod");
+
+				DelegateTypes = new Dictionary<string, Type>();
+			}
+
+			public static string CreateDelegateName(MethodInfo MI) {
+				return CreateDelegateName(MI.ReturnType, MI.GetParamTypes());
+			}
+
+			public static string CreateDelegateName(Type ReturnType, Type[] Args) {
+				string Name = "Delegate?" + ReturnType.FullName + "??";
+
+				for (int i = 0; i < Args.Length; i++) {
+					Name += Args[i].FullName;
+					if (i + 1 < Args.Length)
+						Name += "?";
+				}
+
+				return Name;
+			}
+
+			public static string CreateMethodName(MethodInfo MI) {
+				string Name = "Method?" + MI.ReturnType.FullName + "??" + MI.Name + "??";
+
+				Type[] Args = MI.GetParamTypes();
+				for (int i = 0; i < Args.Length; i++) {
+					Name += Args[i].FullName;
+					if (i + 1 < Args.Length)
+						Name += "?";
+				}
+
+				return Name;
+			}
+
 			public static Type CreateDelegateType(this Delegate D, CCnv CConv = CCnv.Cdecl) {
 				return CreateDelegateType(D.Method.ReturnType, D.Method.GetParamTypes(), CConv);
 			}

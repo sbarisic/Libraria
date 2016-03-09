@@ -62,7 +62,7 @@ namespace Libraria.Interop {
 			if (ProcAddr == IntPtr.Zero)
 				throw new Exception(string.Format("Function '{0}' not found in {1}", Name, LibraryName));
 
-			Delegate D = Marshal.GetDelegateForFunctionPointer(ProcAddr, Runtime.CreateDelegateType(ReturnType, ArgTypes, CConv));
+			Delegate D = Marshal.GetDelegateForFunctionPointer(ProcAddr, ReflectionRuntime.CreateDelegateType(ReturnType, ArgTypes, CConv));
 			Functions.Add(Name, D);
 			return D;
 		}
