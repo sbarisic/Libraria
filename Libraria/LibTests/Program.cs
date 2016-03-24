@@ -6,13 +6,14 @@ using System.Threading;
 using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Reflection.Emit;
-
-using Libraria.Net;
+using Libraria;
 
 namespace LibTests {
 	public class Program {
 		static void Main(string[] args) {
 			Console.Title = "LibTests";
+
+
 			
 			Console.WriteLine("Done!");
 			Console.ReadLine();
