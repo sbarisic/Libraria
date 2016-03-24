@@ -50,6 +50,8 @@ namespace Libraria.Net {
 		public Socket ClientSocket;
 		public DateTime ConnectedAt;
 		public string Prompt;
+		public bool EscapeSequences;
+		public object Userdata;
 
 		string AliasInternal;
 		TelnetServer Server;
@@ -72,6 +74,7 @@ namespace Libraria.Net {
 			Alias = RemoteEndPoint = ((IPEndPoint)ClientSocket.RemoteEndPoint).ToString();
 
 			Echo = true;
+			EscapeSequences = true;
 			Send(TelnetCommand.IAC, Echo ? TelnetCommand.WILL : TelnetCommand.WONT, TelnetCommand.Echo);
 			Send(TelnetCommand.IAC, TelnetCommand.WILL, TelnetCommand.SuppressGoAhead);
 		}
@@ -134,10 +137,6 @@ namespace Libraria.Net {
 					throw new Exception("Cannot send " + Args[i].GetType());
 		}
 
-		public void Erase() {
-			Write("\b \b");
-		}
-
 		public char Read() {
 			char C = (char)Receive();
 			if (Echo && C != '\r' && C != '\n' && C != '\0') {
@@ -159,7 +158,7 @@ namespace Libraria.Net {
 				if (In == '\b') {
 					if (CurrentInput.Length > 0) {
 						CurrentInput.Length--;
-						Erase();
+						Write("\b \b");
 					}
 				} else
 					CurrentInput.Append(In);
@@ -174,8 +173,14 @@ namespace Libraria.Net {
 			return Ret;
 		}
 
+		bool _DisableWrite;
 		public void Write(char C) {
-			ClientStream.WriteByte((byte)C);
+			if (!EscapeSequences && C == (char)0x1B)
+				_DisableWrite = true;
+			if (!_DisableWrite || EscapeSequences)
+				ClientStream.WriteByte((byte)C);
+			if (!EscapeSequences && C == 'm')
+				_DisableWrite = false;
 		}
 
 		public void Write(string Str) {

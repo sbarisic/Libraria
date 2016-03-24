@@ -28,7 +28,7 @@ namespace Libraria {
 				PropertyInfo[] Props = AnonType.GetType().GetProperties(BF);
 
 				for (int i = 0; i < Props.Length; i++)
-					O.SetFieldValue(Props[i].Name, Props[i].GetValue(AnonType));
+					O.SetFieldValue(Props[i].Name, Props[i].GetValue(AnonType, null));
 
 				return O;
 			}
