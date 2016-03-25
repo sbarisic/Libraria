@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Libraria.Interop\NativeBinder.cs" />
+    <Compile Include="Libraria.Native\NtDll.cs" />
     <Compile Include="Libraria.Native\Kernel32.cs" />
     <Compile Include="Libraria.Net\TelnetServer.cs" />
     <Compile Include="Libraria.Patterns\Entity.cs" />

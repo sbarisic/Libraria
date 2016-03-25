@@ -7,108 +7,43 @@ using System.Runtime.InteropServices;
 
 namespace Libraria.Patterns {
 	public class Entity {
-		private Dictionary<Type, object> Components;
+		Dictionary<Type, object> Components = new Dictionary<Type, object>();
 
-		public Entity() {
-			Components = new Dictionary<Type, object>();
+		public T As<T>() where T : class {
+			return (T)As(typeof(T));
 		}
 
-		public virtual void SetComponent(object Comp) {
-			if (Comp == null)
-				throw new Exception("Component cannot be null");
-
-			Type T = Comp.GetType();
-			if (Components.ContainsKey(T))
-				Components.Remove(T);
-			Components.Add(T, Comp);
-		}
-
-		public virtual T GetComponent<T>() {
-			object Ret = GetComponent(typeof(T));
-			if (Ret == null)
-				return default(T);
-			return (T)Ret;
-		}
-
-		public virtual object GetComponent(Type T) {
-			if (Components.ContainsKey(T))
+		public object As(Type T) {
+			if (Is(T))
 				return Components[T];
-
-			foreach (var C in Components)
-				if (T.IsAssignableFrom(C.Key))
-					return C.Value;
-
-			return null;
+			throw new Exception("Component type not found: " + T);
 		}
 
-		public void RemoveComponent<T>(bool AssignableTo = false) {
-			RemoveComponent(typeof(T), AssignableTo);
-		}
-
-		public virtual void RemoveComponent(Type T, bool AssignableTo = false) {
-			if (AssignableTo) {
-				Type Key;
-				if (HasComponent(T, out Key))
-					Components.Remove(Key);
-			} else if (Components.ContainsKey(T))
-				Components.Remove(T);
-		}
-
-		public bool HasComponent<T>() {
-			return HasComponent(typeof(T));
-		}
-
-		public bool HasComponent(params Type[] Types) {
-			for (int i = 0; i < Types.Length; i++)
-				if (!HasComponent(Types[i]))
-					return false;
-			return true;
-		}
-
-		public bool HasComponent(Type T) {
-			Type Key;
-			return HasComponent(T, out Key);
-		}
-
-		public virtual bool HasComponent(Type T, out Type Key) {
-			if (Components.ContainsKey(T)) {
-				Key = T;
-				return true;
+		public void Set(params object[] Vals) {
+			for (int i = 0; i < Vals.Length; i++) {
+				Type T = Vals[i].GetType();
+				if (!T.IsClass)
+					throw new Exception("Type is not class " + T);
+				if (Is(T))
+					throw new Exception("Entity already contains " + T);
+				Components.Add(T, Vals[i]);
 			}
-
-			foreach (var C in Components)
-				if (T.IsAssignableFrom(C.Key)) {
-					Key = C.Key;
-					return true;
-				}
-
-			Key = typeof(void);
-			return false;
 		}
 
-		//////////////////////////////////////////////////////////////////////////////
+		public bool Is<T>() where T : class {
+			return Is(typeof(T));
+		}
 
-		public static IEnumerable<Entity> GetEntities(IEnumerable<Entity> Ents, params Type[] Components) {
-			foreach (var Ent in Ents)
-				if (Ent.HasComponent(Components))
-					yield return Ent;
+		public bool Is(Type T) {
+			return Components.ContainsKey(T);
 		}
 	}
 
-	public class EntitySystem {
-		Type[] ComponentTypes;
-
-		public EntitySystem(params Type[] ComponentTypes) {
-			this.ComponentTypes = ComponentTypes;
-		}
-
-		public void Update(IEnumerable<Entity> Entities) {
-			IEnumerable<Entity> Ents = Entity.GetEntities(Entities, ComponentTypes);
+	public static class EntityUtils {
+		public static IEnumerable<Entity> Get(this IEnumerable<Entity> Ents, Type T) {
 			foreach (var E in Ents)
-				Update(E);
-		}
-
-		public virtual void Update(Entity E) {
+				if (E.Is(T))
+					yield return E;
 		}
 	}
 }

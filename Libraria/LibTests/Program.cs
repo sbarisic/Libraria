@@ -7,13 +7,13 @@ using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Reflection.Emit;
 using Libraria;
+using Libraria.Native;
+using Libraria.Patterns;
 
 namespace LibTests {
 	public class Program {
 		static void Main(string[] args) {
 			Console.Title = "LibTests";
-
-
 			
 			Console.WriteLine("Done!");
 			Console.ReadLine();
