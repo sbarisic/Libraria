@@ -6,10 +6,13 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
 namespace Libraria.Native {
-	public static class Kernel32 {
+	public unsafe static class Kernel32 {
 		const string Lib = "kernel32";
 		const CharSet CSet = CharSet.Ansi;
 		const CallingConvention CConv = CallingConvention.Winapi;
+
+		public const uint MEM_DECOMMIT = 0x4000;
+		public const uint MEM_RELEASE = 0x8000;
 
 		[DllImport(Lib, SetLastError = true, CharSet = CSet, CallingConvention = CConv)]
 		public static extern IntPtr LoadLibrary(string FileName);
@@ -45,6 +48,9 @@ namespace Libraria.Native {
 
 		[DllImport(Lib, SetLastError = true, CharSet = CSet, CallingConvention = CConv)]
 		public static extern uint GetModuleFileName(IntPtr Mod, StringBuilder FileName, int Size = 80);
+
+		[DllImport(Lib, SetLastError = true, CharSet = CSet, CallingConvention = CConv)]
+		public static extern uint GetModuleFileNameEx(IntPtr Proc, IntPtr Mod, StringBuilder FileName, int Size = 80);
 
 		[DllImport(Lib, SetLastError = true, CharSet = CSet, CallingConvention = CConv)]
 		public static extern bool GetModuleHandleEx(ModuleHandleFlags Flags, string ModuleName, out IntPtr Handle);
@@ -111,6 +117,9 @@ namespace Libraria.Native {
 			MemProtection Prot = MemProtection.ReadWrite);
 
 		[DllImport(Lib, SetLastError = true, CharSet = CSet, CallingConvention = CConv)]
+		public static extern bool VirtualFreeEx(IntPtr Proc, IntPtr Addr, int Size = 0, uint FreeType = MEM_RELEASE);
+
+		[DllImport(Lib, SetLastError = true, CharSet = CSet, CallingConvention = CConv)]
 		public static extern IntPtr VirtualAlloc(IntPtr Addr, int Size, AllocType AType = AllocType.Commit, MemProtection Prot = MemProtection.ReadWrite);
 
 		[DllImport(Lib, SetLastError = true, CharSet = CSet, CallingConvention = CConv)]
@@ -123,5 +132,25 @@ namespace Libraria.Native {
 
 		[DllImport(Lib, SetLastError = true, CharSet = CSet, CallingConvention = CConv)]
 		public static extern int GetLastError();
+
+		[DllImport(Lib, SetLastError = true, CharSet = CSet, CallingConvention = CConv)]
+		public static extern bool EnumProcessModules(IntPtr Proc, IntPtr Modules, uint Size, out uint SizeNeeded);
+
+		public static bool EnumProcessModules(IntPtr Proc, IntPtr Modules, uint Size) {
+			uint SizeNeeded;
+			return EnumProcessModules(Proc, Modules, Size, out SizeNeeded);
+		}
+
+		public static bool EnumProcessModules(IntPtr Proc, IntPtr[] Modules, out uint SizeNeeded) {
+			fixed (IntPtr* ModulesPtr = Modules)
+			{
+				return EnumProcessModules(Proc, new IntPtr(ModulesPtr), (uint)(Modules.Length * IntPtr.Size), out SizeNeeded);
+			}
+		}
+
+		public static bool EnumProcessModules(IntPtr Proc, IntPtr[] Modules) {
+			uint SizeNeeded;
+			return EnumProcessModules(Proc, Modules, out SizeNeeded);
+		}
 	}
 }

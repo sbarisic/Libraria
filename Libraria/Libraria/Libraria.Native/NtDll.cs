@@ -50,8 +50,7 @@ namespace Libraria.Native {
 		public static bool RtlCreateUserThread(IntPtr P, IntPtr Fnc, IntPtr Data, out IntPtr Thread) {
 			Thread = IntPtr.Zero;
 			fixed (IntPtr* ThrdPtr = &Thread)
-				return RtlCreateUserThread(P, IntPtr.Zero,
-					false, 0, 0, 0, Fnc, Data, new IntPtr(ThrdPtr), (CLIENT_ID*)0);
+				return RtlCreateUserThread(P, IntPtr.Zero, false, 0, 0, 0, Fnc, Data, new IntPtr(ThrdPtr), (CLIENT_ID*)0);
 		}
 
 		public static bool RtlCreateUserThread(Process P, IntPtr Fnc, IntPtr Data, out IntPtr Thread) {

@@ -21,5 +21,9 @@ namespace Libraria {
 		public static T[] Sub<T>(this T[] A, int Len) {
 			return A.Sub(0, Len);
 		}
+
+		public static T[] Sub<T>(this T[] A, long Len) {
+			return A.Sub((int)Len);
+		}
 	}
 }

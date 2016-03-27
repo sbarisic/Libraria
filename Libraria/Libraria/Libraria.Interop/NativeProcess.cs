@@ -9,16 +9,29 @@ using Libraria.Native;
 
 namespace Libraria.Interop {
 	public class NativeProcess : IDisposable {
+		public static NativeProcess Create(string File, string CmdLine, ProcessCreationFlags Flags,
+			bool InheritHandles = false, string CurrentDir = null) {
+
+			STARTUPINFO SInf = new STARTUPINFO();
+			PROCESS_INFORMATION PInf = new PROCESS_INFORMATION();
+			if (!Kernel32.CreateProcess(File, CmdLine, IntPtr.Zero, IntPtr.Zero, InheritHandles, Flags, IntPtr.Zero, CurrentDir, ref SInf, out PInf))
+				throw new Win32Exception();
+			return new NativeProcess((int)PInf.ClientID.ProcessID);
+		}
+
 		bool Disposed = false;
 		IntPtr Proc;
 
-		public NativeProcess(int PID, ProcessAccess Access = ProcessAccess.AllAccess) {
-			Proc = Kernel32.OpenProcess(Access, false, PID);
+		public Process Process { get; private set; }
+
+		public NativeProcess(Process P, ProcessAccess Access = ProcessAccess.AllAccess) {
+			Process = P;
+			Proc = Kernel32.OpenProcess(Access, false, P.Id);
 			if (Proc == IntPtr.Zero)
 				throw new Win32Exception();
 		}
 
-		public NativeProcess(Process P, ProcessAccess Access = ProcessAccess.AllAccess) : this(P.Id, Access) {
+		public NativeProcess(int PID, ProcessAccess Access = ProcessAccess.AllAccess) : this(Process.GetProcessById(PID), Access) {
 		}
 
 		public void Dispose() {
@@ -55,13 +68,18 @@ namespace Libraria.Interop {
 			return Mem;
 		}
 
+		public bool Free(IntPtr P) {
+			return Kernel32.VirtualFreeEx(Proc, P);
+		}
+
 		public IntPtr LoadLibrary(string Lib) {
 			IntPtr RLib = IntPtr.Zero;
 
 			IntPtr LibName = Allocate(Encoding.ASCII.GetBytes(Lib));
 			ExecThread(Kernel32.GetProcAddress(Kernel32.GetModuleHandle("kernel32.dll"), "LoadLibraryA"), LibName, true);
-			throw new NotImplementedException();
+			Free(LibName);
 
+			throw new NotImplementedException();
 			return RLib;
 		}
 
@@ -71,6 +89,24 @@ namespace Libraria.Interop {
 
 		public IntPtr GetProcAddress(IntPtr Mod, string Name) {
 			throw new NotImplementedException();
+		}
+
+		public IntPtr[] EnumProcessModules(int MaxQuery = 4096) {
+			IntPtr[] Mods = new IntPtr[MaxQuery];
+			uint SizeNeeded = 0;
+
+			if (Kernel32.EnumProcessModules(Proc, Mods, out SizeNeeded)) {
+				return Mods.Sub(SizeNeeded / IntPtr.Size);
+			}
+			throw new Win32Exception();
+		}
+
+		public void Resume() {
+			Process.ResumeProcess();
+		}
+
+		public void Suspend() {
+			Process.SuspendProcess();
 		}
 	}
 }
