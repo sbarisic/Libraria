@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
@@ -48,9 +49,6 @@ namespace Libraria.Native {
 
 		[DllImport(Lib, SetLastError = true, CharSet = CSet, CallingConvention = CConv)]
 		public static extern uint GetModuleFileName(IntPtr Mod, StringBuilder FileName, int Size = 80);
-
-		[DllImport(Lib, SetLastError = true, CharSet = CSet, CallingConvention = CConv)]
-		public static extern uint GetModuleFileNameEx(IntPtr Proc, IntPtr Mod, StringBuilder FileName, int Size = 80);
 
 		[DllImport(Lib, SetLastError = true, CharSet = CSet, CallingConvention = CConv)]
 		public static extern bool GetModuleHandleEx(ModuleHandleFlags Flags, string ModuleName, out IntPtr Handle);
@@ -131,26 +129,20 @@ namespace Libraria.Native {
 		}
 
 		[DllImport(Lib, SetLastError = true, CharSet = CSet, CallingConvention = CConv)]
+		public static extern bool ReadProcessMemory(IntPtr Proc, IntPtr Addr, byte[] Mem, int Size, ref int BytesRead);
+
+		public static byte[] ReadProcessMemory(IntPtr Proc, IntPtr Addr, int Len) {
+			int BRead = 0;
+			byte[] Ret = new byte[Len];
+			if (!ReadProcessMemory(Proc, Addr, Ret, Ret.Length, ref BRead))
+				throw new Win32Exception();
+			return Ret.Sub(BRead);
+		}
+
+		[DllImport(Lib, SetLastError = true, CharSet = CSet, CallingConvention = CConv)]
 		public static extern int GetLastError();
 
 		[DllImport(Lib, SetLastError = true, CharSet = CSet, CallingConvention = CConv)]
-		public static extern bool EnumProcessModules(IntPtr Proc, IntPtr Modules, uint Size, out uint SizeNeeded);
-
-		public static bool EnumProcessModules(IntPtr Proc, IntPtr Modules, uint Size) {
-			uint SizeNeeded;
-			return EnumProcessModules(Proc, Modules, Size, out SizeNeeded);
-		}
-
-		public static bool EnumProcessModules(IntPtr Proc, IntPtr[] Modules, out uint SizeNeeded) {
-			fixed (IntPtr* ModulesPtr = Modules)
-			{
-				return EnumProcessModules(Proc, new IntPtr(ModulesPtr), (uint)(Modules.Length * IntPtr.Size), out SizeNeeded);
-			}
-		}
-
-		public static bool EnumProcessModules(IntPtr Proc, IntPtr[] Modules) {
-			uint SizeNeeded;
-			return EnumProcessModules(Proc, Modules, out SizeNeeded);
-		}
+		public static extern bool TerminateProcess(IntPtr Proc, uint ExitCode);
 	}
 }

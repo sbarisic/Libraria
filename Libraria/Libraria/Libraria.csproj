@@ -48,7 +48,9 @@
     <Compile Include="Libraria.Interop\Memory\VirtualProtectHandle.cs" />
     <Compile Include="Libraria.Interop\NativeBinder.cs" />
     <Compile Include="Libraria.Interop\NativeProcess.cs" />
+    <Compile Include="Libraria.IO\PathExtended.cs" />
     <Compile Include="Libraria.Native\Enums.cs" />
+    <Compile Include="Libraria.Native\PsAPI.cs" />
     <Compile Include="Libraria.Native\Msvcrt.cs" />
     <Compile Include="Libraria.Native\NtDll.cs" />
     <Compile Include="Libraria.Native\Kernel32.cs" />

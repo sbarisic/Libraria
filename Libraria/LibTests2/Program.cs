@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LibTests2 {
+namespace TEST {
 	class Program {
 		static void Main(string[] args) {
 			Console.WriteLine("Test thingie completed execution!");
+			while (true)
+				;
 		}
 	}
 }

@@ -17,10 +17,13 @@ namespace LibTests {
 		static void Main(string[] args) {
 			Console.Title = "LibTests";
 
-			using (NativeProcess LibTests2 = NativeProcess.Create("LibTests2.exe", "", ProcessCreationFlags.CREATE_SUSPENDED)) {
-				LibTests2.Resume();
+			using (NativeProcess TEST = NativeProcess.Create(null, "TEST.exe", ProcessCreationFlags.CREATE_SUSPENDED)) {
+				TEST.ExecEmptyThread();
+				TEST.Resume();
+				Thread.Sleep(500);
+				TEST.TerminateProcess();
 			}
-
+			
 			Console.WriteLine("Done!");
 			Console.ReadLine();
 			Environment.Exit(0);

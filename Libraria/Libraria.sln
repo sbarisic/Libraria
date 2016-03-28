@@ -20,7 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{ADB8AC
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibTests2", "LibTests2\LibTests2.csproj", "{EC384A52-EF82-44D0-B527-B1FD86186B28}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TEST", "LibTests2\TEST.csproj", "{EC384A52-EF82-44D0-B527-B1FD86186B28}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
