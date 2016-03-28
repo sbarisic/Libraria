@@ -5,6 +5,7 @@ using System.Text;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using System.IO;
 
 namespace Libraria.Native {
 	public unsafe static class Kernel32 {
@@ -144,5 +145,17 @@ namespace Libraria.Native {
 
 		[DllImport(Lib, SetLastError = true, CharSet = CSet, CallingConvention = CConv)]
 		public static extern bool TerminateProcess(IntPtr Proc, uint ExitCode);
+
+		[DllImport(Lib, SetLastError = true, CharSet = CSet, CallingConvention = CConv)]
+		public static extern FileType GetFileType(IntPtr Handle);
+
+		[DllImport(Lib, SetLastError = true, CharSet = CSet, CallingConvention = CConv)]
+		public static extern IntPtr GetStdHandle(StdHandle Std);
+
+		[DllImport(Lib, SetLastError = true, CharSet = CSet, CallingConvention = CConv)]
+		public static extern void SetStdHandle(StdHandle Std, IntPtr handle);
+
+		[DllImport(Lib, SetLastError = true, CharSet = CSet, CallingConvention = CConv)]
+		public static extern IntPtr CreateFile(string FileName, FileAccess A, FileShare S, IntPtr Sec, FileMode M, FileAttributes Attr, IntPtr Templ);
 	}
 }

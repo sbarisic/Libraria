@@ -43,6 +43,13 @@ namespace Libraria.Native {
 			return RtlCloneUserProcess(Flags, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, ProcessInfo);
 		}
 
+		public static CloneStatus RtlCloneUserProcess(CloneProcessFlags Flags, ref ProcessInfo ProcessInfo) {
+			fixed (ProcessInfo* ProcessInfoPtr = &ProcessInfo)
+			{
+				return RtlCloneUserProcess(Flags, ProcessInfoPtr);
+			}
+		}
+
 		[DllImport(Lib, SetLastError = true, CallingConvention = CConv)]
 		public static extern bool RtlCreateUserThread(IntPtr Proc, IntPtr SecDesc, bool CreateSuspended, uint StackZeroBits,
 			uint StackReserved, uint StackCommit, IntPtr StartAddr, IntPtr StartParam, IntPtr Thread, CLIENT_ID* Result);

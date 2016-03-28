@@ -95,4 +95,17 @@ namespace Libraria.Native {
 		ProcessImageFileName = 27,
 		ProcessBreakOnTermination = 29,
 	}
+
+	public enum StdHandle : int {
+		IN = -10,
+		OUT = -11,
+		ERR = -12
+	}
+
+	public enum FileType {
+		Unknown,
+		Disk,
+		Char,
+		Pipe
+	};
 }
