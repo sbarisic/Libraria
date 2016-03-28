@@ -35,20 +35,9 @@ namespace Libraria.Native {
 		[DllImport(Lib, SetLastError = true, CharSet = CSet)]
 		public static extern int LdrUnloadDll(IntPtr Module);
 
-		[DllImport(Lib, SetLastError = true, CallingConvention = CConv)]
+		[DllImport(Lib, CallingConvention = CConv)]
 		public static extern CloneStatus RtlCloneUserProcess(CloneProcessFlags Flags, IntPtr ProcSecDesc, IntPtr ThreadSecDesc,
 			IntPtr DebugPort, ProcessInfo* ProcessInfo);
-
-		public static CloneStatus RtlCloneUserProcess(CloneProcessFlags Flags, ProcessInfo* ProcessInfo) {
-			return RtlCloneUserProcess(Flags, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, ProcessInfo);
-		}
-
-		public static CloneStatus RtlCloneUserProcess(CloneProcessFlags Flags, ref ProcessInfo ProcessInfo) {
-			fixed (ProcessInfo* ProcessInfoPtr = &ProcessInfo)
-			{
-				return RtlCloneUserProcess(Flags, ProcessInfoPtr);
-			}
-		}
 
 		[DllImport(Lib, SetLastError = true, CallingConvention = CConv)]
 		public static extern bool RtlCreateUserThread(IntPtr Proc, IntPtr SecDesc, bool CreateSuspended, uint StackZeroBits,

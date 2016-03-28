@@ -78,9 +78,13 @@ namespace Libraria.Native {
 
 	[Flags]
 	public enum CloneProcessFlags : uint {
-		CreateSuspended = 0x1,
-		InheritHandles = 0x2,
-		NoSync = 0x4,
+		CreateSuspended = 1,
+		InheritHandles = 2,
+		NoSync = 4,
+		Unknown1 = 8,
+		Unknown2 = 16,
+		Unknown3 = 32,
+		Unknown4 = 64
 	}
 
 	public enum CloneStatus : int {

@@ -14,5 +14,11 @@ namespace Libraria.Native {
 
 		[DllImport(Lib, SetLastError = true, CharSet = CSet, CallingConvention = CConv)]
 		public static extern IntPtr freopen(string Filename, string Mode, IntPtr Stream);
+
+		[DllImport(Lib, CharSet = CSet, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int setjmp(IntPtr Buf);
+
+		[DllImport(Lib, CharSet = CSet, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void longjmp(IntPtr Buf, int Val);
 	}
 }

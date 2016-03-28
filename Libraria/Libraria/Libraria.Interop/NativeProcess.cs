@@ -72,8 +72,8 @@ namespace Libraria.Interop {
 			return Ret;
 		}
 
-		public void ExecEmptyThread() {
-			ExecThread(Kernel32.GetProcAddress(Kernel32.GetModuleHandle("kernel32.dll"), "ExitThread"), IntPtr.Zero, true);
+		public void ExecEmptyThread(bool Wait = true) {
+			ExecThread(Kernel32.GetProcAddress(Kernel32.GetModuleHandle("kernel32.dll"), "ExitThread"), IntPtr.Zero, Wait);
 		}
 
 		public IntPtr Allocate(byte[] Bytes) {

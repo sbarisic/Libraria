@@ -28,8 +28,8 @@ namespace Libraria.Native {
 
 	[StructLayout(LayoutKind.Sequential)]
 	public struct CLIENT_ID {
-		public uint ProcessID;
-		public uint ThreadID;
+		public IntPtr ProcessID;
+		public IntPtr ThreadID;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -57,8 +57,8 @@ namespace Libraria.Native {
 			this.Process = Process;
 			this.Thread = Thread;
 			this.ClientID = new CLIENT_ID();
-			this.ClientID.ProcessID = PID;
-			this.ClientID.ThreadID = TID;
+			this.ClientID.ProcessID = (IntPtr)PID;
+			this.ClientID.ThreadID = (IntPtr)TID;
 		}
 	}
 
