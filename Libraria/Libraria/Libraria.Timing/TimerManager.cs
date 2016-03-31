@@ -9,7 +9,7 @@ namespace Libraria.Timing {
 		HashSet<Timer> Timers;
 		Queue<Timer> RemoveQueue;
 
-		public int ActiveTimers
+		public int TimerCount
 		{
 			get
 			{
@@ -25,9 +25,13 @@ namespace Libraria.Timing {
 			RemoveQueue = new Queue<Timer>();
 		}
 
+		public Timer[] GetAll() {
+			return Timers.ToArray();
+		}
+
 		public void Add(Timer T) {
 			if (Timers.Contains(T))
-				throw new Exception("Timer already exists");
+				throw new Exception("Timer already exists: " + T);
 
 			Timers.Add(T);
 			if (TimerAdded != null)
@@ -41,7 +45,7 @@ namespace Libraria.Timing {
 
 		public void Remove(Timer T) {
 			if (!Timers.Contains(T))
-				throw new Exception("Timer doesn't exist");
+				throw new Exception("Timer doesn't exist: " + T);
 
 			Timers.Remove(T);
 			if (TimerRemoved != null)
