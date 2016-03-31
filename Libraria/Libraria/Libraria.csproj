@@ -65,6 +65,10 @@
     <Compile Include="Libraria.Reflection\RuntimeExtensions\Structures.cs" />
     <Compile Include="Libraria.Reflection\ReflectionRuntime.cs" />
     <Compile Include="Libraria.Security\Privilege.cs" />
+    <Compile Include="Libraria.Timing\TimerManager.cs" />
+    <Compile Include="Libraria.Timing\Watchdog.cs" />
+    <Compile Include="Libraria.Timing\Clock.cs" />
+    <Compile Include="Libraria.Timing\Timer.cs" />
     <Compile Include="Libraria\ArrayUtils.cs" />
     <Compile Include="Libraria\ProcessUtils.cs" />
     <Compile Include="Libraria\StringUtils.cs" />
