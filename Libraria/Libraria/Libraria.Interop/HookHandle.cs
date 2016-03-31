@@ -4,8 +4,8 @@ using System.Runtime.InteropServices;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Collections.Generic;
-using Libraria.Interop.Memory;
 using Libraria.Native;
+using Libraria.Interop.Memory;
 
 namespace Libraria.Interop {
 	/// <summary>
@@ -51,7 +51,7 @@ namespace Libraria.Interop {
 			_OriginalIntro = originalIntro;
 			_HookedIntro = hookedIntro;
 			HookHandles.Add(this);
-			//Hook();
+			Hook();
 		}
 
 		/// <summary>
@@ -184,8 +184,8 @@ namespace Libraria.Interop {
 			var oldMethod = ((Delegate)(object)old).Method;
 			var newMethod = ((Delegate)(object)@new).Method;
 
-			if (oldMethod.ReturnType.IsAssignableFrom(newMethod.ReturnType))
-				throw new ArgumentException("Return type mismatch: " + newMethod.ReturnType + " isn't assignable to " + oldMethod.ReturnType + ".");
+			/*if (oldMethod.ReturnType.IsAssignableFrom(newMethod.ReturnType))
+				throw new ArgumentException("Return type mismatch: " + newMethod.ReturnType + " isn't assignable to " + oldMethod.ReturnType + ".");*/
 
 			// TODO: Check if this works despite the apparent mismatch.
 			// I think it's impossible due to unbalancing the stack or something along those lines,

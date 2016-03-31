@@ -15,14 +15,13 @@ using Libraria.Patterns;
 using Libraria.Interop.Memory;
 using Libraria.Interop;
 using Libraria.Timing;
-using Timer = Libraria.Timing.Timer;
-using TTimer = System.Threading.Timer;
 
 namespace LibTests {
 	public unsafe class Program {
+		static object Obj { get; set; }
+
 		static void Main(string[] Args) {
 			Console.Title = "LibTests";
-			Console.WriteLine("Running!");
 			
 			Console.WriteLine("Done!");
 			Console.ReadLine();

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.ComponentModel;
 using Libraria.Native;
 
 namespace Libraria.Interop.Memory {
@@ -59,7 +60,8 @@ namespace Libraria.Interop.Memory {
 
 		public static VirtualProtectHandle Protect(IntPtr address, int size, MemProtection newProtection) {
 			MemProtection oldProtection;
-			Kernel32.VirtualProtect(address, size, newProtection, out oldProtection);
+			if (!Kernel32.VirtualProtect(address, size, newProtection, out oldProtection))
+				throw new Win32Exception();
 			return new VirtualProtectHandle(address, size, oldProtection);
 		}
 	}
