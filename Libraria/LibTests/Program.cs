@@ -10,30 +10,24 @@ using System.Reflection.Emit;
 using Microsoft.Win32.SafeHandles;
 using System.Diagnostics;
 using Libraria;
-using Libraria.AI;
+using Libraria.Interop;
+using Libraria.Native;
 
 namespace LibTests {
 	public unsafe class Program {
 		static void Main(string[] Args) {
 			Console.Title = "LibTests";
 
-			BehaviorNetwork N = new BehaviorNetwork();
-			N["Hunger"] = 0;
+			IntPtr NativeTest = Kernel32.LoadLibrary("NativeTest.dll");
+			Symbol[] Exports = Dll.GetExports(NativeTest);
 
-			N.Add((This) => Console.WriteLine("Doin' nothing"), (This) => 42);
+			for (int i = 0; i < Exports.Length; i++) {
+				string Name = Exports[i].Name;
+				string Unmangled = DebugHelp.Demangle(Name);
 
-			N.Add((This) => {
-				Console.WriteLine("Eating; {0}", This["Hunger"]);
-				This["Hunger"] = 0;
-			}, (This) => {
-				return (int)This["Hunger"];
-			});
-
-			while (true) {
-				Thread.Sleep(100);
-				N["Hunger"] = (int)N["Hunger"] + 1;
-				N.Decide();
+				Console.WriteLine("{0} - {1}", Name, Unmangled);
 			}
+
 
 			Console.WriteLine("Done!");
 			Console.ReadLine();

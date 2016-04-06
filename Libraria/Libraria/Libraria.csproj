@@ -49,6 +49,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AI\BehaviorNetwork.cs" />
+    <Compile Include="Interop\DebugHelp.cs" />
+    <Compile Include="Interop\Dll.cs" />
     <Compile Include="Interop\Placement.cs" />
     <Compile Include="Interop\Fork.cs" />
     <Compile Include="Interop\HookHandle.cs" />
@@ -57,6 +59,7 @@
     <Compile Include="Interop\NativeProcess.cs" />
     <Compile Include="IO\PathExtended.cs" />
     <Compile Include="Native\Enums.cs" />
+    <Compile Include="Native\DbgHelp.cs" />
     <Compile Include="Native\PsAPI.cs" />
     <Compile Include="Native\Msvcrt.cs" />
     <Compile Include="Native\NtDll.cs" />

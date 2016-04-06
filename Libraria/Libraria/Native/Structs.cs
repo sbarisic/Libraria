@@ -226,4 +226,18 @@ namespace Libraria.Native {
 		public fixed ushort Res2[10];
 		public uint LFaNew;
 	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct IMAGE_SECTION_HEADER {
+		public fixed byte Name[8];
+		public int PhysicalAddress_VirtualSize;
+		public int VirtualAddress;
+		public int SizeOfRawData;
+		public int PointerToRawData;
+		public int PointerToRelocations;
+		public int PointerToLinenumbers;
+		public short NumerOfRelocations;
+		public short NumberOfLinenumbers;
+		public int Characteristics;
+	}
 }
