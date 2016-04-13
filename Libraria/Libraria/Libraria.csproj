@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Libraria</RootNamespace>
     <AssemblyName>Libraria</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -40,6 +40,9 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Numerics.Vectors" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -49,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AI\BehaviorNetwork.cs" />
+    <Compile Include="Graphics\Resolution.cs" />
     <Compile Include="Interop\DebugHelp.cs" />
     <Compile Include="Interop\Dll.cs" />
     <Compile Include="Interop\Placement.cs" />
@@ -74,6 +78,7 @@
     <Compile Include="Reflection\RuntimeExtensions\Structures.cs" />
     <Compile Include="Reflection\ReflectionRuntime.cs" />
     <Compile Include="Security\Privilege.cs" />
+    <Compile Include="Serialization\JSON.cs" />
     <Compile Include="Timing\TimerManager.cs" />
     <Compile Include="Timing\Watchdog.cs" />
     <Compile Include="Timing\Clock.cs" />

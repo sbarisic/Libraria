@@ -28,7 +28,6 @@ namespace LibTests {
 				Console.WriteLine("{0} - {1}", Name, Unmangled);
 			}
 
-
 			Console.WriteLine("Done!");
 			Console.ReadLine();
 			Environment.Exit(0);

@@ -7,9 +7,15 @@ namespace Libraria {
 	public static class ArrayUtils {
 		public static T[] Append<T>(this T[] A, T[] B) {
 			T[] New = new T[A.Length + B.Length];
-			Array.Copy(A, New, A.Length);
-			Array.Copy(B, 0, New, A.Length, B.Length);
+			if (A.Length > 0)
+				Array.Copy(A, New, A.Length);
+			if (B.Length > 0)
+				Array.Copy(B, 0, New, A.Length, B.Length);
 			return New;
+		}
+
+		public static T[] Append<T>(this T[] A, T B) {
+			return A.Append(new T[] { B });
 		}
 
 		public static T[] Sub<T>(this T[] A, int Idx, int Len) {
