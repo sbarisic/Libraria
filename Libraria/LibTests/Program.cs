@@ -14,23 +14,34 @@ using Libraria.Interop;
 using Libraria.Native;
 
 namespace LibTests {
+	static unsafe class NativeTestLib {
+		[DllImport("NativeTest.dll", CallingConvention = CallingConvention.Cdecl)]
+		public static extern void NativeTest();
+	}
+
+
 	public unsafe class Program {
 		static void Main(string[] Args) {
 			Console.Title = "LibTests";
 
-			IntPtr NativeTest = Kernel32.LoadLibrary("NativeTest.dll");
-			Symbol[] Exports = Dll.GetExports(NativeTest);
+			/*Process[] Processes = Process.GetProcesses().OrderBy((P) => P.ProcessName).ToArray();
+			for (int i = 0; i < Processes.Length; i++)
+				if (Processes[i].ProcessName == "test.elf") {
+					Hax(Processes[i]);
+					break;
+				}*/
 
-			for (int i = 0; i < Exports.Length; i++) {
-				string Name = Exports[i].Name;
-				string Unmangled = DebugHelp.Demangle(Name);
-
-				Console.WriteLine("{0} - {1}", Name, Unmangled);
-			}
+			NativeTestLib.NativeTest();
 
 			Console.WriteLine("Done!");
 			Console.ReadLine();
 			Environment.Exit(0);
+		}
+
+		static void Hax(Process P) {
+			using (NativeProcess NP = new NativeProcess(P)) {
+				NP.ExecEmptyThread();
+			}
 		}
 	}
 }

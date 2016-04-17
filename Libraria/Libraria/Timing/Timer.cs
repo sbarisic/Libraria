@@ -8,8 +8,12 @@ using TimerAction = System.Action<Libraria.Timing.Timer>;
 
 namespace Libraria.Timing {
 	public class Timer {
+		public static Timer Single(TimerAction A) {
+			return Single(DateTime.Now, A);
+		}
+
 		public static Timer Single(DateTime StartOn, TimerAction A) {
-			return Create(DateTime.Now, TimeSpan.Zero, 1, A);
+			return Create(StartOn, TimeSpan.Zero, 1, A);
 		}
 
 		public static Timer Create(TimeSpan Interval, TimerAction A) {
@@ -28,6 +32,7 @@ namespace Libraria.Timing {
 			return new Timer(StartOn, Interval, LoopCount, A);
 		}
 
+		public event TimerAction OnKilled;
 		public bool Dead { get; private set; }
 		public int Loop { get { return CurCount; } }
 		public object Userdata;
@@ -50,16 +55,26 @@ namespace Libraria.Timing {
 			Dead = false;
 		}
 
+		public void Kill() {
+			if (Dead)
+				return;
+
+			Dead = true;
+			if (OnKilled != null)
+				OnKilled(this);
+		}
+
 		public void Tick() {
 			if (Dead)
 				return;
+
 			if (Clock.Elapsed(Next)) {
 				if (CurCount < LoopCount || LoopCount == -1) {
 					A(this);
 					CurCount++;
 					Next += Interval;
 				} else
-					Dead = true;
+					Kill();
 			}
 		}
 	}

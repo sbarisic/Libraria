@@ -34,6 +34,16 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Unix|AnyCPU'">
+    <OutputPath>bin\Unix\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -62,6 +72,7 @@
     <Compile Include="Interop\NativeBinder.cs" />
     <Compile Include="Interop\NativeProcess.cs" />
     <Compile Include="IO\PathExtended.cs" />
+    <Compile Include="Maths.cs" />
     <Compile Include="Native\Enums.cs" />
     <Compile Include="Native\DbgHelp.cs" />
     <Compile Include="Native\PsAPI.cs" />
@@ -78,6 +89,7 @@
     <Compile Include="Reflection\RuntimeExtensions\Structures.cs" />
     <Compile Include="Reflection\ReflectionRuntime.cs" />
     <Compile Include="Security\Privilege.cs" />
+    <Compile Include="Serialization\Binary.cs" />
     <Compile Include="Serialization\JSON.cs" />
     <Compile Include="Timing\TimerManager.cs" />
     <Compile Include="Timing\Watchdog.cs" />
