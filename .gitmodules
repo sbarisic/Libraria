@@ -1,0 +1,3 @@
+[submodule "Libraria.Rendering/Bgfx"]
+	path = Libraria.Rendering/Bgfx
+	url = git@github.com:MikePopoloski/SharpBgfx.git
