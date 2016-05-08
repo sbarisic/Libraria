@@ -46,6 +46,12 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Bgfx\SharpBgfx\SharpBgfx.csproj">
+      <Project>{4de918d2-89ab-433d-9f22-be0407ff0e59}</Project>
+      <Name>SharpBgfx</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="..\LibSerialization\LibSerialization.projitems" Label="Shared" />
   <Import Project="..\Libraria.Net\Libraria.Net.projitems" Label="Shared" />
   <Import Project="..\System.Text\System.Text.projitems" Label="Shared" />

@@ -8,7 +8,4 @@
   <PropertyGroup Label="Configuration">
     <Import_RootNamespace>Libraria.Rendering</Import_RootNamespace>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Bgfx\SharpBgfx.cs" />
-  </ItemGroup>
 </Project>
