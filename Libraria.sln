@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_Libraria", "Libraria\_Libraria.csproj", "{61B3FDD4-0D3F-463A-B045-D5CA4397AF7F}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Libraria.Serialization", "LibSerialization\Libraria.Serialization.shproj", "{7983364E-188D-4F59-93CE-34BFC46EB2DF}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Libraria.Net", "Libraria.Net\Libraria.Net.shproj", "{056703DB-B153-449E-AFC1-91F5A2E6D1F2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E759555B-9CD0-407C-A018-FFE1D99FCDBC}"
+	ProjectSection(SolutionItems) = preProject
+		Rebracer.xml = Rebracer.xml
+	EndProjectSection
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Libraria.Text", "System.Text\Libraria.Text.shproj", "{E3E83306-C106-4407-8553-4842CD12611C}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Libraria.Timing", "Libraria.Timing\Libraria.Timing.shproj", "{A4F8716B-0270-434F-AF0B-48218D837AE3}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Libraria", "LibrariaShared\Libraria.shproj", "{99332A23-0360-472B-B311-7DA8705486AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_LibrariaLite", "LibrariaLite\_LibrariaLite.csproj", "{8F48F330-0845-4C88-BFDB-A78A7D684609}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Libraria.Timing\Libraria.Timing.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
+		System.Text\System.Text.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
+		LibrariaShared\LibrariaShared.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
+		LibSerialization\LibSerialization.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
+		Libraria.Net\Libraria.Net.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
+		LibrariaShared\LibrariaShared.projitems*{99332a23-0360-472b-b311-7da8705486aa}*SharedItemsImports = 13
+		Libraria.Timing\Libraria.Timing.projitems*{a4f8716b-0270-434f-af0b-48218d837ae3}*SharedItemsImports = 13
+		Libraria.Timing\Libraria.Timing.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
+		System.Text\System.Text.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
+		LibrariaShared\LibrariaShared.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
+		LibSerialization\LibSerialization.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
+		Libraria.Net\Libraria.Net.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
+		Libraria.Net\Libraria.Net.projitems*{056703db-b153-449e-afc1-91f5a2e6d1f2}*SharedItemsImports = 13
+		LibSerialization\LibSerialization.projitems*{7983364e-188d-4f59-93ce-34bfc46eb2df}*SharedItemsImports = 13
+		System.Text\System.Text.projitems*{e3e83306-c106-4407-8553-4842cd12611c}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{61B3FDD4-0D3F-463A-B045-D5CA4397AF7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61B3FDD4-0D3F-463A-B045-D5CA4397AF7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61B3FDD4-0D3F-463A-B045-D5CA4397AF7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61B3FDD4-0D3F-463A-B045-D5CA4397AF7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F48F330-0845-4C88-BFDB-A78A7D684609}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F48F330-0845-4C88-BFDB-A78A7D684609}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F48F330-0845-4C88-BFDB-A78A7D684609}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F48F330-0845-4C88-BFDB-A78A7D684609}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

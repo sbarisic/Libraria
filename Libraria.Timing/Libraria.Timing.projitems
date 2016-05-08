@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>a4f8716b-0270-434f-af0b-48218d837ae3</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Libraria.Timing</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Clock.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Timer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TimerManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Watchdog.cs" />
+  </ItemGroup>
+</Project>
