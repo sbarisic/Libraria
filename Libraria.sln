@@ -22,13 +22,17 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Libraria", "LibrariaShared\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_LibrariaLite", "LibrariaLite\_LibrariaLite.csproj", "{8F48F330-0845-4C88-BFDB-A78A7D684609}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Libraria.Rendering", "Libraria.Rendering\Libraria.Rendering.shproj", "{BA38D370-64C0-4F7E-BD6A-387B63082175}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Libraria.Timing\Libraria.Timing.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
 		System.Text\System.Text.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
 		LibrariaShared\LibrariaShared.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
+		Libraria.Rendering\Libraria.Rendering.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
 		LibSerialization\LibSerialization.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
 		Libraria.Net\Libraria.Net.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
+		Libraria.Rendering\Libraria.Rendering.projitems*{ba38d370-64c0-4f7e-bd6a-387b63082175}*SharedItemsImports = 13
 		LibrariaShared\LibrariaShared.projitems*{99332a23-0360-472b-b311-7da8705486aa}*SharedItemsImports = 13
 		Libraria.Timing\Libraria.Timing.projitems*{a4f8716b-0270-434f-af0b-48218d837ae3}*SharedItemsImports = 13
 		Libraria.Timing\Libraria.Timing.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
