@@ -3,12 +3,13 @@
   <PropertyGroup>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <HasSharedItems>true</HasSharedItems>
-    <SharedGUID>ba38d370-64c0-4f7e-bd6a-387b63082175</SharedGUID>
+    <SharedGUID>e6a51e73-a70b-47bc-9fee-52110848208f</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>Libraria.Rendering</Import_RootNamespace>
+    <Import_RootNamespace>Libraria.Reflection</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)RenderWindow.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Assemblies.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Plugin.cs" />
   </ItemGroup>
 </Project>

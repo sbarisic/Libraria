@@ -9,6 +9,7 @@
     <Import_RootNamespace>Libraria</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)EventPool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Maths.cs" />
   </ItemGroup>
 </Project>
