@@ -3,15 +3,13 @@
   <PropertyGroup>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <HasSharedItems>true</HasSharedItems>
-    <SharedGUID>99332a23-0360-472b-b311-7da8705486aa</SharedGUID>
+    <SharedGUID>16e24d64-2ed1-407a-aff4-5aa00e051e35</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>Libraria</Import_RootNamespace>
+    <Import_RootNamespace>Libraria.Physics</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)AABB.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Circle2D.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)EventPool.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Maths.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PhysicsBody.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PhysicsWorld.cs" />
   </ItemGroup>
 </Project>

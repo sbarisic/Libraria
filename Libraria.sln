@@ -30,29 +30,34 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Libraria.Reflection", "Libr
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Libraria.IO", "Libraria.IO\Libraria.IO.shproj", "{C6FCD7A6-DF52-410C-8268-7FA94083C7E9}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Libraria.Physics", "Libraria.Physics\Libraria.Physics.shproj", "{16E24D64-2ED1-407A-AFF4-5AA00E051E35}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Libraria.Timing\Libraria.Timing.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
-		System.Text\System.Text.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
-		Libraria.Reflection\Libraria.Reflection.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
-		Libraria.IO\Libraria.IO.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
 		Libraria.Rendering\Libraria.Rendering.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
-		LibrariaShared\LibrariaShared.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
+		Libraria.Physics\Libraria.Physics.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
+		Libraria.Timing\Libraria.Timing.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
+		Libraria.Reflection\Libraria.Reflection.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
 		Libraria.Net\Libraria.Net.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
+		LibrariaShared\LibrariaShared.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
+		Libraria.IO\Libraria.IO.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
+		System.Text\System.Text.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
 		LibSerialization\LibSerialization.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
 		Libraria.Rendering\Libraria.Rendering.projitems*{ba38d370-64c0-4f7e-bd6a-387b63082175}*SharedItemsImports = 13
 		LibrariaShared\LibrariaShared.projitems*{99332a23-0360-472b-b311-7da8705486aa}*SharedItemsImports = 13
 		Libraria.Timing\Libraria.Timing.projitems*{a4f8716b-0270-434f-af0b-48218d837ae3}*SharedItemsImports = 13
 		Libraria.Reflection\Libraria.Reflection.projitems*{e6a51e73-a70b-47bc-9fee-52110848208f}*SharedItemsImports = 13
+		Libraria.Physics\Libraria.Physics.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
 		Libraria.Timing\Libraria.Timing.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
-		System.Text\System.Text.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
 		Libraria.Reflection\Libraria.Reflection.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
-		Libraria.IO\Libraria.IO.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
-		LibrariaShared\LibrariaShared.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
 		Libraria.Net\Libraria.Net.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
+		LibrariaShared\LibrariaShared.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
+		Libraria.IO\Libraria.IO.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
+		System.Text\System.Text.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
 		LibSerialization\LibSerialization.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
 		Libraria.Net\Libraria.Net.projitems*{056703db-b153-449e-afc1-91f5a2e6d1f2}*SharedItemsImports = 13
 		LibSerialization\LibSerialization.projitems*{7983364e-188d-4f59-93ce-34bfc46eb2df}*SharedItemsImports = 13
+		Libraria.Physics\Libraria.Physics.projitems*{16e24d64-2ed1-407a-aff4-5aa00e051e35}*SharedItemsImports = 13
 		Libraria.IO\Libraria.IO.projitems*{c6fcd7a6-df52-410c-8268-7fa94083c7e9}*SharedItemsImports = 13
 		System.Text\System.Text.projitems*{e3e83306-c106-4407-8553-4842cd12611c}*SharedItemsImports = 13
 	EndGlobalSection

@@ -7,7 +7,6 @@ using System.Text;
 namespace Libraria.Timing {
 	public class TimerManager {
 		HashSet<Timer> Timers;
-		Queue<Timer> RemoveQueue;
 
 		public int TimerCount
 		{
@@ -22,7 +21,6 @@ namespace Libraria.Timing {
 
 		public TimerManager() {
 			Timers = new HashSet<Timer>();
-			RemoveQueue = new Queue<Timer>();
 		}
 
 		public Timer[] GetAll() {
@@ -58,16 +56,13 @@ namespace Libraria.Timing {
 		}
 
 		public void Tick() {
-			RemoveQueue.Clear();
+			Timer[] DemTimers = Timers.ToArray();
 
-			foreach (var T in Timers) {
+			foreach (var T in DemTimers) {
 				T.Tick();
 				if (T.Dead)
-					RemoveQueue.Enqueue(T);
+					Remove(T);
 			}
-
-			if (RemoveQueue.Count > 0)
-				Remove(RemoveQueue);
 		}
 	}
 }
