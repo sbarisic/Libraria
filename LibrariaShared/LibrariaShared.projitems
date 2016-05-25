@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)AABB.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Circle2D.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EventPool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IEnumerableExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Maths.cs" />
   </ItemGroup>
 </Project>
