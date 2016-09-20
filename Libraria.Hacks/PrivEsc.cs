@@ -18,7 +18,7 @@ namespace Libraria.Hacks {
 			RegistryKey K = Registry.CurrentUser.CreateSubKey("Software\\Classes\\mscfile\\shell\\open\\command", true);
 			K.SetValue("", FileName);
 
-			string VwrPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "System32", "eventvwr.exe");
+			string VwrPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "eventvwr.exe");
 			Process.Start(VwrPath).WaitForExit();
 
 			Registry.CurrentUser.DeleteSubKeyTree("Software\\Classes\\mscfile");
