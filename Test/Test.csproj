@@ -4,16 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{61B3FDD4-0D3F-463A-B045-D5CA4397AF7F}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{B378557B-9AAF-463E-AFFE-ED217DA106EF}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Libraria</RootNamespace>
-    <AssemblyName>Libraria</AssemblyName>
+    <RootNamespace>Test</RootNamespace>
+    <AssemblyName>Test</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,6 +25,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\bin\</OutputPath>
@@ -35,12 +37,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -49,24 +45,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Bgfx\SharpBgfx\SharpBgfx.csproj">
-      <Project>{4de918d2-89ab-433d-9f22-be0407ff0e59}</Project>
-      <Name>SharpBgfx</Name>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LibrariaLite\_LibrariaLite.csproj">
+      <Project>{8f48f330-0845-4c88-bfdb-a78a7d684609}</Project>
+      <Name>_LibrariaLite</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="..\LibSerialization\LibSerialization.projitems" Label="Shared" />
-  <Import Project="..\Libraria.Net\Libraria.Net.projitems" Label="Shared" />
-  <Import Project="..\System.Text\System.Text.projitems" Label="Shared" />
-  <Import Project="..\Libraria.Timing\Libraria.Timing.projitems" Label="Shared" />
-  <Import Project="..\LibrariaShared\LibrariaShared.projitems" Label="Shared" />
-  <Import Project="..\Libraria.Rendering\Libraria.Rendering.projitems" Label="Shared" />
-  <Import Project="..\Libraria.Reflection\Libraria.Reflection.projitems" Label="Shared" />
-  <Import Project="..\Libraria.IO\Libraria.IO.projitems" Label="Shared" />
-  <Import Project="..\Libraria.Physics\Libraria.Physics.projitems" Label="Shared" />
-  <Import Project="..\Libraria.Hacks\Libraria.Hacks.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
