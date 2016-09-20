@@ -3,12 +3,12 @@
   <PropertyGroup>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <HasSharedItems>true</HasSharedItems>
-    <SharedGUID>7fde4d3f-106e-4389-90b1-9950ea6dd8dc</SharedGUID>
+    <SharedGUID>1f023340-8ce2-4bec-b2ae-290901e35c32</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>Libraria.Hacks</Import_RootNamespace>
+    <Import_RootNamespace>Libraria.Native</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)PrivEsc.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Kernel32.cs" />
   </ItemGroup>
 </Project>
