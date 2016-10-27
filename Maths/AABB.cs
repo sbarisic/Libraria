@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Numerics;
 
-namespace Libraria {
+namespace Libraria.Maths {
 	public struct AABB {
 		public Vector2 Min, Max;
 

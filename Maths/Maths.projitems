@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>7af4224b-9f67-47d2-9877-4ebd219670bc</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Libraria.Maths</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AABB.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Circle2D.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MF_Extensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MF_Scalar.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MF_Vector.cs" />
+  </ItemGroup>
+</Project>

@@ -40,6 +40,8 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Libraria.Security", "Librar
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Libraria.Native", "Libraria.Native\Libraria.Native.shproj", "{1F023340-8CE2-4BEC-B2AE-290901E35C32}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Libraria.Maths", "Maths\Libraria.Maths.shproj", "{7AF4224B-9F67-47D2-9877-4EBD219670BC}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Libraria.Net\Libraria.Net.projitems*{056703db-b153-449e-afc1-91f5a2e6d1f2}*SharedItemsImports = 13
@@ -57,8 +59,10 @@ Global
 		Libraria.Timing\Libraria.Timing.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
 		LibrariaShared\LibrariaShared.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
 		LibSerialization\LibSerialization.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
+		Maths\Maths.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
 		System.Text\System.Text.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
 		LibSerialization\LibSerialization.projitems*{7983364e-188d-4f59-93ce-34bfc46eb2df}*SharedItemsImports = 13
+		Maths\Maths.projitems*{7af4224b-9f67-47d2-9877-4ebd219670bc}*SharedItemsImports = 13
 		Libraria.Hacks\Libraria.Hacks.projitems*{7fde4d3f-106e-4389-90b1-9950ea6dd8dc}*SharedItemsImports = 13
 		Libraria.Hacks\Libraria.Hacks.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
 		Libraria.IO\Libraria.IO.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
@@ -70,6 +74,7 @@ Global
 		Libraria.Timing\Libraria.Timing.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
 		LibrariaShared\LibrariaShared.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
 		LibSerialization\LibSerialization.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
+		Maths\Maths.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
 		System.Text\System.Text.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
 		LibrariaShared\LibrariaShared.projitems*{99332a23-0360-472b-b311-7da8705486aa}*SharedItemsImports = 13
 		Libraria.Timing\Libraria.Timing.projitems*{a4f8716b-0270-434f-af0b-48218d837ae3}*SharedItemsImports = 13

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Numerics;
 
-namespace Libraria {
+namespace Libraria.Maths {
 	public struct Circle2D {
 		public Vector2 Position;
 		public float Radius;
