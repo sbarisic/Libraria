@@ -4,6 +4,7 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
+using System.Threading;
 
 namespace Libraria.Net {
 	public class TelnetClient {
@@ -34,6 +35,8 @@ namespace Libraria.Net {
 		public string Prompt;
 		public bool EscapeSequences;
 		public object Userdata;
+
+		public event Action<char> OnCharReceived;
 
 		string AliasInternal;
 		TelnetServer Server;
@@ -119,6 +122,21 @@ namespace Libraria.Net {
 					throw new Exception("Cannot send " + Args[i].GetType());
 		}
 
+		public Thread StartDispatchingReceivedInput() {
+			Thread T = new Thread(() => {
+				try {
+					while (true) {
+						char C = Read();
+						OnCharReceived?.Invoke(C);
+					}
+				} catch (Exception) {
+				}
+			});
+			T.IsBackground = true;
+			T.Start();
+			return T;
+		}
+
 		public char Read() {
 			char C = (char)Receive();
 			if (Echo && C != '\r' && C != '\n' && C != '\0') {
@@ -128,13 +146,14 @@ namespace Libraria.Net {
 			return C;
 		}
 
-		public string ReadLine(string Prompt, bool SuppressNewLine = false) {
-			CurrentInput.Clear();
+		public string ReadLine(string Prompt = "", bool SuppressNewLine = false) {
+			CurrentInput.Length = 0;
 			char In;
 
 			Reading = true;
 			this.Prompt = Prompt;
-			Write(Prompt);
+			if (Prompt.Length > 0)
+				Write(Prompt);
 
 			while ((In = Read()) != '\0' && In != '\n') {
 				if (In == '\b') {
@@ -150,24 +169,32 @@ namespace Libraria.Net {
 				Write("\r\n");
 
 			string Ret = CurrentInput.ToString().TrimEnd('\r', '\n');
-			CurrentInput.Clear();
+			CurrentInput.Length = 0;
 			Reading = false;
 			return Ret;
 		}
 
+		public void Delete(string Str) {
+			for (int i = 0; i < Str.Length; i++)
+				Write("\b \b");
+		}
+
 		bool _DisableWrite;
 		public void Write(char C) {
-			if (!EscapeSequences && C == (char)0x1B)
-				_DisableWrite = true;
-			if (!_DisableWrite || EscapeSequences)
-				ClientStream.WriteByte((byte)C);
-			if (!EscapeSequences && C == 'm')
-				_DisableWrite = false;
+			lock (this) {
+				if (!EscapeSequences && C == (char)0x1B)
+					_DisableWrite = true;
+				if (!_DisableWrite || EscapeSequences)
+					ClientStream.WriteByte((byte)C);
+				if (!EscapeSequences && C == 'm')
+					_DisableWrite = false;
+			}
 		}
 
 		public void Write(string Str) {
-			for (int i = 0; i < Str.Length; i++)
-				Write(Str[i]);
+			lock (this)
+				for (int i = 0; i < Str.Length; i++)
+					Write(Str[i]);
 		}
 
 		public void Write(string Fmt, params object[] Args) {
@@ -183,11 +210,13 @@ namespace Libraria.Net {
 		}
 
 		public void InsertLine(string Str) {
-			Write(new string(' ', (Prompt == null ? "" : Prompt).Length + CurrentInput.Length));
-			WriteLine("\r" + Str);
-			if (Reading) {
-				Write("\r" + Prompt);
-				Write(CurrentInput.ToString());
+			lock (this) {
+				Write(new string(' ', (Prompt == null ? "" : Prompt).Length + CurrentInput.Length));
+				WriteLine("\r" + Str);
+				if (Reading) {
+					Write("\r" + Prompt);
+					Write(CurrentInput.ToString());
+				}
 			}
 		}
 

@@ -10,5 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)RenderWindow.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ShaderProgram.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VertexArray.cs" />
   </ItemGroup>
 </Project>

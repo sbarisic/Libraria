@@ -10,14 +10,26 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Reflection;
 using System.Diagnostics;
-
-using Libraria.Maths;
+using Libraria.IO;
+using Libraria.Net;
 
 namespace Test {
 	class Program {
 		static void Main(string[] Args) {
-			
-			Console.WriteLine("Done!");
+			Tube A = new Tube();
+			A.ByteReceived += (Tube, Data) => Console.WriteLine("Received: {0}", Data);
+
+			Tube B = new Tube();
+			B.ByteReceived += (Tube, Data) => {
+				Console.WriteLine("Received: {0}", Data);
+				Tube.WriteByte((byte)(Data + 1));
+			};
+
+			A.Connect(B);
+
+			A.WriteByte(24);
+
+			//Console.WriteLine("Done!");
 			Console.ReadLine();
 		}
 	}

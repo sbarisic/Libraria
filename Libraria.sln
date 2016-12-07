@@ -24,8 +24,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_LibrariaLite", "LibrariaLi
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Libraria.Rendering", "Libraria.Rendering\Libraria.Rendering.shproj", "{BA38D370-64C0-4F7E-BD6A-387B63082175}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpBgfx", "Bgfx\SharpBgfx\SharpBgfx.csproj", "{4DE918D2-89AB-433D-9F22-BE0407FF0E59}"
-EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Libraria.Reflection", "Libraria.Reflection\Libraria.Reflection.shproj", "{E6A51E73-A70B-47BC-9FEE-52110848208F}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Libraria.IO", "Libraria.IO\Libraria.IO.shproj", "{C6FCD7A6-DF52-410C-8268-7FA94083C7E9}"
@@ -42,12 +40,27 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Libraria.Native", "Libraria
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Libraria.Maths", "Maths\Libraria.Maths.shproj", "{7AF4224B-9F67-47D2-9877-4EBD219670BC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibTech", "LibTech\LibTech.csproj", "{B896F669-6633-4D2A-AD52-7DB46DC711E5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "testgame", "testgame", "{D7DC3130-7DFF-4BB0-ADF7-CA16A00117EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{4DB28F85-584B-4E0B-87B2-8D1857D67C88}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{8DFA543E-3291-4BC7-8529-CFE1A0351C51}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI", "UI\UI.csproj", "{187C1428-ECCC-49A2-854F-8BBE315DD92C}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared", "Shared\Shared.shproj", "{503D9627-893D-4586-81B6-5AD614E1426F}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Libraria.Net\Libraria.Net.projitems*{056703db-b153-449e-afc1-91f5a2e6d1f2}*SharedItemsImports = 13
 		Libraria.Physics\Libraria.Physics.projitems*{16e24d64-2ed1-407a-aff4-5aa00e051e35}*SharedItemsImports = 13
+		Shared\Shared.projitems*{187c1428-eccc-49a2-854f-8bbe315dd92c}*SharedItemsImports = 4
 		Libraria.Native\Libraria.Native.projitems*{1f023340-8ce2-4bec-b2ae-290901e35c32}*SharedItemsImports = 13
+		Shared\Shared.projitems*{4db28f85-584b-4e0b-87b2-8d1857d67c88}*SharedItemsImports = 4
 		Libraria.Security\Libraria.Security.projitems*{4dc1c735-7612-434c-8c2d-7799eb8abd9e}*SharedItemsImports = 13
+		Shared\Shared.projitems*{503d9627-893d-4586-81b6-5ad614e1426f}*SharedItemsImports = 13
 		Libraria.Hacks\Libraria.Hacks.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
 		Libraria.IO\Libraria.IO.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
 		Libraria.Native\Libraria.Native.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
@@ -64,6 +77,7 @@ Global
 		LibSerialization\LibSerialization.projitems*{7983364e-188d-4f59-93ce-34bfc46eb2df}*SharedItemsImports = 13
 		Maths\Maths.projitems*{7af4224b-9f67-47d2-9877-4ebd219670bc}*SharedItemsImports = 13
 		Libraria.Hacks\Libraria.Hacks.projitems*{7fde4d3f-106e-4389-90b1-9950ea6dd8dc}*SharedItemsImports = 13
+		Shared\Shared.projitems*{8dfa543e-3291-4bc7-8529-cfe1a0351c51}*SharedItemsImports = 4
 		Libraria.Hacks\Libraria.Hacks.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
 		Libraria.IO\Libraria.IO.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
 		Libraria.Native\Libraria.Native.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
@@ -96,16 +110,34 @@ Global
 		{8F48F330-0845-4C88-BFDB-A78A7D684609}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F48F330-0845-4C88-BFDB-A78A7D684609}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F48F330-0845-4C88-BFDB-A78A7D684609}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4DE918D2-89AB-433D-9F22-BE0407FF0E59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4DE918D2-89AB-433D-9F22-BE0407FF0E59}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4DE918D2-89AB-433D-9F22-BE0407FF0E59}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4DE918D2-89AB-433D-9F22-BE0407FF0E59}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B378557B-9AAF-463E-AFFE-ED217DA106EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B378557B-9AAF-463E-AFFE-ED217DA106EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B378557B-9AAF-463E-AFFE-ED217DA106EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B378557B-9AAF-463E-AFFE-ED217DA106EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B896F669-6633-4D2A-AD52-7DB46DC711E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B896F669-6633-4D2A-AD52-7DB46DC711E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B896F669-6633-4D2A-AD52-7DB46DC711E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B896F669-6633-4D2A-AD52-7DB46DC711E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DB28F85-584B-4E0B-87B2-8D1857D67C88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DB28F85-584B-4E0B-87B2-8D1857D67C88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DB28F85-584B-4E0B-87B2-8D1857D67C88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DB28F85-584B-4E0B-87B2-8D1857D67C88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DFA543E-3291-4BC7-8529-CFE1A0351C51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DFA543E-3291-4BC7-8529-CFE1A0351C51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DFA543E-3291-4BC7-8529-CFE1A0351C51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DFA543E-3291-4BC7-8529-CFE1A0351C51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{187C1428-ECCC-49A2-854F-8BBE315DD92C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{187C1428-ECCC-49A2-854F-8BBE315DD92C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{187C1428-ECCC-49A2-854F-8BBE315DD92C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{187C1428-ECCC-49A2-854F-8BBE315DD92C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4DB28F85-584B-4E0B-87B2-8D1857D67C88} = {D7DC3130-7DFF-4BB0-ADF7-CA16A00117EA}
+		{8DFA543E-3291-4BC7-8529-CFE1A0351C51} = {D7DC3130-7DFF-4BB0-ADF7-CA16A00117EA}
+		{187C1428-ECCC-49A2-854F-8BBE315DD92C} = {D7DC3130-7DFF-4BB0-ADF7-CA16A00117EA}
+		{503D9627-893D-4586-81B6-5AD614E1426F} = {D7DC3130-7DFF-4BB0-ADF7-CA16A00117EA}
 	EndGlobalSection
 EndGlobal

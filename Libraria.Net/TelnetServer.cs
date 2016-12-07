@@ -6,6 +6,7 @@ using System.Threading;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Diagnostics;
 
 namespace Libraria.Net {
 	public enum TelnetCommand : byte {
@@ -30,7 +31,7 @@ namespace Libraria.Net {
 		Socket ServerSocket;
 		int Port;
 
-		public event Action<TelnetClient> OnConnected;
+		public Action<TelnetClient> OnConnected;
 		public event Action<TelnetClient, string, string> OnAliasChanged;
 		public event Action<string> OnWrite;
 
@@ -41,8 +42,7 @@ namespace Libraria.Net {
 		}
 
 		public void RaiseOnAliasChanged(TelnetClient C, string Old, string New) {
-			if (OnAliasChanged != null)
-				OnAliasChanged(C, Old, New);
+			OnAliasChanged?.Invoke(C, Old, New);
 		}
 
 		public void Run() {
@@ -54,11 +54,25 @@ namespace Libraria.Net {
 			while (Running) {
 				Socket ClientSocket = ServerSocket.Accept();
 				TelnetClient Client = new TelnetClient(this, ClientSocket, DateTime.Now);
-				Clients.Add(Client);
+				lock (Clients)
+					Clients.Add(Client);
 
-				if (OnConnected != null)
-					OnConnected(Client);
+				// TODO: Better way
+				Thread ClientThread = new Thread((C) => {
+					OnConnected?.Invoke((TelnetClient)C);
+					lock (Clients)
+						Clients.Remove((TelnetClient)C);
+				});
+				ClientThread.IsBackground = true;
+				ClientThread.Start(Client);
 			}
+		}
+
+		public Thread RunAsync() {
+			Thread T = new Thread(Run);
+			T.IsBackground = true;
+			T.Start();
+			return T;
 		}
 
 		public void Close() {
@@ -66,24 +80,24 @@ namespace Libraria.Net {
 		}
 
 		public void Write(char C) {
-			if (OnWrite != null)
-				OnWrite(C.ToString());
-			foreach (var Cl in Clients)
-				Cl.Write(C);
+			OnWrite?.Invoke(C.ToString());
+			lock (Clients)
+				foreach (var Cl in Clients)
+					Cl.Write(C);
 		}
 
 		public void Write(string Str) {
-			if (OnWrite != null)
-				OnWrite(Str);
-			foreach (var Cl in Clients)
-				Cl.Write(Str);
+			OnWrite?.Invoke(Str);
+			lock (Clients)
+				foreach (var Cl in Clients)
+					Cl.Write(Str);
 		}
 
 		public void WriteLine(string Str) {
-			if (OnWrite != null)
-				OnWrite(Str + "\n");
-			foreach (var Cl in Clients)
-				Cl.WriteLine(Str);
+			OnWrite?.Invoke(Str + "\n");
+			lock (Clients)
+				foreach (var Cl in Clients)
+					Cl.WriteLine(Str);
 		}
 
 		public void WriteLine(string Fmt, params object[] Args) {
@@ -91,10 +105,10 @@ namespace Libraria.Net {
 		}
 
 		public void InsertLine(string Str) {
-			if (OnWrite != null)
-				OnWrite(Str + "\n");
-			foreach (var Cl in Clients)
-				Cl.InsertLine(Str);
+			OnWrite?.Invoke(Str + "\n");
+			lock (Clients)
+				foreach (var Cl in Clients)
+					Cl.InsertLine(Str);
 		}
 
 		public void InsertLine(string Fmt, params object[] Args) {
@@ -102,11 +116,55 @@ namespace Libraria.Net {
 		}
 
 		public void Disconnect(TelnetClient TC) {
-			if (Clients.Contains(TC)) {
-				Clients.Remove(TC);
-				TC.ClientSocket.Disconnect(false);
-				TC.ClientSocket.Dispose();
-			}
+			lock (Clients)
+				if (Clients.Contains(TC)) {
+					Clients.Remove(TC);
+					TC.ClientSocket.Disconnect(false);
+					TC.ClientSocket.Close();
+				}
+		}
+
+		public Action<TelnetClient> CreateCommandLine() {
+			return new Action<TelnetClient>((C) => {
+				ProcessStartInfo PSI = new ProcessStartInfo("cmd");
+				PSI.RedirectStandardError = true;
+				PSI.RedirectStandardInput = true;
+				PSI.RedirectStandardOutput = true;
+				PSI.UseShellExecute = false;
+				PSI.CreateNoWindow = true;
+
+				Process P = new Process();
+				P.StartInfo = PSI;
+				P.EnableRaisingEvents = true;
+				P.Start();
+
+				Thread OutputThread = new Thread(() => {
+					while (!P.HasExited && Running)
+						C.Write((char)P.StandardOutput.Read());
+				});
+
+				Thread ErrorThread = new Thread(() => {
+					while (!P.HasExited && Running)
+						C.Write((char)P.StandardError.Read());
+				});
+
+				OutputThread.IsBackground = true;
+				OutputThread.Start();
+				ErrorThread.IsBackground = true;
+				ErrorThread.Start();
+
+				while (!P.HasExited && Running) {
+					string InLine = C.ReadLine("", true);
+					C.Delete(InLine);
+
+					P.StandardInput.WriteLine(InLine);
+					P.StandardInput.Flush();
+				}
+
+				if (!P.HasExited)
+					P.Kill();
+				C.Disconnect();
+			});
 		}
 	}
 }

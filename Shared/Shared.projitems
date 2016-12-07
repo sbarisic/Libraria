@@ -3,14 +3,11 @@
   <PropertyGroup>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <HasSharedItems>true</HasSharedItems>
-    <SharedGUID>056703db-b153-449e-afc1-91f5a2e6d1f2</SharedGUID>
+    <SharedGUID>503d9627-893d-4586-81b6-5ad614e1426f</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>Libraria.Net</Import_RootNamespace>
+    <Import_RootNamespace>Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)TelnetClient.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)TelnetServer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Webs.cs" />
   </ItemGroup>
 </Project>
