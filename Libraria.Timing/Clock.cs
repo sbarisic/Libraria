@@ -12,10 +12,12 @@ namespace Libraria.Timing {
 
 		Stopwatch SWatch;
 		DateTime CreationTime;
+		float Dt;
 
 		public Clock() {
 			SWatch = new Stopwatch();
 			CreationTime = DateTime.Now;
+			Dt = 0;
 		}
 
 		public TimeSpan SinceCreation() {
@@ -30,12 +32,15 @@ namespace Libraria.Timing {
 			return SWatch.Elapsed;
 		}
 
-		public TimeSpan AtLeast(TimeSpan TSpan, Action A) {
+		public TimeSpan AtLeast(TimeSpan TSpan, Action<float> A) {
 			SWatch.Restart();
-			A();
+
+			A(Dt);
+
 			while (SWatch.Elapsed < TSpan)
 				;
 			SWatch.Stop();
+			Dt = (float)SWatch.Elapsed.TotalSeconds;
 			return SWatch.Elapsed;
 		}
 	}

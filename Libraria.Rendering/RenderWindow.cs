@@ -29,7 +29,9 @@ namespace Libraria.Rendering {
 			if (SDL.SDL_Init(SDL.SDL_INIT_VIDEO) < 0)
 				throw new Exception("Failed to initialize SDL2");
 
-			SDL.SDL_WindowFlags WFlags = SDL.SDL_WindowFlags.SDL_WINDOW_OPENGL | SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN;
+			SDL.SDL_WindowFlags WFlags = SDL.SDL_WindowFlags.SDL_WINDOW_OPENGL
+				| SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN;
+
 			if (NoBorder)
 				WFlags |= SDL.SDL_WindowFlags.SDL_WINDOW_BORDERLESS;
 
@@ -40,19 +42,24 @@ namespace Libraria.Rendering {
 		}
 
 		public void Init() {
-			SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-			SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_CONTEXT_MINOR_VERSION, 3);
-
 			TKContext = new GraphicsContext(new ContextHandle(IntPtr.Zero),
 						SDL.SDL_GL_GetProcAddress, () => new ContextHandle(SDL.SDL_GL_GetCurrentContext()));
 			TKContext.LoadAll();
 
+			SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_CONTEXT_PROFILE_MASK, (int)SDL.SDL_GLprofile.SDL_GL_CONTEXT_PROFILE_CORE);
+			SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+			SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_CONTEXT_MINOR_VERSION, 5);
+			SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_DOUBLEBUFFER, 1);
+			SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_ACCELERATED_VISUAL, 1); // Require hardware acceleration
+
 			GL.Disable(EnableCap.DepthTest); //Disable Z-Buffer, 2D Rendering
 			GL.Disable(EnableCap.CullFace);
+
 			GL.Enable(EnableCap.Texture2D);
 			GL.Enable(EnableCap.Blend);
 			GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 			GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
+
 			//GL.RenderMode(RenderingMode.Render);
 			//GL.MatrixMode(MatrixMode.Projection);
 
@@ -68,13 +75,17 @@ namespace Libraria.Rendering {
 			SDL.SDL_GL_SwapWindow(Window);
 		}
 
+		public void Close() {
+			IsOpen = false;
+		}
+
 		public void PollEvents() {
 			SDL.SDL_Event Event;
 
 			while (SDL.SDL_PollEvent(out Event) != 0) {
 				switch (Event.type) {
 					case SDL.SDL_EventType.SDL_QUIT:
-						IsOpen = false;
+						Close();
 						break;
 
 					default:

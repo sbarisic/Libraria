@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Server</RootNamespace>
     <AssemblyName>Server</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,10 +41,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Entry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Libraria\_Libraria.csproj">
+      <Project>{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}</Project>
+      <Name>_Libraria</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\LibTech\LibTech.csproj">
       <Project>{b896f669-6633-4d2a-ad52-7db46dc711e5}</Project>
       <Name>LibTech</Name>

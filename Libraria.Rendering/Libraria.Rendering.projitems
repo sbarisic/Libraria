@@ -9,8 +9,13 @@
     <Import_RootNamespace>Libraria.Rendering</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Buffers\GfxBuffer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Buffers\DataBuffer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Buffers\IndexBuffer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Buffers\VertexBuffer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RenderObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RenderWindow.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ShaderProgram.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)VertexArray.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Texture2D.cs" />
   </ItemGroup>
 </Project>

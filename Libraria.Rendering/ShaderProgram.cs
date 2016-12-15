@@ -55,6 +55,7 @@ namespace Libraria.Rendering {
 			for (int i = 0; i < Shaders.Length; i++)
 				GL.AttachShader(ID, Shaders[i]);
 
+			//GL.BindFragDataLocation(ID, 0, "Color");
 			GL.LinkProgram(ID);
 
 			string Log = GL.GetProgramInfoLog(ID);
@@ -91,12 +92,44 @@ namespace Libraria.Rendering {
 			GL.UseProgram(0);
 		}
 
+		public int GetAttribLocation(string Name) {
+			return GL.GetAttribLocation(ID, Name);
+		}
+
 		public int GetUniformLocation(string Name) {
 			return GL.GetUniformLocation(ID, Name);
 		}
 
+		public void SetUniform(string Name, Matrix4 Mtx) {
+			SetUniform(Name, ref Mtx);
+		}
+
 		public void SetUniform(string Name, ref Matrix4 Mtx) {
 			GL.ProgramUniformMatrix4(ID, GetUniformLocation(Name), false, ref Mtx);
+		}
+
+		public void SetUniform(string Name, Vector3 Vec) {
+			SetUniform(Name, ref Vec);
+		}
+
+		public void SetUniform(string Name, ref Vector3 Vec) {
+			GL.ProgramUniform3(ID, GetUniformLocation(Name), ref Vec);
+		}
+
+		public void SetUniform(string Name, Vector2 Vec) {
+			SetUniform(Name, ref Vec);
+		}
+
+		public void SetUniform(string Name, ref Vector2 Vec) {
+			GL.ProgramUniform2(ID, GetUniformLocation(Name), ref Vec);
+		}
+
+		public void SetUniform(string Name, float Val) {
+			GL.ProgramUniform1(ID, GetUniformLocation(Name), Val);
+		}
+
+		public void SetUniform(string Name, Texture2D Tex) {
+			GL.ProgramUniform1(ID, GetUniformLocation(Name), Tex.TexUnit);
 		}
 	}
 }
