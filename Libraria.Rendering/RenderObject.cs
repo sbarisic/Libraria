@@ -33,8 +33,8 @@ namespace Libraria.Rendering {
 			GL.BindVertexArray(0);
 		}
 
-		public void BindIndexBuffer(IndexBuffer IndexBuffer) {
-			IBuf = IndexBuffer;
+		public void BindIndexBuffer(GfxBuffer IndexBuffer) {
+			IBuf = (IndexBuffer)IndexBuffer;
 			IBuf.Bind();
 		}
 
@@ -42,10 +42,24 @@ namespace Libraria.Rendering {
 			this.Shader = Shader;
 		}
 
-		public void BindBuffer(string AttributeName, GfxBuffer Array, int Stride = -1, int Offset = 0) {
+		public int GetAttribLocation(string AttributeName) {
 			if (Shader == null)
-				throw new Exception("No shader bound");
-			int AttribLocation = Shader.GetAttribLocation(AttributeName);
+				throw new Exception("No shader found");
+			return Shader.GetAttribLocation(AttributeName);
+		}
+
+		public bool BindBuffer(string AttributeName, Func<GfxBuffer> BufferBuilder, int Stride = -1, int Offset = 0) {
+			int Attrib = GetAttribLocation(AttributeName);
+			if (Attrib == -1)
+				return false;
+
+			BindBuffer(Attrib, BufferBuilder(), Stride, Offset);
+			return true;
+		}
+
+		public void BindBuffer(string AttributeName, GfxBuffer Array, int Stride = -1, int Offset = 0) {
+			int AttribLocation = GetAttribLocation(AttributeName);
+
 			if (AttribLocation == -1)
 				throw new Exception(string.Format("Attribute '{0}' could not be found", AttributeName));
 
@@ -56,6 +70,7 @@ namespace Libraria.Rendering {
 			if (Stride == -1)
 				Stride = Array.Stride;
 
+			Array.Bind();
 			GL.EnableVertexAttribArray(AttributeName);
 			GL.BindVertexBuffer(AttributeName, Array.ID, (IntPtr)Offset, Stride);
 		}

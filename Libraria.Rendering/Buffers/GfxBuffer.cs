@@ -74,25 +74,29 @@ namespace Libraria.Rendering {
 			Bind();
 		}
 
-		public virtual void Bind() {
+		public virtual GfxBuffer Bind() {
 			GL.BindBuffer(Tgt, ID);
+			return this;
 		}
 
-		public virtual void Unbind() {
+		public virtual GfxBuffer Unbind() {
 			GL.BindBuffer(Tgt, 0);
+			return this;
 		}
 
 		public virtual void Destroy() {
 			GL.DeleteBuffer(ID);
 		}
 
-		public virtual void SetData<T>(T[] Data, VertexUsageHint Hint = VertexUsageHint.StaticDraw) where T : struct {
-			SetData<T>(Data.Length * Marshal.SizeOf<T>(), Data, Hint);
+		public virtual GfxBuffer SetData<T>(T[] Data, VertexUsageHint Hint = VertexUsageHint.StaticDraw) where T : struct {
+			return SetData<T>(Data.Length * Marshal.SizeOf<T>(), Data, Hint);
 		}
 
-		public virtual void SetData<T>(int Size, T[] Data, VertexUsageHint Hint = VertexUsageHint.StaticDraw) where T : struct {
+		public virtual GfxBuffer SetData<T>(int Size, T[] Data, VertexUsageHint Hint = VertexUsageHint.StaticDraw) where T : struct {
 			Length = Data.Length;
+			Bind();
 			GL.BufferData<T>(Tgt, Size, Data, (BufferUsageHint)Hint);
+			return this;
 		}
 
 		public virtual void Draw(int First = 0, DrawPrimitiveType PType = DrawPrimitiveType.Triangles) {

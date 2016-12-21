@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using OpenTK.Graphics.OpenGL;
+using OpenTK;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -61,14 +62,7 @@ namespace Libraria.Rendering {
 		public static Texture2D FromBitmap(Bitmap BMap, TexFilterMode FilterMode = TexFilterMode.Linear,
 			TexWrapMode WrapMode = TexWrapMode.ClampToEdge, bool GenerateMipmap = true) {
 
-			Texture2D Tex = new Texture2D();
-			Tex.Bind();
-
-			Tex.SetParam(TexParam.WrapS, WrapMode);
-			Tex.SetParam(TexParam.WrapT, WrapMode);
-			Tex.SetParam(TexParam.MinFilter, FilterMode);
-			Tex.SetParam(TexParam.MagFilter, FilterMode);
-
+			Texture2D Tex = new Texture2D(FilterMode, WrapMode);
 			Tex.LoadDataFromBitmap(BMap);
 
 			if (GenerateMipmap)
@@ -79,10 +73,17 @@ namespace Libraria.Rendering {
 
 		public int ID;
 		public int TexUnit;
+		public int Width, Height;
+		public Vector2 Size { get { return new Vector2(Width, Height); } }
 
-		public Texture2D() {
+		public Texture2D(TexFilterMode FilterMode, TexWrapMode WrapMode = TexWrapMode.ClampToEdge) {
 			ID = GL.GenTexture();
 			Bind();
+
+			SetParam(TexParam.WrapS, WrapMode);
+			SetParam(TexParam.WrapT, WrapMode);
+			SetParam(TexParam.MinFilter, FilterMode);
+			SetParam(TexParam.MagFilter, FilterMode);
 		}
 
 		public void Bind(int TexUnit = 0) {
@@ -104,6 +105,9 @@ namespace Libraria.Rendering {
 		}
 
 		public void LoadDataFromBitmap(Bitmap BMap) {
+			Width = BMap.Width;
+			Height = BMap.Height;
+
 			BitmapData BDta = BMap.LockBits(new Rectangle(0, 0, BMap.Width, BMap.Height),
 							ImageLockMode.ReadOnly, IPixelFormat.Format32bppArgb);
 

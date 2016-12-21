@@ -14,5 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)MF_Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MF_Scalar.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MF_Vector.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rect.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RectanglePacking.cs" />
   </ItemGroup>
 </Project>
