@@ -16,7 +16,8 @@ namespace UI {
 
 		//RenderObject Obj;
 		TextLabel Obj;
-
+		TextLabel Obj2;
+		
 		public void Init(params object[] Args) {
 			Client = Args[0] as IModule;
 
@@ -26,21 +27,27 @@ namespace UI {
 
 			ShaderProgram FontShader = new ShaderProgram("testgame\\shaders\\default.vert", "testgame\\shaders\\text.frag");
 
-			Matrix4 ViewMatrix = Matrix4.CreateOrthographicOffCenter(0, 600, 0, 600 / Engine.RenderWindow.AspectRatio, -100, 100);
+			Matrix4 ViewMatrix = Matrix4.CreateOrthographicOffCenter(0, Engine.RenderWindow.Width, 0,
+				Engine.RenderWindow.Height, -100, 100);
 			FontShader.SetUniform("ViewMatrix", ViewMatrix);
 
-			//GfxFont TestFont = new GfxFont("testgame\\fonts\\clacon.ttf");
-			GfxFont TestFont = new GfxFont("C:\\Windows\\Fonts\\consola.ttf");
-
+			GfxFont TestFont = new GfxFont("testgame\\fonts\\clacon.ttf", 18);
 			Obj = new TextLabel(TestFont, FontShader);
 			Obj.DrawText(new Vector2(10, 250), "I hate font rendering\nTest one two one two", Vector3.One);
-			Obj.DrawText(new Vector2(10, 200), "Lazy potatoes", new Vector3(1, 0, 0));
+			Obj.DrawText(new Vector2(10, 200), "Kill me pls", new Vector3(1, 0, 0));
 			Obj.DrawText(new Vector2(10, 150), "The slow green snake", new Vector3(0, 1, 0));
+
+			GfxFont TestFont2 = new GfxFont("C:\\Windows\\Fonts\\consola.ttf", 36);
+			Obj2 = new TextLabel(TestFont2, FontShader);
+			Obj2.DrawText(new Vector2(400, 520), "I really hate\nfont rendering\nTest four five\n6 7 ()#$&", new Vector3(1, 0, 1));
+			Obj2.DrawText(new Vector2(400, 200), "Lazy potatoes", new Vector3(0, 0, 1));
+			Obj2.DrawText(new Vector2(400, 100), "The slow\nyellow snake", new Vector3(1, 1, 0));
 		}
 
 		public void Event(ModuleEvent Evt, params object[] Args) {
 			if (Evt == ModuleEvent.RENDER) {
 				Obj.Draw();
+				Obj2.Draw();
 			}
 		}
 

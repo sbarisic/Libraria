@@ -8,7 +8,6 @@ using System.IO;
 using System.Drawing;
 using System.Drawing.Text;
 using System.Drawing.Drawing2D;
-using System.Windows.Forms;
 using NVector2 = System.Numerics.Vector2;
 
 namespace Libraria.Rendering {
@@ -28,7 +27,7 @@ namespace Libraria.Rendering {
 		public float LineHeight { get; private set; }
 		public int HalfPadding { get; private set; }
 
-		public GfxFont(string FilePath, int Size = 16, int Padding = 8) {
+		public GfxFont(string FilePath, int Size = 16, int Padding = 2) {
 			FontSize = Size;
 			HalfPadding = Padding;
 
@@ -38,7 +37,7 @@ namespace Libraria.Rendering {
 
 			DrawingFont = new Font(PFC.Families[0], FontSize);
 			LineHeight = DrawingFont.Height;
-			
+
 			FontAtlas = new Texture2D(TexFilterMode.Linear);
 			Characters = new HashSet<char>();
 			Dirty = true;
@@ -59,19 +58,33 @@ namespace Libraria.Rendering {
 				LoadChar(Chars[i]);
 		}
 
+		bool IsMonospace(Graphics Gfx, Font F) {
+			return Gfx.MeasureString("iiiii", F).Width == Gfx.MeasureString("MMMMM", F).Width;
+		}
+
 		public bool Update() {
 			if (!Dirty)
 				return false;
 			Dirty = false;
 
-			RectPack = new RectanglePack();
-			foreach (var Chr in Characters) {
-				Size Sz = TextRenderer.MeasureText(Chr.ToString(), DrawingFont);
-				RectPack.Add(Chr, new NVector2(Sz.Width + HalfPadding * 2, Sz.Height + HalfPadding * 2));
-			}
-			CharLocations = RectPack.Pack();
+			Bitmap Bmp = new Bitmap(1, 1);
+			using (Graphics Gfx = Graphics.FromImage(Bmp)) {
+				RectPack = new RectanglePack();
 
-			Bitmap Bmp = new Bitmap((int)RectPack.Size.X, (int)RectPack.Size.Y);
+				bool Monospace = IsMonospace(Gfx, DrawingFont);
+				SizeF Sz = Gfx.MeasureString("X", DrawingFont);
+
+				foreach (var Chr in Characters) {
+					if (!Monospace)
+						Sz = Gfx.MeasureString(Chr.ToString(), DrawingFont);
+
+					RectPack.Add(Chr, new NVector2(Sz.Width + HalfPadding * 2, Sz.Height + HalfPadding * 2));
+				}
+
+				CharLocations = RectPack.Pack();
+			}
+
+			Bmp = new Bitmap((int)RectPack.Size.X, (int)RectPack.Size.Y);
 			using (Graphics Gfx = Graphics.FromImage(Bmp)) {
 				Gfx.SmoothingMode = SmoothingMode.HighQuality;
 				Gfx.InterpolationMode = InterpolationMode.HighQualityBicubic;
@@ -79,14 +92,20 @@ namespace Libraria.Rendering {
 				Gfx.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
 				Gfx.Clear(Color.Transparent);
 				//Gfx.Clear(Color.Black);
-				
+
+				//Random Rnd = new Random();
+
 				foreach (var Chr in Characters) {
 					Rect R = CharLocations[Chr];
+
+					/*Gfx.FillRectangle(new SolidBrush(Color.FromArgb(Rnd.Next(256), Rnd.Next(256), Rnd.Next(256))),
+						new Rectangle((int)R.X, (int)R.Y, (int)R.W, (int)R.H));*/
+
 					Gfx.DrawString(Chr.ToString(), DrawingFont, new SolidBrush(Color.FromArgb(255, 255, 255, 255)),
 						R.X + HalfPadding, R.Y + HalfPadding);
 				}
 			}
-
+			
 			// TODO: Make a convar to control dumping the atlas
 			Bmp.Save("atlas.png");
 			FontAtlas.LoadDataFromBitmap(Bmp);
@@ -105,7 +124,7 @@ namespace Libraria.Rendering {
 		}
 
 		public float GetKerning(char A, char B) {
-			return -18; // TODO
+			return 0; // TODO
 		}
 
 		public float GetDescent(char A) {

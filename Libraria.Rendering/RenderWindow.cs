@@ -16,7 +16,10 @@ namespace Libraria.Rendering {
 		IntPtr Window;
 		IntPtr GLContext;
 		GraphicsContext TKContext;
+
 		public float AspectRatio { get; private set; }
+		public int Width { get; private set; }
+		public int Height { get; private set; }
 
 		public RenderWindow(string Title, int W, int H, bool NoBorder = true) {
 			ToolkitOptions Options = new ToolkitOptions();
@@ -24,6 +27,8 @@ namespace Libraria.Rendering {
 			Options.Backend = PlatformBackend.PreferNative;
 			Toolkit.Init(Options);
 
+			Width = W;
+			Height = H;
 			AspectRatio = (float)W / H;
 
 			if (SDL.SDL_Init(SDL.SDL_INIT_VIDEO) < 0)
