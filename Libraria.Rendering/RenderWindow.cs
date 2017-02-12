@@ -21,18 +21,19 @@ namespace Libraria.Rendering {
 		public int Width { get; private set; }
 		public int Height { get; private set; }
 
-		public RenderWindow(string Title, int W, int H, bool NoBorder = true) {
+		public static void InitRenderer() {
 			ToolkitOptions Options = new ToolkitOptions();
-			Options.EnableHighResolution = false;
 			Options.Backend = PlatformBackend.PreferNative;
 			Toolkit.Init(Options);
 
+			if (SDL.SDL_Init(SDL.SDL_INIT_VIDEO) < 0)
+				throw new Exception("Failed to initialize SDL2");
+		}
+
+		public RenderWindow(string Title, int W, int H, bool NoBorder = true) {
 			Width = W;
 			Height = H;
 			AspectRatio = (float)W / H;
-
-			if (SDL.SDL_Init(SDL.SDL_INIT_VIDEO) < 0)
-				throw new Exception("Failed to initialize SDL2");
 
 			SDL.SDL_WindowFlags WFlags = SDL.SDL_WindowFlags.SDL_WINDOW_OPENGL
 				| SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN;
@@ -41,6 +42,7 @@ namespace Libraria.Rendering {
 				WFlags |= SDL.SDL_WindowFlags.SDL_WINDOW_BORDERLESS;
 
 			Window = SDL.SDL_CreateWindow(Title, SDL.SDL_WINDOWPOS_CENTERED, SDL.SDL_WINDOWPOS_CENTERED, W, H, WFlags);
+			//SDL.SDL_SetWindowPosition(Window, SDL.SDL_WINDOWPOS_CENTERED, SDL.SDL_WINDOWPOS_CENTERED);
 
 			GLContext = SDL.SDL_GL_CreateContext(Window);
 			MakeCurrent();
@@ -70,6 +72,30 @@ namespace Libraria.Rendering {
 
 			GL.ClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 			IsOpen = true;
+		}
+
+		public void SetWindowSize(int W, int H) {
+			if (W == -1)
+				W = Width;
+			if (H == -1)
+				H = Height;
+
+
+			//SDL.SDL_SetWindowSize(Window, (int)(W * 1.2f), (int)(H * 1.2f));
+			//GL.Viewport(0, 0, (int)(W * 1.2f), (int)(H * 1.2f));
+
+			SDL.SDL_SetWindowSize(Window, W, H);
+			Reset();
+
+			Width = W;
+			Height = H;
+		}
+
+		public void Reset() {
+			/*GL.Viewport(0, 0, Width, Height);
+			GL.MatrixMode(MatrixMode.Projection);
+			GL.LoadIdentity();
+			GL.Ortho(0, 1, 0, 1, 0.01, 1);*/
 		}
 
 		public int MakeCurrent() {

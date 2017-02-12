@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
+using Libraria.Reflection.CustomMarshals;
 
 namespace Libraria.NanoVG {
 	[StructLayout(LayoutKind.Sequential)]
@@ -43,7 +44,7 @@ namespace Libraria.NanoVG {
 
 	[StructLayout(LayoutKind.Sequential)]
 	public struct NVGglyphPosition {
-		// Position of the glyph in the input string.
+		// Position of the glyph in the input  string.
 		public IntPtr Str;
 
 		// The x-coordinate of the logical glyph position.
@@ -83,6 +84,15 @@ namespace Libraria.NanoVG {
 		public const int NVG_STENCIL_STROKES = 1 << 1;
 		// Flag indicating that additional debug checks are done.
 		public const int NVG_DEBUG = 1 << 2;
+
+		public const int NVG_ALIGN_LEFT = 1 << 0;   // Default, align text horizontally to left.
+		public const int NVG_ALIGN_CENTER = 1 << 1; // Align text horizontally to center.
+		public const int NVG_ALIGN_RIGHT = 1 << 2;  // Align text horizontally to right.
+													// Vertical align
+		public const int NVG_ALIGN_TOP = 1 << 3;    // Align text vertically to top.
+		public const int NVG_ALIGN_MIDDLE = 1 << 4; // Align text vertically to middle.
+		public const int NVG_ALIGN_BOTTOM = 1 << 5; // Align text vertically to bottom.
+		public const int NVG_ALIGN_BASELINE = 1 << 6; // Default, align text vertically to baseline.
 
 		[DllImport(DllName, EntryPoint = "InitOpenGL", CallingConvention = CConv, CharSet = CSet)]
 		public static extern bool InitOpenGL();
@@ -446,23 +456,23 @@ namespace Libraria.NanoVG {
 		// NANOVG_EXPORT void nvgFontFace(IntPtr ctx, const char* font);
 
 		[DllImport(DllName, EntryPoint = "nvgText", CallingConvention = CConv, CharSet = CSet)]
-		public static extern float Text(IntPtr ctx, float x, float y, string Str, string end);
-		// NANOVG_EXPORT float nvgText(IntPtr ctx, float x, float y, const char* string, const char* end);
+		public static extern float Text(IntPtr ctx, float x, float y, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshal))] string Str, IntPtr end);
+		// NANOVG_EXPORT float nvgText(IntPtr ctx, float x, float y, const char*  string, const char* end);
 
 		[DllImport(DllName, EntryPoint = "nvgTextBox", CallingConvention = CConv, CharSet = CSet)]
-		public static extern void TextBox(IntPtr ctx, float x, float y, float breakRowWidth, string Str, string end);
+		public static extern void TextBox(IntPtr ctx, float x, float y, float breakRowWidth, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshal))] string Str, IntPtr end);
 		// NANOVG_EXPORT void nvgTextBox(IntPtr ctx, float x, float y, float breakRowWidth, const char* string, const char* end);
 
 		[DllImport(DllName, EntryPoint = "nvgTextBounds", CallingConvention = CConv, CharSet = CSet)]
-		public static extern float TextBounds(IntPtr ctx, float x, float y, string Str, string end, float[] bounds);
+		public static extern float TextBounds(IntPtr ctx, float x, float y, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshal))]string Str, IntPtr end, float[] bounds);
 		// NANOVG_EXPORT float nvgTextBounds(IntPtr ctx, float x, float y, const char* string, const char* end, float* bounds);
 
 		[DllImport(DllName, EntryPoint = "nvgTextBoxBounds", CallingConvention = CConv, CharSet = CSet)]
-		public static extern void TextBoxBounds(IntPtr ctx, float x, float y, float breakRowWidth, string Str, string end, float[] bounds);
+		public static extern void TextBoxBounds(IntPtr ctx, float x, float y, float breakRowWidth, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshal))] string Str, IntPtr end, float[] bounds);
 		// NANOVG_EXPORT void nvgTextBoxBounds(IntPtr ctx, float x, float y, float breakRowWidth, const char* string, const char* end, float* bounds);
 
 		[DllImport(DllName, EntryPoint = "nvgTextGlyphPositions", CallingConvention = CConv, CharSet = CSet)]
-		public static extern int TextGlyphPositions(IntPtr ctx, float x, float y, string Str, string end, ref NVGglyphPosition positions, int maxPositions);
+		public static extern int TextGlyphPositions(IntPtr ctx, float x, float y, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshal))]string Str, IntPtr end, ref NVGglyphPosition positions, int maxPositions);
 		// NANOVG_EXPORT int nvgTextGlyphPositions(IntPtr ctx, float x, float y, const char* string, const char* end, NVGglyphPosition* positions, int maxPositions);
 
 		[DllImport(DllName, EntryPoint = "nvgTextMetrics", CallingConvention = CConv, CharSet = CSet)]
@@ -470,7 +480,7 @@ namespace Libraria.NanoVG {
 		// NANOVG_EXPORT void nvgTextMetrics(IntPtr ctx, float* ascender, float* descender, float* lineh);
 
 		[DllImport(DllName, EntryPoint = "nvgTextBreakLines", CallingConvention = CConv, CharSet = CSet)]
-		public static extern int TextBreakLines(IntPtr ctx, string Str, string end, float breakRowWidth, ref NVGtextRow rows, int maxRows);
+		public static extern int TextBreakLines(IntPtr ctx, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshal))] string Str, IntPtr end, float breakRowWidth, ref NVGtextRow rows, int maxRows);
 		// NANOVG_EXPORT int nvgTextBreakLines(IntPtr ctx, const char* string, const char* end, float breakRowWidth, NVGtextRow* rows, int maxRows);
 	}
 }

@@ -12,6 +12,7 @@ using Libraria.Rendering;
 using System.Threading;
 using System.Reflection;
 using Libraria.NanoVG;
+using System.Runtime.InteropServices;
 
 namespace LibTech {
 	public static class Engine {
@@ -20,6 +21,7 @@ namespace LibTech {
 
 		public static string GameFolder;
 		public static bool Headless;
+		public static Stopwatch TimeSinceLaunch;
 	}
 
 	class Program {
@@ -31,19 +33,24 @@ namespace LibTech {
 		static TimeSpan UpdateRate, RenderRate;
 
 		static void Main(string[] args) {
+			SetProcessDPIAware();
+
 			Console.Title = "LibTech";
 			Engine.GameFolder = "testgame";
 			Engine.Headless = false;
+			Engine.TimeSinceLaunch = Stopwatch.StartNew();
 			Running = true;
 
 			UpdateRate = TimeSpan.FromSeconds(1.0 / 25);
-			RenderRate = TimeSpan.FromSeconds(1.0 / 120);
+			RenderRate = TimeSpan.FromSeconds(1.0 / (60 * 2));
 
 			if (!Engine.Headless) {
+				RenderWindow.InitRenderer();
 				SpawnWindow();
 
 				NVG.InitOpenGL();
 				Engine.NanoVG = NVG.CreateGL3(NVG.NVG_DEBUG | NVG.NVG_ANTIALIAS);
+				Engine.RenderWindow.SetWindowSize(-1, -1);
 
 				Client = ModuleLoader.LoadModule(Engine.GameFolder, "Client");
 				UI = ModuleLoader.LoadModule(Engine.GameFolder, "UI");
@@ -73,9 +80,14 @@ namespace LibTech {
 			Environment.Exit(0);
 		}
 
-		static void SpawnWindow() {
+		static void SpawnWindow(int PrefW = -1, int PrefH = -1) {
 			int W, H;
 			Lib.GetScreenResolution(out W, out H, 0.8f);
+			if (PrefW != -1)
+				W = PrefW;
+			if (PrefH != -1)
+				H = PrefH;
+
 			Console.WriteLine("Running at {0}x{1}", W, H);
 
 			Engine.RenderWindow = new RenderWindow("LibTech", W, H);
@@ -95,6 +107,8 @@ namespace LibTech {
 
 		static void Render(float Dt) {
 			Engine.RenderWindow.PollEvents();
+			Engine.RenderWindow.Reset();
+
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
 			// Perspective 3D
@@ -110,5 +124,8 @@ namespace LibTech {
 			Engine.RenderWindow?.Close();
 			Running = false;
 		}
+
+		[DllImport("user32")]
+		private static extern bool SetProcessDPIAware();
 	}
 }

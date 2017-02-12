@@ -59,9 +59,9 @@ namespace Libraria.Rendering {
 				LoadChar(Chars[i]);
 		}
 
-		bool IsMonospace(Graphics Gfx, Font F) {
+		/*bool IsMonospace(Graphics Gfx, Font F) {
 			return Gfx.MeasureString("iiiii", F).Width == Gfx.MeasureString("MMMMM", F).Width;
-		}
+		}*/
 
 		public bool Update() {
 			if (!Dirty)
@@ -72,13 +72,15 @@ namespace Libraria.Rendering {
 			using (Graphics Gfx = Graphics.FromImage(Bmp)) {
 				RectPack = new RectanglePack();
 
-				bool Monospace = IsMonospace(Gfx, DrawingFont);
+				//bool Monospace = IsMonospace(Gfx, DrawingFont);
 				SizeF Sz = Gfx.MeasureString("X", DrawingFont);
 
 				foreach (var Chr in Characters) {
-					if (!Monospace)
+					if (char.IsWhiteSpace(Chr))
+						Sz = Gfx.MeasureString("_", DrawingFont);
+					else
 						Sz = Gfx.MeasureString(Chr.ToString(), DrawingFont);
-
+			
 					RectPack.Add(Chr, new NVector2(Sz.Width + HalfPadding * 2, Sz.Height + HalfPadding * 2));
 				}
 
@@ -100,8 +102,8 @@ namespace Libraria.Rendering {
 					Rect R = CharLocations[Chr];
 
 					// TODO: Convar to colorize
-					Gfx.FillRectangle(new SolidBrush(Color.FromArgb(Rnd.Next(256), Rnd.Next(256), Rnd.Next(256))),
-						new Rectangle((int)R.X, (int)R.Y, (int)R.W, (int)R.H));
+					/*Gfx.FillRectangle(new SolidBrush(Color.FromArgb(Rnd.Next(256), Rnd.Next(256), Rnd.Next(256))),
+						new Rectangle((int)R.X, (int)R.Y, (int)R.W, (int)R.H));*/
 
 					Gfx.DrawString(Chr.ToString(), DrawingFont, new SolidBrush(Color.FromArgb(255, 255, 255, 255)),
 						R.X + HalfPadding, R.Y + HalfPadding);

@@ -10,6 +10,7 @@ using LibTech;
 using Libraria.Rendering;
 using Libraria.NanoVG;
 using OpenTK;
+using System.Runtime.InteropServices;
 
 namespace UI {
 	public class Entry : IModule {
@@ -18,13 +19,20 @@ namespace UI {
 		//RenderObject Obj;
 		TextLabel Obj;
 		TextLabel Obj2;
-		
+
 		public void Init(params object[] Args) {
 			Client = Args[0] as IModule;
-			
+
 			/*Obj = InitTriangle();
 			Obj.SetTexture(Texture2D.Mask_Tex0);
 			Obj.SetTexture(TestFont.FontAtlas, 1);*/
+
+			NVG.CreateFont(Engine.NanoVG, "sans", "testgame\\fonts\\Roboto-Regular.ttf");
+			NVG.CreateFont(Engine.NanoVG, "arial", "C:\\windows\\fonts\\arial.ttf");
+			NVG.CreateFont(Engine.NanoVG, "meiryo", "testgame\\fonts\\Meiryo.ttf");
+
+			NVG.AddFallbackFont(Engine.NanoVG, "sans", "meiryo");
+			NVG.AddFallbackFont(Engine.NanoVG, "sans", "arial");
 
 			ShaderProgram FontShader = new ShaderProgram("testgame\\shaders\\default.vert", "testgame\\shaders\\text.frag");
 
@@ -40,29 +48,72 @@ namespace UI {
 
 			GfxFont TestFont2 = new GfxFont("C:\\Windows\\Fonts\\consola.ttf", 36);
 			Obj2 = new TextLabel(TestFont2, FontShader);
-			Obj2.DrawText(new Vector2(400, 520), "I really hate\nfont rendering\n日本語は面白いです。\n6 7 ()#$&", new Vector3(1, 0, 1));
-			Obj2.DrawText(new Vector2(400, 200), "Lazy potatoes", new Vector3(0, 0, 1));
-			Obj2.DrawText(new Vector2(400, 100), "The slow\nyellow snake", new Vector3(1, 1, 0));
+			Obj2.DrawText(new Vector2(600, 720), "I really hate\nfont rendering\n日本語は面白いです。\n6 7 ()#$&", new Vector3(1, 0, 1));
+			Obj2.DrawText(new Vector2(600, 400), "Lazy potatoes", new Vector3(0, 0, 1));
+			Obj2.DrawText(new Vector2(600, 300), "The slow\nyellow snake", new Vector3(1, 1, 0));
 		}
 
 		public void Event(ModuleEvent Evt, params object[] Args) {
 			if (Evt == ModuleEvent.RENDER) {
+				float Dt = (float)Args[0];
+
 				Obj.Draw();
 				Obj2.Draw();
 
 				NVG.BeginFrame(Engine.NanoVG, Engine.RenderWindow.Width, Engine.RenderWindow.Height, 1);
-				NVG.Save(Engine.NanoVG);
+				NVG.Reset(Engine.NanoVG);
+				NVG.FontFace(Engine.NanoVG, "sans");
+				NVG.FontSize(Engine.NanoVG, 24.0f);
+				NVG.TextAlign(Engine.NanoVG, NVG.NVG_ALIGN_LEFT | NVG.NVG_ALIGN_TOP);
+				NVG.FillColor(Engine.NanoVG, Color.White);
+				NVG.Text(Engine.NanoVG, 0, 0, "Frametime: " + Dt + " ms; " + (1.0f / Dt) + " fps", IntPtr.Zero);
+
 				DrawNVG();
-				NVG.Restore(Engine.NanoVG);
 				NVG.EndFrame(Engine.NanoVG);
 			}
 		}
 
+		//IntPtr Txt2 = IntPtr.Zero;
+
 		void DrawNVG() {
+			string Txt = "Hello NanoVG World! 日本語は面白いです。";
+			int TxtX = 100;
+			int TxtY = 100;
+			float Spacing = 25;
+			float Rounding = 20;
+
+			NVG.Translate(Engine.NanoVG, 300, 300);
+			NVG.Rotate(Engine.NanoVG, Engine.TimeSinceLaunch.ElapsedMilliseconds / 1000.0f);
+			NVG.Translate(Engine.NanoVG, -300, -300);
+
+			NVG.FontSize(Engine.NanoVG, 80.0f);
+			NVG.FontFace(Engine.NanoVG, "sans");
+			NVG.TextAlign(Engine.NanoVG, NVG.NVG_ALIGN_LEFT | NVG.NVG_ALIGN_MIDDLE);
+			float[] Bounds = new float[4];
+			NVG.TextBounds(Engine.NanoVG, TxtX, TxtY, Txt, IntPtr.Zero, Bounds);
+
+			float X = Bounds[0] - Spacing;
+			float Y = Bounds[1] - Spacing;
+			float W = Bounds[2] - Bounds[0] + Spacing * 2;
+			float H = Bounds[3] - Bounds[1] + Spacing * 2;
+
+			NVGpaint P = NVG.BoxGradient(Engine.NanoVG, X, Y, W, H, 30, 30, Color.CornflowerBlue, Color.Black);
 			NVG.BeginPath(Engine.NanoVG);
-			NVG.RoundedRect(Engine.NanoVG, 100, 100, 360, 220, 20);
-			NVG.FillColor(Engine.NanoVG, Color.CornflowerBlue);
+			NVG.RoundedRect(Engine.NanoVG, X, Y, W, H, Rounding);
+			NVG.FillPaint(Engine.NanoVG, P);
 			NVG.Fill(Engine.NanoVG);
+
+			NVG.Save(Engine.NanoVG);
+			{
+				NVG.FillColor(Engine.NanoVG, Color.Black);
+				NVG.FontBlur(Engine.NanoVG, 6);
+				NVG.Text(Engine.NanoVG, TxtX, TxtY, Txt, IntPtr.Zero);
+				NVG.Text(Engine.NanoVG, TxtX, TxtY, Txt, IntPtr.Zero);
+			}
+			NVG.Restore(Engine.NanoVG);
+
+			NVG.FillColor(Engine.NanoVG, Color.White);
+			NVG.Text(Engine.NanoVG, TxtX, TxtY, Txt, IntPtr.Zero);
 		}
 
 		RenderObject InitText(string Txt) { /////// aaaaaaaaaaaaaaah

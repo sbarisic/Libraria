@@ -52,7 +52,7 @@
 
 #define NVG_COUNTOF(arr) (sizeof(arr) / sizeof(0[arr]))
 
-NANOVG_EXPORT int InitOpenGL() {
+extern "C" NANOVG_EXPORT int InitOpenGL() {
 	if (!glfwInit())
 		return 0;
 	if (glewInit() != GLEW_OK)

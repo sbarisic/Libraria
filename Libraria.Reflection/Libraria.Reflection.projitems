@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Assemblies.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomMarshals\UTF8StringMarshal.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin.cs" />
   </ItemGroup>
 </Project>
