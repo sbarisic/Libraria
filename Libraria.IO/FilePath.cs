@@ -12,5 +12,10 @@ namespace Libraria.IO {
 		public static string GetEntryAssemblyPath() {
 			return Normalize(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location));
 		}
+
+		public static void EnsureDirExists(string DirName) {
+			if (!Directory.Exists(DirName))
+				Directory.CreateDirectory(DirName);
+		}
 	}
 }

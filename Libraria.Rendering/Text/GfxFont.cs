@@ -8,6 +8,7 @@ using System.IO;
 using System.Drawing;
 using System.Drawing.Text;
 using System.Drawing.Drawing2D;
+using Libraria.IO;
 using NVector2 = System.Numerics.Vector2;
 
 namespace Libraria.Rendering {
@@ -93,21 +94,23 @@ namespace Libraria.Rendering {
 				Gfx.Clear(Color.Transparent);
 				//Gfx.Clear(Color.Black);
 
-				//Random Rnd = new Random();
+				Random Rnd = new Random(42);
 
 				foreach (var Chr in Characters) {
 					Rect R = CharLocations[Chr];
 
-					/*Gfx.FillRectangle(new SolidBrush(Color.FromArgb(Rnd.Next(256), Rnd.Next(256), Rnd.Next(256))),
-						new Rectangle((int)R.X, (int)R.Y, (int)R.W, (int)R.H));*/
+					// TODO: Convar to colorize
+					Gfx.FillRectangle(new SolidBrush(Color.FromArgb(Rnd.Next(256), Rnd.Next(256), Rnd.Next(256))),
+						new Rectangle((int)R.X, (int)R.Y, (int)R.W, (int)R.H));
 
 					Gfx.DrawString(Chr.ToString(), DrawingFont, new SolidBrush(Color.FromArgb(255, 255, 255, 255)),
 						R.X + HalfPadding, R.Y + HalfPadding);
 				}
 			}
-			
+
 			// TODO: Make a convar to control dumping the atlas
-			Bmp.Save("atlas.png");
+			FilePath.EnsureDirExists("debug");
+			Bmp.Save("debug\\atlas.png");
 			FontAtlas.LoadDataFromBitmap(Bmp);
 			return true;
 		}

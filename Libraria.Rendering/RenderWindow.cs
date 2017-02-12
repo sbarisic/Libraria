@@ -15,7 +15,7 @@ namespace Libraria.Rendering {
 
 		IntPtr Window;
 		IntPtr GLContext;
-		GraphicsContext TKContext;
+		public GraphicsContext TKContext;
 
 		public float AspectRatio { get; private set; }
 		public int Width { get; private set; }

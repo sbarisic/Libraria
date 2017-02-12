@@ -11,10 +11,12 @@ using Libraria;
 using Libraria.Rendering;
 using System.Threading;
 using System.Reflection;
+using Libraria.NanoVG;
 
 namespace LibTech {
 	public static class Engine {
 		public static RenderWindow RenderWindow;
+		public static IntPtr NanoVG;
 
 		public static string GameFolder;
 		public static bool Headless;
@@ -39,6 +41,9 @@ namespace LibTech {
 
 			if (!Engine.Headless) {
 				SpawnWindow();
+
+				NVG.InitOpenGL();
+				Engine.NanoVG = NVG.CreateGL3(NVG.NVG_DEBUG | NVG.NVG_ANTIALIAS);
 
 				Client = ModuleLoader.LoadModule(Engine.GameFolder, "Client");
 				UI = ModuleLoader.LoadModule(Engine.GameFolder, "UI");
@@ -72,8 +77,14 @@ namespace LibTech {
 			int W, H;
 			Lib.GetScreenResolution(out W, out H, 0.8f);
 			Console.WriteLine("Running at {0}x{1}", W, H);
+
 			Engine.RenderWindow = new RenderWindow("LibTech", W, H);
 			Engine.RenderWindow.Init();
+
+			Console.WriteLine("Vendor: {0}", GL.GetString(StringName.Vendor));
+			Console.WriteLine("Renderer: {0}", GL.GetString(StringName.Renderer));
+			Console.WriteLine("Version: {0}", GL.GetString(StringName.Version));
+			Console.WriteLine("Shading language version: {0}", GL.GetString(StringName.ShadingLanguageVersion));
 		}
 
 		static void Update(float Dt) {

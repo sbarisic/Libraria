@@ -77,6 +77,7 @@
   <Import Project="..\Libraria.Rendering\Libraria.Rendering.projitems" Label="Shared" />
   <Import Project="..\Libraria.Net\Libraria.Net.projitems" Label="Shared" />
   <Import Project="..\Libraria.Physics\Libraria.Physics.projitems" Label="Shared" />
+  <Import Project="..\Libraria.NanoVG\Libraria.NanoVG.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -5,9 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.IO;
-
+using System.Drawing;
 using LibTech;
 using Libraria.Rendering;
+using Libraria.NanoVG;
 using OpenTK;
 
 namespace UI {
@@ -20,7 +21,7 @@ namespace UI {
 		
 		public void Init(params object[] Args) {
 			Client = Args[0] as IModule;
-
+			
 			/*Obj = InitTriangle();
 			Obj.SetTexture(Texture2D.Mask_Tex0);
 			Obj.SetTexture(TestFont.FontAtlas, 1);*/
@@ -39,7 +40,7 @@ namespace UI {
 
 			GfxFont TestFont2 = new GfxFont("C:\\Windows\\Fonts\\consola.ttf", 36);
 			Obj2 = new TextLabel(TestFont2, FontShader);
-			Obj2.DrawText(new Vector2(400, 520), "I really hate\nfont rendering\nTest four five\n6 7 ()#$&", new Vector3(1, 0, 1));
+			Obj2.DrawText(new Vector2(400, 520), "I really hate\nfont rendering\n日本語は面白いです。\n6 7 ()#$&", new Vector3(1, 0, 1));
 			Obj2.DrawText(new Vector2(400, 200), "Lazy potatoes", new Vector3(0, 0, 1));
 			Obj2.DrawText(new Vector2(400, 100), "The slow\nyellow snake", new Vector3(1, 1, 0));
 		}
@@ -48,7 +49,20 @@ namespace UI {
 			if (Evt == ModuleEvent.RENDER) {
 				Obj.Draw();
 				Obj2.Draw();
+
+				NVG.BeginFrame(Engine.NanoVG, Engine.RenderWindow.Width, Engine.RenderWindow.Height, 1);
+				NVG.Save(Engine.NanoVG);
+				DrawNVG();
+				NVG.Restore(Engine.NanoVG);
+				NVG.EndFrame(Engine.NanoVG);
 			}
+		}
+
+		void DrawNVG() {
+			NVG.BeginPath(Engine.NanoVG);
+			NVG.RoundedRect(Engine.NanoVG, 100, 100, 360, 220, 20);
+			NVG.FillColor(Engine.NanoVG, Color.CornflowerBlue);
+			NVG.Fill(Engine.NanoVG);
 		}
 
 		RenderObject InitText(string Txt) { /////// aaaaaaaaaaaaaaah
