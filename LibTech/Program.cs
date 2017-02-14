@@ -1,25 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
-using OpenTK.Graphics.OpenGL;
-using Libraria.Timing;
-using OpenTK;
-using Libraria;
-using Libraria.Rendering;
-using System.Threading;
-using System.Reflection;
+﻿using Libraria;
 using Libraria.NanoVG;
+using Libraria.Rendering;
+using Libraria.Timing;
+using OpenTK.Graphics.OpenGL;
+using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Threading;
+using LibTech.Rendering;
 
 namespace LibTech {
-	public static class Engine {
+	public static partial class Engine {
 		public static RenderWindow RenderWindow;
-		public static IntPtr NanoVG;
 
-		public static string GameFolder;
 		public static bool Headless;
 		public static Stopwatch TimeSinceLaunch;
 	}
@@ -33,10 +26,13 @@ namespace LibTech {
 		static TimeSpan UpdateRate, RenderRate;
 
 		static void Main(string[] args) {
+			Console.Title = "LibTech";
 			SetProcessDPIAware();
 
-			Console.Title = "LibTech";
-			Engine.GameFolder = "testgame";
+			Files.Initialize("basegame");
+			// TODO: Load from arguments passed or somethin'
+			Files.SetGameFolder("testgame");
+
 			Engine.Headless = false;
 			Engine.TimeSinceLaunch = Stopwatch.StartNew();
 			Running = true;
@@ -48,8 +44,7 @@ namespace LibTech {
 				RenderWindow.InitRenderer();
 				SpawnWindow();
 
-				NVG.InitOpenGL();
-				Engine.NanoVG = NVG.CreateGL3(NVG.NVG_DEBUG | NVG.NVG_ANTIALIAS);
+				NanoVG.Initialize();
 				Engine.RenderWindow.SetWindowSize(-1, -1);
 
 				Client = ModuleLoader.LoadModule(Engine.GameFolder, "Client");

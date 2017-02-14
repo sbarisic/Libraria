@@ -31,10 +31,6 @@ namespace Libraria.Rendering {
 		}
 
 		public RenderWindow(string Title, int W, int H, bool NoBorder = true) {
-			Width = W;
-			Height = H;
-			AspectRatio = (float)W / H;
-
 			SDL.SDL_WindowFlags WFlags = SDL.SDL_WindowFlags.SDL_WINDOW_OPENGL
 				| SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN;
 
@@ -42,7 +38,7 @@ namespace Libraria.Rendering {
 				WFlags |= SDL.SDL_WindowFlags.SDL_WINDOW_BORDERLESS;
 
 			Window = SDL.SDL_CreateWindow(Title, SDL.SDL_WINDOWPOS_CENTERED, SDL.SDL_WINDOWPOS_CENTERED, W, H, WFlags);
-			//SDL.SDL_SetWindowPosition(Window, SDL.SDL_WINDOWPOS_CENTERED, SDL.SDL_WINDOWPOS_CENTERED);
+			SetWindowSize(W, H);
 
 			GLContext = SDL.SDL_GL_CreateContext(Window);
 			MakeCurrent();
@@ -79,16 +75,13 @@ namespace Libraria.Rendering {
 				W = Width;
 			if (H == -1)
 				H = Height;
-
-
-			//SDL.SDL_SetWindowSize(Window, (int)(W * 1.2f), (int)(H * 1.2f));
-			//GL.Viewport(0, 0, (int)(W * 1.2f), (int)(H * 1.2f));
-
+			
 			SDL.SDL_SetWindowSize(Window, W, H);
 			Reset();
 
 			Width = W;
 			Height = H;
+			AspectRatio = (float)W / H;
 		}
 
 		public void Reset() {

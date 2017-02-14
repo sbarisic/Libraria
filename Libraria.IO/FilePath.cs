@@ -6,7 +6,7 @@ using System.IO;using System.Reflection;
 namespace Libraria.IO {
 	public static class FilePath {
 		public static string Normalize(string Pth) {
-			return Pth.Replace('/', '\\');
+			return Pth.Replace('/', '\\').Trim();
 		}
 
 		public static string GetEntryAssemblyPath() {
