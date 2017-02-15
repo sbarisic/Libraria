@@ -745,6 +745,16 @@ void nvgFillPaint(NVGcontext* ctx, NVGpaint paint) {
 	nvgTransformMultiply(state->fill.xform, state->xform);
 }
 
+extern "C" NANOVG_EXPORT int nvgCreateImage_OpenGL_RGBA(NVGcontext* ctx, int ogl_texid, int w, int h, int flags) {
+	GLNVGtexture* tex = glnvg__allocTexture((GLNVGcontext*)(ctx->params.userPtr));
+	tex->width = w;
+	tex->height = h;
+	tex->flags = flags;
+	tex->type = NVG_TEXTURE_RGBA;
+	tex->tex = ogl_texid;
+	return tex->id;
+}
+
 int nvgCreateImage(NVGcontext* ctx, const char* filename, int imageFlags) {
 	int w, h, n, image;
 	unsigned char* img;

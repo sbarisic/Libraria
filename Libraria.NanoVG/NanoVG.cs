@@ -94,8 +94,17 @@ namespace Libraria.NanoVG {
 		public const int NVG_ALIGN_BOTTOM = 1 << 5; // Align text vertically to bottom.
 		public const int NVG_ALIGN_BASELINE = 1 << 6; // Default, align text vertically to baseline.
 
+		public const int NVG_IMAGE_FLIPY = 1 << 3;
+
+		#region Custom extensions
+
 		[DllImport(DllName, EntryPoint = "InitOpenGL", CallingConvention = CConv, CharSet = CSet)]
 		public static extern bool InitOpenGL();
+
+		[DllImport(DllName, EntryPoint = "nvgCreateImage_OpenGL_RGBA", CallingConvention = CConv, CharSet = CSet)]
+		public static extern int CreateImage_OpenGL_RGBA(IntPtr ctx, int ogl_texid, int w, int h, int flags);
+		
+		#endregion
 
 		[DllImport(DllName, EntryPoint = "nvgCreateGL3", CallingConvention = CConv, CharSet = CSet)]
 		public static extern IntPtr CreateGL3(int flags);

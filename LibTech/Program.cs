@@ -103,7 +103,6 @@ namespace LibTech {
 		static void Render(float Dt) {
 			Engine.RenderWindow.PollEvents();
 			Engine.RenderWindow.Reset();
-
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
 			// Perspective 3D

@@ -65,8 +65,7 @@ namespace Libraria.Rendering {
 
 			//GL.RenderMode(RenderingMode.Render);
 			//GL.MatrixMode(MatrixMode.Projection);
-
-			GL.ClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+			
 			IsOpen = true;
 		}
 
@@ -77,7 +76,6 @@ namespace Libraria.Rendering {
 				H = Height;
 			
 			SDL.SDL_SetWindowSize(Window, W, H);
-			Reset();
 
 			Width = W;
 			Height = H;
@@ -85,10 +83,8 @@ namespace Libraria.Rendering {
 		}
 
 		public void Reset() {
-			/*GL.Viewport(0, 0, Width, Height);
-			GL.MatrixMode(MatrixMode.Projection);
-			GL.LoadIdentity();
-			GL.Ortho(0, 1, 0, 1, 0.01, 1);*/
+			GL.Viewport(0, 0, Width, Height);
+			GL.ClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		}
 
 		public int MakeCurrent() {

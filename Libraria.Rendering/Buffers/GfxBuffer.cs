@@ -60,8 +60,15 @@ namespace Libraria.Rendering {
 		PatchesExt = 14
 	}
 
-	public abstract class GfxBuffer {
+	public abstract class OpenGLBuffer<T> {
 		public int ID;
+
+		public abstract T Bind();
+		public abstract T Unbind();
+		public abstract void Destroy();
+	}
+
+	public abstract class GfxBuffer : OpenGLBuffer<GfxBuffer> {
 		public int Stride;
 		public BufferTarget Tgt;
 
@@ -74,17 +81,17 @@ namespace Libraria.Rendering {
 			Bind();
 		}
 
-		public virtual GfxBuffer Bind() {
+		public override GfxBuffer Bind() {
 			GL.BindBuffer(Tgt, ID);
 			return this;
 		}
 
-		public virtual GfxBuffer Unbind() {
+		public override GfxBuffer Unbind() {
 			GL.BindBuffer(Tgt, 0);
 			return this;
 		}
 
-		public virtual void Destroy() {
+		public override void Destroy() {
 			GL.DeleteBuffer(ID);
 		}
 

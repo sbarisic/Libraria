@@ -74,6 +74,7 @@ namespace Libraria.Rendering {
 		public int ID;
 		public int TexUnit;
 		public int Width, Height;
+		public TextureTarget Target { get; private set; } = TextureTarget.Texture2D;
 		public Vector2 Size { get { return new Vector2(Width, Height); } }
 
 		public Texture2D(TexFilterMode FilterMode, TexWrapMode WrapMode = TexWrapMode.ClampToEdge) {
@@ -86,6 +87,10 @@ namespace Libraria.Rendering {
 			SetParam(TexParam.MagFilter, FilterMode);
 		}
 
+		public Texture2D(TexFilterMode FilterMode, int W, int H, TexWrapMode WrapMode = TexWrapMode.ClampToEdge) : this(FilterMode, WrapMode) {
+			LoadEmptyData(W, H);
+		}
+
 		public void Bind(int TexUnit = 0) {
 			if (TexUnit < 0 || TexUnit > 31)
 				throw new Exception("Invalid texture unit " + TexUnit);
@@ -93,11 +98,32 @@ namespace Libraria.Rendering {
 			this.TexUnit = TexUnit;
 
 			GL.ActiveTexture(TextureUnit.Texture0 + TexUnit);
-			GL.BindTexture(TextureTarget.Texture2D, ID);
+			GL.BindTexture(Target, ID);
+		}
+
+		public void Unbind() {
+			Unbind(TexUnit);
+		}
+
+		public void Unbind(int TexUnit) {
+			GL.ActiveTexture(TextureUnit.Texture0 + TexUnit);
+			GL.BindTexture(Target, 0);
 		}
 
 		public void GenerateMipmap() {
 			GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+		}
+
+		public void LoadData(Texture2D Tex) {
+			if (Tex.Width != Width || Tex.Height != Height)
+				throw new Exception("Cannot copy data from two images of different sizes");
+			GL.CopyImageSubData(Tex.ID, ImageTarget.Texture2D, 0, 0, 0, 0, ID, ImageTarget.Texture2D, 0, 0, 0, 0, Width, Height, 1);
+		}
+
+		public void LoadEmptyData(int W, int H) {
+			Width = W;
+			Height = H;
+			GL.TexImage2D(Target, 0, PixelInternalFormat.Rgba, W, H, 0, PixelFormat.Rgba, PixelType.UnsignedByte, IntPtr.Zero);
 		}
 
 		public void LoadDataFromFile(string Pth) {
@@ -111,14 +137,14 @@ namespace Libraria.Rendering {
 			BitmapData BDta = BMap.LockBits(new Rectangle(0, 0, BMap.Width, BMap.Height),
 							ImageLockMode.ReadOnly, IPixelFormat.Format32bppArgb);
 
-			GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, BMap.Width, BMap.Height, 0,
+			GL.TexImage2D(Target, 0, PixelInternalFormat.Rgba, BMap.Width, BMap.Height, 0,
 				PixelFormat.Bgra, PixelType.UnsignedByte, BDta.Scan0);
 
 			BMap.UnlockBits(BDta);
 		}
 
 		public void SetParam(TexParam Param, int Val) {
-			GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)Param, Val);
+			GL.TexParameter(Target, (TextureParameterName)Param, Val);
 		}
 
 		public void SetParam(TexParam Param, TexWrapMode WrapMode) {
@@ -127,6 +153,10 @@ namespace Libraria.Rendering {
 
 		public void SetParam(TexParam Param, TexFilterMode WrapMode) {
 			SetParam(Param, (int)WrapMode);
+		}
+
+		public void Destroy() {
+			GL.DeleteTexture(ID);
 		}
 	}
 }

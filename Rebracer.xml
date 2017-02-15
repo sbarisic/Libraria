@@ -418,8 +418,8 @@
         <PropertyValue name="NewlineEmptyTypeCloseBrace">true</PropertyValue>
         <PropertyValue name="NewlineFunctionBrace">1</PropertyValue>
         <PropertyValue name="NewlineInitListBrace">0</PropertyValue>
-        <PropertyValue name="NewlineKeywordCatch">false</PropertyValue>
-        <PropertyValue name="NewlineKeywordElse">false</PropertyValue>
+        <PropertyValue name="NewlineKeywordCatch">true</PropertyValue>
+        <PropertyValue name="NewlineKeywordElse">true</PropertyValue>
         <PropertyValue name="NewlineKeywordWhile">false</PropertyValue>
         <PropertyValue name="NewlineLambdaBrace">1</PropertyValue>
         <PropertyValue name="NewlineNamespaceBrace">1</PropertyValue>

@@ -9,12 +9,15 @@
     <Import_RootNamespace>Libraria.Rendering</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Buffers\FrameBuffer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\GfxBuffer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\DataBuffer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\IndexBuffer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Buffers\RenderBuffer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\VertexBuffer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Camera.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RenderObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RenderTexture.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RenderWindow.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ShaderProgram.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Texture2D.cs" />
