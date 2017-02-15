@@ -348,7 +348,7 @@
         <PropertyValue name="WarnOnBuildErrors">0</PropertyValue>
         <PropertyValue name="Wrapping_IgnoreSpacesAroundBinaryOperators">0</PropertyValue>
         <PropertyValue name="Wrapping_IgnoreSpacesAroundVariableDeclaration">0</PropertyValue>
-        <PropertyValue name="Wrapping_KeepStatementsOnSingleLine">0</PropertyValue>
+        <PropertyValue name="Wrapping_KeepStatementsOnSingleLine">1</PropertyValue>
         <PropertyValue name="Wrapping_PreserveSingleLine">1</PropertyValue>
       </ToolsOptionsSubCategory>
       <ToolsOptionsSubCategory name="JavaScript Specific">
@@ -423,7 +423,7 @@
         <PropertyValue name="NewlineKeywordWhile">false</PropertyValue>
         <PropertyValue name="NewlineLambdaBrace">1</PropertyValue>
         <PropertyValue name="NewlineNamespaceBrace">1</PropertyValue>
-        <PropertyValue name="NewlineScopeBrace">true</PropertyValue>
+        <PropertyValue name="NewlineScopeBrace">false</PropertyValue>
         <PropertyValue name="NewlineTypeBrace">1</PropertyValue>
         <PropertyValue name="PreserveBlock">0</PropertyValue>
         <PropertyValue name="PreserveCommentIndentation">false</PropertyValue>
@@ -463,7 +463,7 @@
         <PropertyValue name="SpaceBeforeInheritanceColon">true</PropertyValue>
         <PropertyValue name="SpaceBeforeInitListBrace">false</PropertyValue>
         <PropertyValue name="SpaceBeforeLambdaParenthesis">false</PropertyValue>
-        <PropertyValue name="SpaceBetweenEmptyBraces">true</PropertyValue>
+        <PropertyValue name="SpaceBetweenEmptyBraces">false</PropertyValue>
         <PropertyValue name="SpaceBetweenEmptyBrackets">false</PropertyValue>
         <PropertyValue name="SpaceBetweenEmptyFunctionParentheses">false</PropertyValue>
         <PropertyValue name="SpaceBetweenEmptyLambdaBrackets">false</PropertyValue>

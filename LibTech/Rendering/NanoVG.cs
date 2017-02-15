@@ -64,7 +64,7 @@ namespace LibTech.Rendering {
 			if (FlipY)
 				Flags = NVG.NVG_IMAGE_FLIPY;
 
-			return NVG.CreateImage_OpenGL_RGBA(Engine.NVGCtx, Tex.ID, Tex.Width, Tex.Height, Flags);
+			return NVG.CreateImageFromHandleGL3(Engine.NVGCtx, Tex.ID, Tex.Width, Tex.Height, Flags);
 		}
 
 		public static int CreateImage(RenderTexture RT) {

@@ -52,15 +52,6 @@
 
 #define NVG_COUNTOF(arr) (sizeof(arr) / sizeof(0[arr]))
 
-extern "C" NANOVG_EXPORT int InitOpenGL() {
-	if (!glfwInit())
-		return 0;
-	if (glewInit() != GLEW_OK)
-		return 0;
-
-	return 1;
-}
-
 enum NVGcommands {
 	NVG_MOVETO = 0,
 	NVG_LINETO = 1,
@@ -140,6 +131,8 @@ struct NVGcontext {
 	int strokeTriCount;
 	int textTriCount;
 };
+
+#include "nanovg_custom_crap.h"
 
 static float nvg__sqrtf(float a) {
 	return sqrtf(a);
@@ -743,16 +736,6 @@ void nvgFillPaint(NVGcontext* ctx, NVGpaint paint) {
 	NVGstate* state = nvg__getState(ctx);
 	state->fill = paint;
 	nvgTransformMultiply(state->fill.xform, state->xform);
-}
-
-extern "C" NANOVG_EXPORT int nvgCreateImage_OpenGL_RGBA(NVGcontext* ctx, int ogl_texid, int w, int h, int flags) {
-	GLNVGtexture* tex = glnvg__allocTexture((GLNVGcontext*)(ctx->params.userPtr));
-	tex->width = w;
-	tex->height = h;
-	tex->flags = flags;
-	tex->type = NVG_TEXTURE_RGBA;
-	tex->tex = ogl_texid;
-	return tex->id;
 }
 
 int nvgCreateImage(NVGcontext* ctx, const char* filename, int imageFlags) {

@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClInclude Include="fontstash.h" />
     <ClInclude Include="nanovg.h" />
+    <ClInclude Include="nanovg_custom_crap.h" />
     <ClInclude Include="nanovg_gl.h" />
     <ClInclude Include="nanovg_gl_utils.h" />
     <ClInclude Include="stb_image.h" />

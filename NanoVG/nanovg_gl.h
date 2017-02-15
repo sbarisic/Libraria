@@ -69,8 +69,8 @@ extern "C" {
 	NANOVG_EXPORT NVGcontext* nvgCreateGL3(int flags);
 	NANOVG_EXPORT void nvgDeleteGL3(NVGcontext* ctx);
 
-	int nvglCreateImageFromHandleGL3(NVGcontext* ctx, GLuint textureId, int w, int h, int flags);
-	GLuint nvglImageHandleGL3(NVGcontext* ctx, int image);
+	NANOVG_EXPORT int nvglCreateImageFromHandleGL3(NVGcontext* ctx, GLuint textureId, int w, int h, int flags);
+	NANOVG_EXPORT GLuint nvglImageHandleGL3(NVGcontext* ctx, int image);
 
 #endif
 

@@ -100,10 +100,10 @@ namespace Libraria.NanoVG {
 
 		[DllImport(DllName, EntryPoint = "InitOpenGL", CallingConvention = CConv, CharSet = CSet)]
 		public static extern bool InitOpenGL();
-
-		[DllImport(DllName, EntryPoint = "nvgCreateImage_OpenGL_RGBA", CallingConvention = CConv, CharSet = CSet)]
-		public static extern int CreateImage_OpenGL_RGBA(IntPtr ctx, int ogl_texid, int w, int h, int flags);
 		
+		[DllImport(DllName, EntryPoint = "nvglCreateImageFromHandleGL3", CallingConvention = CConv, CharSet = CSet)]
+		public static extern int CreateImageFromHandleGL3(IntPtr ctx, int textureId, int w, int h, int imageFlags);
+
 		#endregion
 
 		[DllImport(DllName, EntryPoint = "nvgCreateGL3", CallingConvention = CConv, CharSet = CSet)]
