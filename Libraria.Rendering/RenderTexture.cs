@@ -37,7 +37,7 @@ namespace Libraria.Rendering {
 		Texture2D OldBuffer = null;
 		Texture2D NewBuffer = null;
 
-		public RenderTexture(int W, int H, bool Depth = true, bool DoubleBuffered = false, TexFilterMode FilterMode = TexFilterMode.Nearest) {
+		public RenderTexture(int W, int H, bool Depth = true, bool DoubleBuffered = false, TexFilterMode FilterMode = TexFilterMode.Linear) {
 			HasDepth = Depth;
 			IsDoubleBuffered = DoubleBuffered;
 

@@ -63,6 +63,7 @@
   <Import Project="..\Libraria.Security\Libraria.Security.projitems" Label="Shared" />
   <Import Project="..\Libraria.Native\Libraria.Native.projitems" Label="Shared" />
   <Import Project="..\Maths\Maths.projitems" Label="Shared" />
+  <Import Project="..\Libraria.Collections\Libraria.Collections.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -44,7 +44,7 @@
         <PropertyValue name="Indent_FlushLabelsLeft">0</PropertyValue>
         <PropertyValue name="Indent_UnindentLabels">1</PropertyValue>
         <PropertyValue name="NewLines_AnonymousTypeInitializer_EachMember">1</PropertyValue>
-        <PropertyValue name="NewLines_Braces_Accessor">1</PropertyValue>
+        <PropertyValue name="NewLines_Braces_Accessor">0</PropertyValue>
         <PropertyValue name="NewLines_Braces_AnonymousMethod">0</PropertyValue>
         <PropertyValue name="NewLines_Braces_AnonymousTypeInitializer">0</PropertyValue>
         <PropertyValue name="NewLines_Braces_ControlFlow">0</PropertyValue>
@@ -413,10 +413,10 @@
         <PropertyValue name="MemberListDotToArrow_1">true</PropertyValue>
         <PropertyValue name="MemberListFilterHeuristic">false</PropertyValue>
         <PropertyValue name="MemberListFilterPredictive">false</PropertyValue>
-        <PropertyValue name="NewlineControlBlockBrace">1</PropertyValue>
+        <PropertyValue name="NewlineControlBlockBrace">0</PropertyValue>
         <PropertyValue name="NewlineEmptyFunctionCloseBrace">true</PropertyValue>
         <PropertyValue name="NewlineEmptyTypeCloseBrace">true</PropertyValue>
-        <PropertyValue name="NewlineFunctionBrace">1</PropertyValue>
+        <PropertyValue name="NewlineFunctionBrace">0</PropertyValue>
         <PropertyValue name="NewlineInitListBrace">0</PropertyValue>
         <PropertyValue name="NewlineKeywordCatch">true</PropertyValue>
         <PropertyValue name="NewlineKeywordElse">true</PropertyValue>

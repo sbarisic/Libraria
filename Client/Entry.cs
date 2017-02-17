@@ -8,10 +8,16 @@ using LibTech;
 
 namespace Client {
 	public class Entry : IModule {
-		public void Init(params object[] Args) {
+		public void Open(IModule Client, IModule Server, IModule UI) {
 		}
 
-		public void Event(ModuleEvent Evt, params object[] Args) {
+		public void Close() {
+		}
+
+		public void Update(float Dt) {
+		}
+
+		public void Render(float Dt) {
 		}
 	}
 }

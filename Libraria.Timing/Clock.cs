@@ -33,15 +33,20 @@ namespace Libraria.Timing {
 		}
 
 		public TimeSpan AtLeast(TimeSpan TSpan, Action<float> A) {
-			SWatch.Restart();
+			if (!SWatch.IsRunning)
+				SWatch.Start();
 
 			A(Dt);
 
 			while (SWatch.Elapsed < TSpan)
 				;
+
 			SWatch.Stop();
-			Dt = (float)SWatch.Elapsed.TotalSeconds;
-			return SWatch.Elapsed;
+			TimeSpan Elapsed = SWatch.Elapsed;
+			SWatch.Restart();
+
+			Dt = (float)Elapsed.TotalSeconds;
+			return Elapsed;
 		}
 	}
 }

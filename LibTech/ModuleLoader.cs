@@ -13,8 +13,11 @@ namespace LibTech {
 	}
 
 	public interface IModule {
-		void Init(params object[] Args);
-		void Event(ModuleEvent Evt, params object[] Args);
+		void Open(IModule Client, IModule Server, IModule UI);
+		void Close();
+
+		void Update(float Dt);
+		void Render(float Dt);
 	}
 
 	public class ModuleLoader {

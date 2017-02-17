@@ -100,7 +100,7 @@ namespace Libraria.NanoVG {
 
 		[DllImport(DllName, EntryPoint = "InitOpenGL", CallingConvention = CConv, CharSet = CSet)]
 		public static extern bool InitOpenGL();
-		
+
 		[DllImport(DllName, EntryPoint = "nvglCreateImageFromHandleGL3", CallingConvention = CConv, CharSet = CSet)]
 		public static extern int CreateImageFromHandleGL3(IntPtr ctx, int textureId, int w, int h, int imageFlags);
 
@@ -481,7 +481,7 @@ namespace Libraria.NanoVG {
 		// NANOVG_EXPORT void nvgTextBoxBounds(IntPtr ctx, float x, float y, float breakRowWidth, const char* string, const char* end, float* bounds);
 
 		[DllImport(DllName, EntryPoint = "nvgTextGlyphPositions", CallingConvention = CConv, CharSet = CSet)]
-		public static extern int TextGlyphPositions(IntPtr ctx, float x, float y, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshal))]string Str, IntPtr end, ref NVGglyphPosition positions, int maxPositions);
+		public static extern int TextGlyphPositions(IntPtr ctx, float x, float y, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshal))]string Str, IntPtr end, [Out] NVGglyphPosition[] positions, int maxPositions);
 		// NANOVG_EXPORT int nvgTextGlyphPositions(IntPtr ctx, float x, float y, const char* string, const char* end, NVGglyphPosition* positions, int maxPositions);
 
 		[DllImport(DllName, EntryPoint = "nvgTextMetrics", CallingConvention = CConv, CharSet = CSet)]
@@ -489,7 +489,7 @@ namespace Libraria.NanoVG {
 		// NANOVG_EXPORT void nvgTextMetrics(IntPtr ctx, float* ascender, float* descender, float* lineh);
 
 		[DllImport(DllName, EntryPoint = "nvgTextBreakLines", CallingConvention = CConv, CharSet = CSet)]
-		public static extern int TextBreakLines(IntPtr ctx, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshal))] string Str, IntPtr end, float breakRowWidth, ref NVGtextRow rows, int maxRows);
+		public static extern int TextBreakLines(IntPtr ctx, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshal))] string Str, IntPtr end, float breakRowWidth, NVGtextRow[] rows, int maxRows);
 		// NANOVG_EXPORT int nvgTextBreakLines(IntPtr ctx, const char* string, const char* end, float breakRowWidth, NVGtextRow* rows, int maxRows);
 	}
 }

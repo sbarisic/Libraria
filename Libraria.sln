@@ -59,6 +59,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NanoVG", "NanoVG\NanoVG.vcx
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Libraria.NanoVG", "Libraria.NanoVG\Libraria.NanoVG.shproj", "{6E48B225-C6A4-46A6-AC97-958D8CA04B1F}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Libraria.Collections", "Libraria.Collections\Libraria.Collections.shproj", "{B107CDAA-7365-446A-A369-00715F6D8C4B}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Libraria.Net\Libraria.Net.projitems*{056703db-b153-449e-afc1-91f5a2e6d1f2}*SharedItemsImports = 13
@@ -68,6 +70,7 @@ Global
 		Shared\Shared.projitems*{4db28f85-584b-4e0b-87b2-8d1857d67c88}*SharedItemsImports = 4
 		Libraria.Security\Libraria.Security.projitems*{4dc1c735-7612-434c-8c2d-7799eb8abd9e}*SharedItemsImports = 13
 		Shared\Shared.projitems*{503d9627-893d-4586-81b6-5ad614e1426f}*SharedItemsImports = 13
+		Libraria.Collections\Libraria.Collections.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
 		Libraria.Hacks\Libraria.Hacks.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
 		Libraria.IO\Libraria.IO.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
 		Libraria.NanoVG\Libraria.NanoVG.projitems*{61b3fdd4-0d3f-463a-b045-d5ca4397af7f}*SharedItemsImports = 4
@@ -87,6 +90,7 @@ Global
 		Maths\Maths.projitems*{7af4224b-9f67-47d2-9877-4ebd219670bc}*SharedItemsImports = 13
 		Libraria.Hacks\Libraria.Hacks.projitems*{7fde4d3f-106e-4389-90b1-9950ea6dd8dc}*SharedItemsImports = 13
 		Shared\Shared.projitems*{8dfa543e-3291-4bc7-8529-cfe1a0351c51}*SharedItemsImports = 4
+		Libraria.Collections\Libraria.Collections.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
 		Libraria.Hacks\Libraria.Hacks.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
 		Libraria.IO\Libraria.IO.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
 		Libraria.Native\Libraria.Native.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
@@ -101,6 +105,7 @@ Global
 		System.Text\System.Text.projitems*{8f48f330-0845-4c88-bfdb-a78a7d684609}*SharedItemsImports = 4
 		LibrariaShared\LibrariaShared.projitems*{99332a23-0360-472b-b311-7da8705486aa}*SharedItemsImports = 13
 		Libraria.Timing\Libraria.Timing.projitems*{a4f8716b-0270-434f-af0b-48218d837ae3}*SharedItemsImports = 13
+		Libraria.Collections\Libraria.Collections.projitems*{b107cdaa-7365-446a-a369-00715f6d8c4b}*SharedItemsImports = 13
 		Libraria.Rendering\Libraria.Rendering.projitems*{ba38d370-64c0-4f7e-bd6a-387b63082175}*SharedItemsImports = 13
 		Libraria.IO\Libraria.IO.projitems*{c6fcd7a6-df52-410c-8268-7fa94083c7e9}*SharedItemsImports = 13
 		System.Text\System.Text.projitems*{e3e83306-c106-4407-8553-4842cd12611c}*SharedItemsImports = 13

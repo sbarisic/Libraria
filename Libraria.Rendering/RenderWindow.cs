@@ -65,7 +65,7 @@ namespace Libraria.Rendering {
 
 			//GL.RenderMode(RenderingMode.Render);
 			//GL.MatrixMode(MatrixMode.Projection);
-			
+
 			IsOpen = true;
 		}
 
@@ -74,7 +74,7 @@ namespace Libraria.Rendering {
 				W = Width;
 			if (H == -1)
 				H = Height;
-			
+
 			SDL.SDL_SetWindowSize(Window, W, H);
 
 			Width = W;
@@ -96,22 +96,25 @@ namespace Libraria.Rendering {
 		}
 
 		public void Close() {
-			IsOpen = false;
+			SDL.SDL_GL_DeleteContext(GLContext);
+			SDL.SDL_DestroyWindow(Window);
 		}
 
-		public void PollEvents() {
+		public bool PollEvents() {
 			SDL.SDL_Event Event;
 
 			while (SDL.SDL_PollEvent(out Event) != 0) {
 				switch (Event.type) {
 					case SDL.SDL_EventType.SDL_QUIT:
-						Close();
-						break;
+						IsOpen = false;
+						return false;
 
 					default:
 						break;
 				}
 			}
+
+			return true;
 		}
 	}
 }

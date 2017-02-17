@@ -8,39 +8,41 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 using LibTech.Rendering;
+using Libraria.Collections;
+using System.Drawing;
 
 namespace LibTech {
 	public static partial class Engine {
 		public static RenderWindow RenderWindow;
 
-		public static bool Headless;
+		public static bool DrawFPSCounter;
+		public static bool DedicatedServer;
 		public static Stopwatch TimeSinceLaunch;
 	}
 
 	class Program {
 		static Thread UpdateThread;
+		static TimeSpan UpdateRate, RenderRate;
 
 		static IModule Server, Client, UI;
 
-		static bool Running;
-		static TimeSpan UpdateRate, RenderRate;
-
 		static void Main(string[] args) {
-			Console.Title = "LibTech";
 			SetProcessDPIAware();
 
 			Files.Initialize("basegame");
 			// TODO: Load from arguments passed or somethin'
 			Files.SetGameFolder("testgame");
 
-			Engine.Headless = false;
+			Console.Visible = true;
+			Engine.DedicatedServer = false;
+			Engine.DrawFPSCounter = true;
 			Engine.TimeSinceLaunch = Stopwatch.StartNew();
-			Running = true;
 
+			bool Running = true;
 			UpdateRate = TimeSpan.FromSeconds(1.0 / 25);
 			RenderRate = TimeSpan.FromSeconds(1.0 / (60 * 2));
 
-			if (!Engine.Headless) {
+			if (!Engine.DedicatedServer) {
 				RenderWindow.InitRenderer();
 				SpawnWindow();
 
@@ -49,8 +51,12 @@ namespace LibTech {
 
 				Client = ModuleLoader.LoadModule(Engine.GameFolder, "Client");
 				UI = ModuleLoader.LoadModule(Engine.GameFolder, "UI");
+			} else {
+				// TODO: Spawn a console here
 			}
+
 			Server = ModuleLoader.LoadModule(Engine.GameFolder, "Server");
+			Server?.Open(null, null, null);
 
 			// Update loop
 			UpdateThread = new Thread(() => {
@@ -61,17 +67,23 @@ namespace LibTech {
 			UpdateThread.Start();
 
 			// Render loop
-			if (!Engine.Headless) {
-				Client?.Init();
-				UI?.Init(Client);
+			if (!Engine.DedicatedServer) {
+				Client?.Open(null, Server, UI);
+				UI?.Open(Client, Server, null);
 
 				Clock RenderClk = new Clock();
 				while (Engine.RenderWindow.IsOpen)
 					RenderClk.AtLeast(RenderRate, (Dt) => Render(Dt));
+
+				Running = false;
+				Engine.RenderWindow.Close();
 			}
 
 			while (Running)
 				Thread.Sleep(10);
+			Server?.Close();
+			Client?.Close();
+			UI?.Close();
 			Environment.Exit(0);
 		}
 
@@ -83,9 +95,9 @@ namespace LibTech {
 			if (PrefH != -1)
 				H = PrefH;
 
-			Console.WriteLine("Running at {0}x{1}", W, H);
+			Console.WriteLine(Console.Yellow + "Running at {0}x{1}", W, H);
 
-			Engine.RenderWindow = new RenderWindow("LibTech", W, H);
+			Engine.RenderWindow = new RenderWindow("LibTech", W, H, false);
 			Engine.RenderWindow.Init();
 
 			Console.WriteLine("Vendor: {0}", GL.GetString(StringName.Vendor));
@@ -95,28 +107,28 @@ namespace LibTech {
 		}
 
 		static void Update(float Dt) {
-			Server?.Event(ModuleEvent.UPDATE, Dt);
-			Client?.Event(ModuleEvent.UPDATE, Dt);
-			UI?.Event(ModuleEvent.UPDATE, Dt);
+			Server?.Update(Dt);
+			Client?.Update(Dt);
+			UI?.Update(Dt);
 		}
 
 		static void Render(float Dt) {
-			Engine.RenderWindow.PollEvents();
+			if (!Engine.RenderWindow.PollEvents())
+				return;
+
 			Engine.RenderWindow.Reset();
-			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
 
-			// Perspective 3D
-			Client?.Event(ModuleEvent.RENDER, Dt);
-
-			// Ortho 2D
-			UI?.Event(ModuleEvent.RENDER, Dt);
+			Client?.Render(Dt);
+			UI?.Render(Dt);
+			Console.Render(Dt);
+			if (Engine.DrawFPSCounter) {
+				NanoVG.BeginFrame();
+				NanoVG.DrawText("clacon", 12, TextAlign.TopLeft, Color.White, 0, 0, string.Format("FPS: {0} - {1} ms", 1.0f / Dt, Dt));
+				NanoVG.EndFrame();
+			}
 
 			Engine.RenderWindow.Swap();
-		}
-
-		static void Exit() {
-			Engine.RenderWindow?.Close();
-			Running = false;
 		}
 
 		[DllImport("user32")]
