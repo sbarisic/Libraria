@@ -421,8 +421,8 @@
         <PropertyValue name="NewlineKeywordCatch">true</PropertyValue>
         <PropertyValue name="NewlineKeywordElse">true</PropertyValue>
         <PropertyValue name="NewlineKeywordWhile">false</PropertyValue>
-        <PropertyValue name="NewlineLambdaBrace">1</PropertyValue>
-        <PropertyValue name="NewlineNamespaceBrace">1</PropertyValue>
+        <PropertyValue name="NewlineLambdaBrace">0</PropertyValue>
+        <PropertyValue name="NewlineNamespaceBrace">0</PropertyValue>
         <PropertyValue name="NewlineScopeBrace">false</PropertyValue>
         <PropertyValue name="NewlineTypeBrace">1</PropertyValue>
         <PropertyValue name="PreserveBlock">0</PropertyValue>

@@ -10,6 +10,9 @@ using System.Threading;
 using LibTech.Rendering;
 using Libraria.Collections;
 using System.Drawing;
+using System.Windows.Forms;
+using System.Windows.Input;
+using System.IO;
 
 namespace LibTech {
 	public static partial class Engine {
@@ -20,7 +23,7 @@ namespace LibTech {
 		public static Stopwatch TimeSinceLaunch;
 	}
 
-	class Program {
+	static class Program {
 		static Thread UpdateThread;
 		static TimeSpan UpdateRate, RenderRate;
 
@@ -40,7 +43,7 @@ namespace LibTech {
 
 			bool Running = true;
 			UpdateRate = TimeSpan.FromSeconds(1.0 / 25);
-			RenderRate = TimeSpan.FromSeconds(1.0 / (60 * 2));
+			RenderRate = TimeSpan.FromSeconds(1.0 / 120);
 
 			if (!Engine.DedicatedServer) {
 				RenderWindow.InitRenderer();
@@ -99,11 +102,68 @@ namespace LibTech {
 
 			Engine.RenderWindow = new RenderWindow("LibTech", W, H, false);
 			Engine.RenderWindow.Init();
+			Engine.RenderWindow.OnMouseMove += OnMouseMove;
+			Engine.RenderWindow.OnMouseButton += OnMouseButton;
+			Engine.RenderWindow.OnMouseWheel += OnMouseWheel;
+			Engine.RenderWindow.OnKey += OnKey;
+			Engine.RenderWindow.OnTextInput += OnTextInput;
 
 			Console.WriteLine("Vendor: {0}", GL.GetString(StringName.Vendor));
 			Console.WriteLine("Renderer: {0}", GL.GetString(StringName.Renderer));
 			Console.WriteLine("Version: {0}", GL.GetString(StringName.Version));
 			Console.WriteLine("Shading language version: {0}", GL.GetString(StringName.ShadingLanguageVersion));
+		}
+
+		static void OnMouseMove(int X, int Y, int RelX, int RelY) {
+			if (Console.Visible) 
+				return;
+
+			// TODO: Forward
+		}
+
+		static void OnMouseButton(int Clicks, int Button, int X, int Y, bool Pressed) {
+			if (Console.Visible) 
+				return;
+
+			// TODO: Forward
+		}
+
+		static void OnMouseWheel(int X, int Y) {
+			if (Console.Visible) {
+				Console.Scroll(Y);
+				return;
+			}
+
+			// TODO: Forward
+		}
+
+		static void OnKey(int Repeat, int Scancode, int Keycode, int Mod, bool Pressed) {
+			Scancodes SC = (Scancodes)Scancode;
+			if (Pressed && SC == Scancodes.F1) {
+				Console.Visible = !Console.Visible;
+				return;
+			}
+
+			if (Console.Visible) {
+				if (Pressed) {
+					if ((SC == Scancodes.Backspace || SC == Scancodes.Kp_Backspace) && (Console.Input.Length > 0))
+						Console.Input = Console.Input.Substring(0, Console.Input.Length - 1);
+					else if (SC == Scancodes.Kp_Enter || SC == Scancodes.Return)
+						Console.ParseInput();
+				}
+				return;
+			}
+
+			// TODO: Forward
+		}
+
+		static void OnTextInput(string Txt) {
+			if (Console.Visible) {
+				Console.Input += Txt;
+				return;
+			}
+
+			// TODO: Forward
 		}
 
 		static void Update(float Dt) {

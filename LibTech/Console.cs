@@ -35,27 +35,76 @@ namespace LibTech {
 		static AdvancedStack<string> ConsoleLines;
 		static RenderTexture RT;
 		static int RT_NVG;
-		static string Input;
-		static float Scroll;
+		static float ScrollAmt;
 		static Color ClearColor;
 
+		public static string Input;
 		public static bool Visible;
 
 		static Console() {
 			ConsoleLines = new AdvancedStack<string>();
-			for (int i = 0; i < MaxLines; i++)
-				ConsoleLines.Push("");
-			Scroll = 0;
+			Clear();
+			ScrollAmt = 0;
+			Input = "";
 		}
 
-		public static void WriteLine(string Str) {
+		static void AppendString(string Str) {
+			ConsoleLines.Push(ConsoleLines.Pop() + Str);
+		}
+
+		static void AppendLine(string Str) {
 			ConsoleLines.Push(Str);
 			while (ConsoleLines.Count > MaxLines)
 				ConsoleLines.PopBottom();
 		}
 
+		public static void Clear() {
+			for (int i = 0; i < MaxLines; i++)
+				ConsoleLines.Push("");
+			while (ConsoleLines.Count > MaxLines)
+				ConsoleLines.PopBottom();
+			ScrollAmt = 0;
+		}
+
+		public static void Write(string Str) {
+			string[] Lines = Str.Split('\n');
+
+			for (int i = 0; i < Lines.Length; i++) {
+				if (i != 0)
+					AppendLine("");
+				AppendString(Lines[i]);
+			}
+		}
+
+		public static void WriteLine(string Str) {
+			Write(Str + "\n");
+		}
+
 		public static void WriteLine(string Fmt, params object[] Args) {
 			WriteLine(string.Format(Fmt, Args));
+		}
+
+		public static void WriteLine(object Obj) {
+			WriteLine(Obj.ToString());
+		}
+
+		public static void ParseInput() {
+			string In = Input;
+			Input = "";
+			if (In.Length == 0)
+				return;
+
+			if (In.StartsWith("echo ")) {
+				In = In.Substring(5);
+				Console.WriteLine(In);
+			} else if (In == "clear")
+				Clear();
+			else
+				Console.WriteLine("Unknown command '{0}'", In);
+		}
+
+		public static void Scroll(int Amt) {
+			ScrollAmt += (Amt * 10);
 		}
 
 		public static void InitGraphics() {
@@ -94,7 +143,7 @@ namespace LibTech {
 			RenderContent(Dt);
 			RT.Unbind();
 
-			float Y = (0 - RT.Height) + (NanoVG.Height * ConsoleHeightRatio) + Scroll;
+			float Y = (0 - RT.Height) + (NanoVG.Height * ConsoleHeightRatio) + ScrollAmt;
 			NanoVG.BeginFrame();
 			NanoVG.DrawTexturedRect(RT_NVG, 0, (int)Y, RT.Width, RT.Height);
 			NanoVG.EndFrame();

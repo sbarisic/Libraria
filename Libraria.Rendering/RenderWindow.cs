@@ -8,9 +8,16 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Platform;
+using System.Runtime.InteropServices;
 
 namespace Libraria.Rendering {
-	public class RenderWindow {
+	public delegate void OnMouseMoveAction(int X, int Y, int RelativeX, int RelativeY);
+	public delegate void OnMouseButtonAction(int Clicks, int Button, int X, int Y, bool Pressed);
+	public delegate void OnMouseWheelAction(int X, int Y);
+	public delegate void OnKeyAction(int Repeat, int Scancode, int Keycode, int Mod, bool Pressed);
+	public delegate void OnTextInputAction(string Txt);
+
+	public unsafe class RenderWindow {
 		public bool IsOpen { get; private set; }
 
 		IntPtr Window;
@@ -100,6 +107,19 @@ namespace Libraria.Rendering {
 			SDL.SDL_DestroyWindow(Window);
 		}
 
+		public void StartTextInput(bool Start) {
+			if (Start)
+				SDL.SDL_StartTextInput();
+			else
+				SDL.SDL_StopTextInput();
+		}
+
+		public event OnMouseMoveAction OnMouseMove;
+		public event OnMouseButtonAction OnMouseButton;
+		public event OnMouseWheelAction OnMouseWheel;
+		public event OnKeyAction OnKey;
+		public event OnTextInputAction OnTextInput;
+
 		public bool PollEvents() {
 			SDL.SDL_Event Event;
 
@@ -109,11 +129,46 @@ namespace Libraria.Rendering {
 						IsOpen = false;
 						return false;
 
+					case SDL.SDL_EventType.SDL_WINDOWEVENT:
+						break;
+
+					case SDL.SDL_EventType.SDL_MOUSEMOTION:
+						OnMouseMove?.Invoke(Event.motion.x, Event.motion.y, Event.motion.xrel, Event.motion.yrel);
+						break;
+
+					case SDL.SDL_EventType.SDL_MOUSEBUTTONDOWN:
+						OnMouseButton?.Invoke(Event.button.clicks, Event.button.button, Event.button.x, Event.button.y, true);
+						break;
+
+					case SDL.SDL_EventType.SDL_MOUSEBUTTONUP:
+						OnMouseButton?.Invoke(Event.button.clicks, Event.button.button, Event.button.x, Event.button.y, false);
+						break;
+
+					case SDL.SDL_EventType.SDL_MOUSEWHEEL:
+						OnMouseWheel?.Invoke(Event.wheel.x, Event.wheel.y);
+						break;
+
+					case SDL.SDL_EventType.SDL_KEYDOWN:
+						OnKey?.Invoke(Event.key.repeat, (int)Event.key.keysym.scancode, (int)Event.key.keysym.sym, (int)Event.key.keysym.mod, true);
+						break;
+
+					case SDL.SDL_EventType.SDL_KEYUP:
+						OnKey?.Invoke(Event.key.repeat, (int)Event.key.keysym.scancode, (int)Event.key.keysym.sym, (int)Event.key.keysym.mod, false);
+						break;
+
+					case SDL.SDL_EventType.SDL_TEXTINPUT:
+						OnTextInput?.Invoke(Marshal.PtrToStringAuto(new IntPtr(Event.text.text)));
+						break;
+
+					case SDL.SDL_EventType.SDL_TEXTEDITING:
+
+						break;
+
 					default:
 						break;
 				}
 			}
-
+			
 			return true;
 		}
 	}
