@@ -19,6 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)RenderObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RenderTexture.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RenderWindow.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scancodes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ShaderProgram.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Texture2D.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Text\GfxFont.cs" />

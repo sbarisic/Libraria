@@ -17,7 +17,7 @@ File.AppendAllText("out.txt", C + ScancodeNames[i] + " = " + Values[i] + ",\n");
 			}
 	*/
 
-namespace LibTech {
+namespace Libraria.Rendering {
 	public enum Scancodes {
 		Unknown = 0,
 		A = 4,

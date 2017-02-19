@@ -404,7 +404,7 @@
         <PropertyValue name="IndentBraces">false</PropertyValue>
         <PropertyValue name="IndentCaseBraces">false</PropertyValue>
         <PropertyValue name="IndentCaseContents">true</PropertyValue>
-        <PropertyValue name="IndentCaseLabels">true</PropertyValue>
+        <PropertyValue name="IndentCaseLabels">false</PropertyValue>
         <PropertyValue name="IndentGotoLabels">1</PropertyValue>
         <PropertyValue name="IndentNamespaceContents">true</PropertyValue>
         <PropertyValue name="IndentPreprocessor">2</PropertyValue>

@@ -35,13 +35,15 @@ namespace LibTech {
 			return FilePath.Normalize(Path.GetFullPath(Pth));
 		}
 
-		public static string GetRelativePath(string Pth) {
+		public static string GetRelativePath(string Pth, bool RemoveBaseFolder = true) {
 			string Rel = Pth.Replace(FilePath.GetEntryAssemblyPath(), "").TrimStart('\\');
 
-			if (Rel.StartsWith(Engine.GameFolder + "\\"))
-				return Rel.Replace(Engine.GameFolder + "\\", "");
-			if (Rel.StartsWith(Engine.BaseFolder + "\\"))
-				return Rel.Replace(Engine.BaseFolder + "\\", "");
+			if (RemoveBaseFolder) {
+				if (Rel.StartsWith(Engine.GameFolder + "\\"))
+					Rel = Rel.Replace(Engine.GameFolder + "\\", "");
+				else if (Rel.StartsWith(Engine.BaseFolder + "\\"))
+					Rel = Rel.Replace(Engine.BaseFolder + "\\", "");
+			}
 			return Rel;
 		}
 

@@ -13,21 +13,39 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.IO;
+using System.Reflection;
 
 namespace LibTech {
 	public static partial class Engine {
-		public static RenderWindow RenderWindow;
+		internal static ModuleBase Server, Client, UI;
 
+		public static RenderWindow RenderWindow;
 		public static bool DrawFPSCounter;
 		public static bool DedicatedServer;
 		public static Stopwatch TimeSinceLaunch;
+
+		public static void Print(params object[] Args) {
+			const string _SV = "^00FFFF";
+			const string _CL = "^FFFF00";
+			const string _UI = "^00FF33";
+
+			string Str = string.Join("", Args);
+			Assembly IntroAsm = Assembly.GetCallingAssembly();
+
+			if (IntroAsm == Server?.GetType().Assembly)
+				Console.WriteLine(_SV + Str);
+			else if (IntroAsm == Client?.GetType().Assembly)
+				Console.WriteLine(_CL + Str);
+			else if (IntroAsm == UI?.GetType().Assembly)
+				Console.WriteLine(_UI + Str);
+			else
+				Console.WriteLine(Str);
+		}
 	}
 
 	static class Program {
 		static Thread UpdateThread;
 		static TimeSpan UpdateRate, RenderRate;
-
-		static IModule Server, Client, UI;
 
 		static void Main(string[] args) {
 			SetProcessDPIAware();
@@ -36,7 +54,7 @@ namespace LibTech {
 			// TODO: Load from arguments passed or somethin'
 			Files.SetGameFolder("testgame");
 
-			Console.Visible = true;
+			Console.IsOpen = false;
 			Engine.DedicatedServer = false;
 			Engine.DrawFPSCounter = true;
 			Engine.TimeSinceLaunch = Stopwatch.StartNew();
@@ -52,14 +70,14 @@ namespace LibTech {
 				NanoVG.Initialize();
 				Engine.RenderWindow.SetWindowSize(-1, -1);
 
-				Client = ModuleLoader.LoadModule(Engine.GameFolder, "Client");
-				UI = ModuleLoader.LoadModule(Engine.GameFolder, "UI");
+				Engine.Client = ModuleLoader.LoadModule(Engine.GameFolder, "Client");
+				Engine.UI = ModuleLoader.LoadModule(Engine.GameFolder, "UI");
 			} else {
 				// TODO: Spawn a console here
 			}
 
-			Server = ModuleLoader.LoadModule(Engine.GameFolder, "Server");
-			Server?.Open(null, null, null);
+			Engine.Server = ModuleLoader.LoadModule(Engine.GameFolder, "Server");
+			Engine.Server?.Open(null, null, null);
 
 			// Update loop
 			UpdateThread = new Thread(() => {
@@ -71,8 +89,8 @@ namespace LibTech {
 
 			// Render loop
 			if (!Engine.DedicatedServer) {
-				Client?.Open(null, Server, UI);
-				UI?.Open(Client, Server, null);
+				Engine.Client?.Open(null, Engine.Server, Engine.UI);
+				Engine.UI?.Open(Engine.Client, Engine.Server, null);
 
 				Clock RenderClk = new Clock();
 				while (Engine.RenderWindow.IsOpen)
@@ -84,9 +102,10 @@ namespace LibTech {
 
 			while (Running)
 				Thread.Sleep(10);
-			Server?.Close();
-			Client?.Close();
-			UI?.Close();
+
+			ModuleLoader.UnloadModule(Engine.Server);
+			ModuleLoader.UnloadModule(Engine.Client);
+			ModuleLoader.UnloadModule(Engine.UI);
 			Environment.Exit(0);
 		}
 
@@ -98,7 +117,7 @@ namespace LibTech {
 			if (PrefH != -1)
 				H = PrefH;
 
-			Console.WriteLine(Console.Yellow + "Running at {0}x{1}", W, H);
+			Console.WriteLine("Running at {0}x{1}", W, H);
 
 			Engine.RenderWindow = new RenderWindow("LibTech", W, H, false);
 			Engine.RenderWindow.Init();
@@ -115,61 +134,66 @@ namespace LibTech {
 		}
 
 		static void OnMouseMove(int X, int Y, int RelX, int RelY) {
-			if (Console.Visible) 
+			if (Console.IsOpen)
 				return;
 
-			// TODO: Forward
+			if (!(Engine.UI?.OnMouseMove(X, Y, RelX, RelY) ?? false))
+				Engine.Client?.OnMouseMove(X, Y, RelX, RelY);
 		}
 
 		static void OnMouseButton(int Clicks, int Button, int X, int Y, bool Pressed) {
-			if (Console.Visible) 
+			if (Console.IsOpen)
 				return;
 
-			// TODO: Forward
+			if (!(Engine.UI?.OnMouseButton(Clicks, Button, X, Y, Pressed) ?? false))
+				Engine.Client?.OnMouseButton(Clicks, Button, X, Y, Pressed);
 		}
 
 		static void OnMouseWheel(int X, int Y) {
-			if (Console.Visible) {
+			if (Console.IsOpen) {
 				Console.Scroll(Y);
 				return;
 			}
 
-			// TODO: Forward
+			if (!(Engine.UI?.OnMouseWheel(X, Y) ?? false))
+				Engine.Client?.OnMouseWheel(X, Y);
 		}
 
-		static void OnKey(int Repeat, int Scancode, int Keycode, int Mod, bool Pressed) {
-			Scancodes SC = (Scancodes)Scancode;
-			if (Pressed && SC == Scancodes.F1) {
-				Console.Visible = !Console.Visible;
+		static void OnKey(int Repeat, Scancodes Scancode, int Keycode, int Mod, bool Pressed) {
+			if (Pressed && Scancode == Scancodes.F1) {
+				Console.IsOpen = !Console.IsOpen;
+				Console.Scroll(0, true);
 				return;
 			}
 
-			if (Console.Visible) {
+			if (Console.IsOpen) {
 				if (Pressed) {
-					if ((SC == Scancodes.Backspace || SC == Scancodes.Kp_Backspace) && (Console.Input.Length > 0))
+					if ((Scancode == Scancodes.Backspace || Scancode == Scancodes.Kp_Backspace) && (Console.Input.Length > 0))
 						Console.Input = Console.Input.Substring(0, Console.Input.Length - 1);
-					else if (SC == Scancodes.Kp_Enter || SC == Scancodes.Return)
+					else if (Scancode == Scancodes.Kp_Enter || Scancode == Scancodes.Return)
 						Console.ParseInput();
 				}
 				return;
 			}
 
-			// TODO: Forward
+			if (!(Engine.UI?.OnKey(Repeat, Scancode, Keycode, Mod, Pressed) ?? false))
+				Engine.Client?.OnKey(Repeat, Scancode, Keycode, Mod, Pressed);
 		}
 
 		static void OnTextInput(string Txt) {
-			if (Console.Visible) {
+			if (Console.IsOpen) {
 				Console.Input += Txt;
 				return;
 			}
 
-			// TODO: Forward
+			if (!(Engine.UI?.OnTextInput(Txt) ?? false))
+				Engine.Client?.OnTextInput(Txt);
 		}
 
 		static void Update(float Dt) {
-			Server?.Update(Dt);
-			Client?.Update(Dt);
-			UI?.Update(Dt);
+			Engine.Server?.Update(Dt);
+			Engine.Client?.Update(Dt);
+			Engine.UI?.Update(Dt);
 		}
 
 		static void Render(float Dt) {
@@ -179,8 +203,8 @@ namespace LibTech {
 			Engine.RenderWindow.Reset();
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
 
-			Client?.Render(Dt);
-			UI?.Render(Dt);
+			Engine.Client?.Render(Dt);
+			Engine.UI?.Render(Dt);
 			Console.Render(Dt);
 			if (Engine.DrawFPSCounter) {
 				NanoVG.BeginFrame();

@@ -14,7 +14,7 @@ namespace Libraria.Rendering {
 	public delegate void OnMouseMoveAction(int X, int Y, int RelativeX, int RelativeY);
 	public delegate void OnMouseButtonAction(int Clicks, int Button, int X, int Y, bool Pressed);
 	public delegate void OnMouseWheelAction(int X, int Y);
-	public delegate void OnKeyAction(int Repeat, int Scancode, int Keycode, int Mod, bool Pressed);
+	public delegate void OnKeyAction(int Repeat, Scancodes Scancode, int Keycode, int Mod, bool Pressed);
 	public delegate void OnTextInputAction(string Txt);
 
 	public unsafe class RenderWindow {
@@ -149,11 +149,11 @@ namespace Libraria.Rendering {
 						break;
 
 					case SDL.SDL_EventType.SDL_KEYDOWN:
-						OnKey?.Invoke(Event.key.repeat, (int)Event.key.keysym.scancode, (int)Event.key.keysym.sym, (int)Event.key.keysym.mod, true);
+						OnKey?.Invoke(Event.key.repeat, (Scancodes)Event.key.keysym.scancode, (int)Event.key.keysym.sym, (int)Event.key.keysym.mod, true);
 						break;
 
 					case SDL.SDL_EventType.SDL_KEYUP:
-						OnKey?.Invoke(Event.key.repeat, (int)Event.key.keysym.scancode, (int)Event.key.keysym.sym, (int)Event.key.keysym.mod, false);
+						OnKey?.Invoke(Event.key.repeat, (Scancodes)Event.key.keysym.scancode, (int)Event.key.keysym.sym, (int)Event.key.keysym.mod, false);
 						break;
 
 					case SDL.SDL_EventType.SDL_TEXTINPUT:

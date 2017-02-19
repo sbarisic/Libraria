@@ -39,7 +39,7 @@ namespace LibTech {
 		static Color ClearColor;
 
 		public static string Input;
-		public static bool Visible;
+		public static bool IsOpen;
 
 		static Console() {
 			ConsoleLines = new AdvancedStack<string>();
@@ -63,7 +63,7 @@ namespace LibTech {
 				ConsoleLines.Push("");
 			while (ConsoleLines.Count > MaxLines)
 				ConsoleLines.PopBottom();
-			ScrollAmt = 0;
+			Scroll(0, true);
 		}
 
 		public static void Write(string Str) {
@@ -87,10 +87,16 @@ namespace LibTech {
 		public static void WriteLine(object Obj) {
 			WriteLine(Obj.ToString());
 		}
-
+		
 		public static void ParseInput() {
 			string In = Input;
 			Input = "";
+			ParseInput(In);
+		}
+
+		public static void ParseInput(string In) {
+			// TODO: Proper way
+
 			if (In.Length == 0)
 				return;
 
@@ -103,7 +109,9 @@ namespace LibTech {
 				Console.WriteLine("Unknown command '{0}'", In);
 		}
 
-		public static void Scroll(int Amt) {
+		public static void Scroll(int Amt, bool Reset = false) {
+			if (Reset)
+				ScrollAmt = 0;
 			ScrollAmt += (Amt * 10);
 		}
 
@@ -132,7 +140,7 @@ namespace LibTech {
 		}
 
 		public static void Render(float Dt) {
-			if (!Visible)
+			if (!IsOpen)
 				return;
 
 			if (RT == null)
