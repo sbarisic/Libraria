@@ -9,7 +9,6 @@ using LibTech;
 namespace Server {
 	public class Entry : ModuleBase {
 		public override void Open(ModuleBase Client, ModuleBase Server, ModuleBase UI) {
-			Engine.Print("Hello Server!");
 		}
 	}
 }

@@ -7,9 +7,27 @@ using Libraria.Rendering;
 using LibTech;
 
 namespace Client {
+	class Entity {
+		[Networked]
+		public int Property1 { get; set; }
+
+		[Networked]
+		public int Property2 { get; set; }
+
+		[Networked]
+		public string Property3 { get; set; }
+
+		public Entity() {
+			NetworkManager.Network(this);
+		}
+	}
+
 	public class Entry : ModuleBase {
 		public override void Open(ModuleBase Client, ModuleBase Server, ModuleBase UI) {
-			Engine.Print("Hello Client!");
+			Entity E = new Entity();
+			E.Property1 = 50;
+			E.Property2 = 60;
+			E.Property3 = "70";
 		}
 	}
 }

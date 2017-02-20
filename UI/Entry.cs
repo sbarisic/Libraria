@@ -33,10 +33,8 @@ namespace UI {
 		public override void Open(ModuleBase Client, ModuleBase Server, ModuleBase UI) {
 			StateMgr = new GameStateManager();
 			StateMgr.Push(new MainMenuState());
-
-			Engine.Print("Hello UI!");
 		}
-		
+
 		public override bool OnMouseMove(int X, int Y, int RelativeX, int RelativeY) {
 			return StateMgr.OnMouseMove(X, Y, RelativeX, RelativeY);
 		}
@@ -58,6 +56,9 @@ namespace UI {
 		}
 
 		public override void Update(float Dt) {
+			if (StateMgr == null)
+				return;
+
 			StateMgr.Update(Dt);
 		}
 

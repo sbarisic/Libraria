@@ -11,7 +11,9 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Asmblr.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enums.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HookHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Kernel32.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MachineCode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MemoryManagement.cs" />
   </ItemGroup>
 </Project>
