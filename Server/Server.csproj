@@ -57,6 +57,11 @@
       <Name>LibTech</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\SharedCode\Shared.csproj">
+      <Project>{9dc78756-a22d-46c5-8759-1dc10244bb71}</Project>
+      <Name>Shared</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="..\Shared\Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

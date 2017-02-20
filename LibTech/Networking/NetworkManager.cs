@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Linq.Expressions;
 
-namespace LibTech {
+namespace LibTech.Networking {
 	[AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
 	public sealed class NetworkedAttribute : Attribute {
 	}

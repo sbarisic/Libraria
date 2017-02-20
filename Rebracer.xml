@@ -424,8 +424,8 @@
         <PropertyValue name="NewlineLambdaBrace">0</PropertyValue>
         <PropertyValue name="NewlineNamespaceBrace">0</PropertyValue>
         <PropertyValue name="NewlineScopeBrace">false</PropertyValue>
-        <PropertyValue name="NewlineTypeBrace">1</PropertyValue>
-        <PropertyValue name="PreserveBlock">0</PropertyValue>
+        <PropertyValue name="NewlineTypeBrace">0</PropertyValue>
+        <PropertyValue name="PreserveBlock">1</PropertyValue>
         <PropertyValue name="PreserveCommentIndentation">false</PropertyValue>
         <PropertyValue name="PreserveInitListSpace">false</PropertyValue>
         <PropertyValue name="PreserveParameterIndentation">false</PropertyValue>

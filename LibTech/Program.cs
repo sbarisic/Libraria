@@ -54,6 +54,16 @@ namespace LibTech {
 			// TODO: Load from arguments passed or somethin'
 			Files.SetGameFolder("testgame");
 
+			AppDomain.CurrentDomain.AssemblyResolve += (S, E) => {
+				string DllName = E.Name.Split(',')[0] + ".dll";
+
+				string DllPath = Files.GetFilePath(DllName);
+				if (!string.IsNullOrEmpty(DllPath))
+					return Assembly.LoadFile(DllPath);
+
+				return null;
+			};
+
 			Console.IsOpen = false;
 			Engine.DedicatedServer = false;
 			Engine.DrawFPSCounter = true;

@@ -5,9 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Libraria.Rendering;
 using LibTech;
+using LibTech.Networking;
+using Shared;
 
 namespace Client {
-	class Entity {
+	class Entity : EntityShared {
 		[Networked]
 		public int Property1 { get; set; }
 
@@ -29,6 +31,7 @@ namespace Client {
 			E.Property2 = 60;
 			E.Property3 = "70";
 			E.Property1 = E.Property1 + 50;
+			
 		}
 	}
 }
