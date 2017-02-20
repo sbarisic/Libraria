@@ -28,6 +28,7 @@ namespace Client {
 			E.Property1 = 50;
 			E.Property2 = 60;
 			E.Property3 = "70";
+			E.Property1 = E.Property1 + 50;
 		}
 	}
 }
