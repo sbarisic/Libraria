@@ -8,30 +8,26 @@ using LibTech;
 using LibTech.Networking;
 using Shared;
 
-namespace Client {
-	class Entity : EntityShared {
-		[Networked]
-		public int Property1 { get; set; }
-
-		[Networked]
-		public int Property2 { get; set; }
-
-		[Networked]
-		public string Property3 { get; set; }
-
-		public Entity() {
-			NetworkManager.Network(this);
-		}
-	}
-
+namespace ClientLib {
 	public class Entry : ModuleBase {
-		public override void Open(ModuleBase Client, ModuleBase Server, ModuleBase UI) {
-			Entity E = new Entity();
-			E.Property1 = 50;
-			E.Property2 = 60;
-			E.Property3 = "70";
-			E.Property1 = E.Property1 + 50;
-			
+		Client NetClient;
+
+		public override void Open(ModuleBase ClientLib, ModuleBase ServerLib, ModuleBase UILib) {
+			NetClient = new Client();
+			NetClient.Connect("127.0.0.1");
+		}
+
+		bool Printed = false;
+		public override void Update(float Dt) {
+			NetClient.Update();
+
+			Entity E = NetClient.GetObject(0) as Entity;
+			if (!Printed && E != null) {
+				Printed = true;
+
+				Engine.Print("Integer: ", E.Integer);
+				Engine.Print("Stringe: ", E.Stringe);
+			}
 		}
 	}
 }

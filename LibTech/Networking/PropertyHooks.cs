@@ -37,6 +37,19 @@ namespace LibTech.Networking {
 		}
 	}
 
+	public class ObjectNetworkedProperties {
+		public List<PropertyInfo> Properties;
+
+		public ObjectNetworkedProperties() {
+			Properties = new List<PropertyInfo>();
+		}
+
+		public PropertyInfo Add(PropertyInfo Prop) {
+			Properties.Add(Prop);
+			return Prop;
+		}
+	}
+
 	public static class PropertyHooks {
 		public delegate void SetOverrideAction(object Origin, object Value, PropertyOverride Override);
 
@@ -55,8 +68,18 @@ namespace LibTech.Networking {
 			ModBuilder = AsmBuilder.DefineDynamicModule(nameof(PropertyHooks) + "Mod");
 		}
 
-		public static void Hook(object Obj, SetOverrideAction SetOverride) {
+		public static void Unhook(object Obj) {
+			PropertyOverride[] ObjOverrides = Overrides.Where((O) => O.Origin == Obj).ToArray();
+
+			for (int i = 0; i < ObjOverrides.Length; i++) {
+				Overrides.Remove(ObjOverrides[i]);
+				ObjOverrides[i].Hook.Unhook();
+			}
+		}
+
+		public static ObjectNetworkedProperties Hook(object Obj, SetOverrideAction SetOverride) {
 			PropertyInfo[] Props = Obj.GetType().GetProperties().Where((P) => P.GetCustomAttribute(typeof(NetworkedAttribute)) != null).ToArray();
+			ObjectNetworkedProperties NetworkedProps = new ObjectNetworkedProperties();
 
 			TypeBuilder TypeBuilder = ModBuilder.DefineType("Overrides" + Rnd.Next().ToString() + Rnd.Next().ToString(), TypeAttributes.Public);
 			string[] PropOverrideNames = new string[Props.Length];
@@ -84,20 +107,10 @@ namespace LibTech.Networking {
 
 			for (int i = 0; i < Props.Length; i++) {
 				MethodInfo SetMethodInfo = Props[i].GetSetMethod(true);
-				Overrides.Add(new PropertyOverride(HookHandle.CreateHook(SetMethodInfo, OverridesType.GetMethod(PropOverrideNames[i])).Hook(), Props[i], Obj));
+				Overrides.Add(new PropertyOverride(HookHandle.CreateHook(SetMethodInfo, OverridesType.GetMethod(PropOverrideNames[i])).Hook(), NetworkedProps.Add(Props[i]), Obj));
 			}
-		}
-	}
 
-	public static class NetworkManager {
-		public static void SetOverride(object Origin, object Value, PropertyOverride Override) {
-			Console.WriteLine(Console.Magenta + "{0}->{1} = {2}", Origin.GetType(), Override.Property.Name, Value);
-			Override.Set(Value);
-		}
-
-		public static void Network(object Obj) {
-			Console.WriteLine(Console.Magenta + "Type created: `{0}`", Obj);
-			PropertyHooks.Hook(Obj, SetOverride);
+			return NetworkedProps;
 		}
 	}
 }

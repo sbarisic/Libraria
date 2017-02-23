@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using System.Drawing;
 
 namespace Libraria {
-	public static class Lib {
+	public static partial class Lib {
 		public static string GetProcessExePath() {
 			return Assembly.GetEntryAssembly().Location;
 		}

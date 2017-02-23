@@ -15,7 +15,7 @@ using System.Runtime.InteropServices;
 using OpenTK.Graphics.OpenGL;
 using Libraria.Collections;
 
-namespace UI {
+namespace UILib {
 	class MainMenuState : GameState {
 		public override void Render(float Dt) {
 			const float Offset = 20;
@@ -30,7 +30,7 @@ namespace UI {
 	public class Entry : ModuleBase {
 		GameStateManager StateMgr;
 
-		public override void Open(ModuleBase Client, ModuleBase Server, ModuleBase UI) {
+		public override void Open(ModuleBase ClientLib, ModuleBase ServerLib, ModuleBase UILib) {
 			StateMgr = new GameStateManager();
 			StateMgr.Push(new MainMenuState());
 		}
@@ -56,9 +56,6 @@ namespace UI {
 		}
 
 		public override void Update(float Dt) {
-			if (StateMgr == null)
-				return;
-
 			StateMgr.Update(Dt);
 		}
 

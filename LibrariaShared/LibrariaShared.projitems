@@ -14,5 +14,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)EventPool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IEnumerableExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Lib.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StreamExtensions.cs" />
   </ItemGroup>
 </Project>

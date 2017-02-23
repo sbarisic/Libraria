@@ -3,12 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using LibTech;
+using LibTech.Networking;
+using Shared;
 
-namespace Server {
+namespace ServerLib {
 	public class Entry : ModuleBase {
-		public override void Open(ModuleBase Client, ModuleBase Server, ModuleBase UI) {
+		Server NetServer;
+
+		public override void Open(ModuleBase ClientLib, ModuleBase ServerLib, ModuleBase UILib) {
+			NetServer = new Server();
+
+			Entity E = NetServer.CreateNetworked(new Entity());
+			E.Integer = 666;
+			E.Stringe = "Hello World!";
+		}
+
+		public override void Update(float Dt) {
+			NetServer.Update();
 		}
 	}
 }

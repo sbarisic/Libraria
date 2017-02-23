@@ -73,19 +73,6 @@ namespace LibTech {
 			UpdateRate = TimeSpan.FromSeconds(1.0 / 25);
 			RenderRate = TimeSpan.FromSeconds(1.0 / 120);
 
-			if (!Engine.DedicatedServer) {
-				RenderWindow.InitRenderer();
-				SpawnWindow();
-
-				NanoVG.Initialize();
-				Engine.RenderWindow.SetWindowSize(-1, -1);
-
-				Engine.Client = ModuleLoader.LoadModule(Engine.GameFolder, "Client");
-				Engine.UI = ModuleLoader.LoadModule(Engine.GameFolder, "UI");
-			} else {
-				// TODO: Spawn a console here
-			}
-
 			Engine.Server = ModuleLoader.LoadModule(Engine.GameFolder, "Server");
 			Engine.Server?.Open(null, null, null);
 
@@ -95,19 +82,33 @@ namespace LibTech {
 				while (Running)
 					UpdateClk.AtLeast(UpdateRate, (Dt) => Update(Dt));
 			});
+
 			UpdateThread.Start();
 
 			// Render loop
 			if (!Engine.DedicatedServer) {
-				Engine.Client?.Open(null, Engine.Server, Engine.UI);
-				Engine.UI?.Open(Engine.Client, Engine.Server, null);
+				RenderWindow.InitRenderer();
+				SpawnWindow();
 
+				NanoVG.Initialize();
+				Engine.RenderWindow.SetWindowSize(-1, -1);
+
+				ModuleBase Client = ModuleLoader.LoadModule(Engine.GameFolder, "Client");
+				Client?.Open(null, Engine.Server, null);
+				Engine.Client = Client;
+
+				ModuleBase UI = ModuleLoader.LoadModule(Engine.GameFolder, "UI");
+				UI?.Open(Engine.Client, Engine.Server, null);
+				Engine.UI = UI;
+				
 				Clock RenderClk = new Clock();
 				while (Engine.RenderWindow.IsOpen)
 					RenderClk.AtLeast(RenderRate, (Dt) => Render(Dt));
 
 				Running = false;
 				Engine.RenderWindow.Close();
+			} else {
+				// TODO: Spawn console
 			}
 
 			while (Running)

@@ -16,6 +16,10 @@ namespace Libraria.Serialization {
 			return MS;
 		}
 
+		public static byte[] SerializeToBytes(object Obj) {
+			return ((MemoryStream)Serialize(Obj)).ToArray();
+		}
+
 		public static object DeserializeFile(string Pth) {
 			object Ret = null;
 			using (FileStream FS = File.OpenRead(Pth)) {

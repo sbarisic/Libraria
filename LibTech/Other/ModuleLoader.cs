@@ -51,7 +51,7 @@ namespace LibTech {
 			return false;
 		}
 
-		public virtual void Open(ModuleBase Client, ModuleBase Server, ModuleBase UI) {
+		public virtual void Open(ModuleBase ClientLib, ModuleBase ServerLib, ModuleBase UILib) {
 		}
 
 		public virtual void Render(float Dt) {

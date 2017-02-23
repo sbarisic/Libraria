@@ -11,5 +11,6 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Binary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)JSON.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ValueSerializer.cs" />
   </ItemGroup>
 </Project>
