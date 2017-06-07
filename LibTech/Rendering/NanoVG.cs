@@ -8,6 +8,7 @@ using Libraria.Rendering;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using Libraria.Maths;
 
 namespace LibTech {
 	public static partial class Engine {
@@ -71,6 +72,14 @@ namespace LibTech.Rendering {
 			}
 
 			NVG.ImagePattern(Engine.NVGCtx, 0, 0, 100, 100, 0, 0, 0);
+		}
+
+		public static int ScaleX(int X) {
+			return (int)((float)X / Engine.RenderWindow.Width * Width);
+		}
+
+		public static int ScaleY(int Y) {
+			return (int)((float)Y / Engine.RenderWindow.Height * Height);
 		}
 
 		public static int CreateImage(Texture2D Tex, bool FlipY = false) {
@@ -249,6 +258,29 @@ namespace LibTech.Rendering {
 
 			if (Blur != 0)
 				FontBlur(Blur);
+
+			Text(X, Y, Str);
+
+			if (Blur != 0) {
+				FontBlur(0);
+				if (BlurPasses > 0)
+					DrawText(Font, Size, Align, Color, X, Y, Str, Blur, BlurPasses - 1);
+			}
+		}
+
+		public static void DrawText(string Font, float Size, TextAlign Align, Color Color, float X, float Y, string Str, ref AABB? Bounds, float Blur = 0, int BlurPasses = 0) {
+			SetFont(Font, Size);
+			TextAlign(Align);
+			FillColor(Color);
+
+			if (Blur != 0)
+				FontBlur(Blur);
+
+			if (Bounds == null) {
+				float Width, Height;
+				TextBounds(X, Y, Str, out Width, out Height);
+				Bounds = new AABB(X, Y, Width, Height);
+			}
 
 			Text(X, Y, Str);
 

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Reflection;
 using Libraria.Rendering;
+using OpenTK.Input;
 
 namespace LibTech {
 	public enum ModuleEvent {
@@ -27,23 +28,34 @@ namespace LibTech {
 		void Render(float Dt);
 	}*/
 
+	public delegate void OnMessageAction(string MessageName, params object[] Args);
+
 	public class ModuleBase {
+		public event OnMessageAction OnMessage;
+
+		public virtual void Message(string MessageName, params object[] Args) {
+			OnMessage?.Invoke(MessageName, Args);
+		}
+
+		public virtual void Open() {
+		}
+
 		public virtual void Close() {
 		}
 
-		public virtual bool OnKey(int Repeat, Scancodes Scancode, int Keycode, int Mod, bool Pressed) {
+		public virtual bool OnKey(KeyboardKeyEventArgs E, bool Pressed) {
 			return false;
 		}
 
-		public virtual bool OnMouseButton(int Clicks, int Button, int X, int Y, bool Pressed) {
+		public virtual bool OnMouseButton(MouseButtonEventArgs E, bool Pressed) {
 			return false;
 		}
 
-		public virtual bool OnMouseMove(int X, int Y, int RelativeX, int RelativeY) {
+		public virtual bool OnMouseMove(MouseMoveEventArgs E) {
 			return false;
 		}
 
-		public virtual bool OnMouseWheel(int X, int Y) {
+		public virtual bool OnMouseWheel(MouseWheelEventArgs E) {
 			return false;
 		}
 
@@ -51,13 +63,10 @@ namespace LibTech {
 			return false;
 		}
 
-		public virtual void Open(ModuleBase ClientLib, ModuleBase ServerLib, ModuleBase UILib) {
+		public virtual void Update(float Dt) {
 		}
 
 		public virtual void Render(float Dt) {
-		}
-
-		public virtual void Update(float Dt) {
 		}
 	}
 

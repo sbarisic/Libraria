@@ -14,6 +14,7 @@ using OpenTK;
 using System.Runtime.InteropServices;
 using OpenTK.Graphics.OpenGL;
 using Libraria.Collections;
+using OpenTK.Input;
 
 namespace UILib {
 	class MainMenuState : GameState {
@@ -30,7 +31,7 @@ namespace UILib {
 	public class Entry : ModuleBase {
 		GameStateManager StateMgr;
 
-		public override void Open(ModuleBase ClientLib, ModuleBase ServerLib, ModuleBase UILib) {
+		public override void Open() {
 			StateMgr = new GameStateManager();
 			StateMgr.Push(new MainMenuState());
 		}
@@ -47,8 +48,8 @@ namespace UILib {
 			return StateMgr.OnMouseWheel(X, Y);
 		}
 
-		public override bool OnKey(int Repeat, Scancodes Scancode, int Keycode, int Mod, bool Pressed) {
-			return StateMgr.OnKey(Repeat, Scancode, Keycode, Mod, Pressed);
+		public override bool OnKey(KeyboardKeyEventArgs E, bool Pressed) {
+			return StateMgr.OnKey(E, Pressed);
 		}
 
 		public override bool OnTextInput(string Txt) {

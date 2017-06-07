@@ -7,11 +7,16 @@ namespace Libraria.Maths {
 	public struct AABB {
 		public Vector2 Min, Max;
 
-		// Clockwise starting ith top-left corner (min)
+		// Clockwise starting with top-left corner (min)
 		public Vector2 CornerA { get { return Min; } }
 		public Vector2 CornerB { get { return new Vector2(Max.X, Min.Y); } }
 		public Vector2 CornerC { get { return Max; } }
 		public Vector2 CornerD { get { return new Vector2(Min.X, Max.Y); } }
+
+		public AABB(float X, float Y, float W, float H) {
+			Min = new Vector2(X, Y);
+			Max = new Vector2(X + W, Y + H);
+		}
 
 		public float Width
 		{
@@ -27,6 +32,10 @@ namespace Libraria.Maths {
 			{
 				return Max.Y - Min.Y;
 			}
+		}
+
+		public bool Collide(float X, float Y) {
+			return X < Max.X && X > Min.X && Y < Max.Y && Y > Min.Y;
 		}
 
 		public bool Collide(AABB Other) {

@@ -9,6 +9,7 @@
     <Import_RootNamespace>Libraria.IO</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)BusPirate\BusPirate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Compression\SevenZip\CRC.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Compression\SevenZip\InBuffer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Compression\SevenZip\Lib.cs" />

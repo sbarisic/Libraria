@@ -11,18 +11,25 @@ using LibTech.Rendering;
 using Libraria.Collections;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Windows.Input;
 using System.IO;
 using System.Reflection;
+using OpenTK;
+using System.Collections.Generic;
+using OpenTK.Input;
+using OpenTK.Graphics;
 
 namespace LibTech {
 	public static partial class Engine {
-		internal static ModuleBase Server, Client, UI;
+		public static ModuleBase Server, Client, UI;
 
-		public static RenderWindow RenderWindow;
-		public static bool DrawFPSCounter;
+		public static bool Running;
 		public static bool DedicatedServer;
 		public static Stopwatch TimeSinceLaunch;
+
+		public static float UpdateDelta;
+		public static Camera Camera;
+		public static RenderWindow RenderWindow;
+		public static bool DrawFPSCounter;
 
 		public static void Print(params object[] Args) {
 			const string _SV = "^00FFFF";
@@ -43,6 +50,14 @@ namespace LibTech {
 		}
 	}
 
+	public static class Input {
+		public static KeyboardDevice Keyboard;
+
+		internal static void Init() {
+			Keyboard = Engine.RenderWindow.Keyboard;
+		}
+	}
+
 	static class Program {
 		static Thread UpdateThread;
 		static TimeSpan UpdateRate, RenderRate;
@@ -51,8 +66,10 @@ namespace LibTech {
 			SetProcessDPIAware();
 
 			Files.Initialize("basegame");
+
 			// TODO: Load from arguments passed or somethin'
-			Files.SetGameFolder("testgame");
+			//Files.SetGameFolder("testgame");
+			Files.SetGameFolder("Blochs");
 
 			AppDomain.CurrentDomain.AssemblyResolve += (S, E) => {
 				string DllName = E.Name.Split(',')[0] + ".dll";
@@ -68,22 +85,24 @@ namespace LibTech {
 			Engine.DedicatedServer = false;
 			Engine.DrawFPSCounter = true;
 			Engine.TimeSinceLaunch = Stopwatch.StartNew();
+			Engine.Running = true;
 
-			bool Running = true;
-			UpdateRate = TimeSpan.FromSeconds(1.0 / 25);
+			UpdateRate = TimeSpan.FromSeconds(1.0 / 60);
 			RenderRate = TimeSpan.FromSeconds(1.0 / 120);
 
 			Engine.Server = ModuleLoader.LoadModule(Engine.GameFolder, "Server");
-			Engine.Server?.Open(null, null, null);
+			Engine.Server?.Open();
 
 			// Update loop
 			UpdateThread = new Thread(() => {
 				Clock UpdateClk = new Clock();
-				while (Running)
+
+				while (Engine.Running)
 					UpdateClk.AtLeast(UpdateRate, (Dt) => Update(Dt));
 			});
 
-			UpdateThread.Start();
+			if (Engine.DedicatedServer)
+				UpdateThread.Start();
 
 			// Render loop
 			if (!Engine.DedicatedServer) {
@@ -93,25 +112,27 @@ namespace LibTech {
 				NanoVG.Initialize();
 				Engine.RenderWindow.SetWindowSize(-1, -1);
 
+				Engine.Camera = new Camera();
+				Engine.Camera.Projection = Matrix4.CreatePerspectiveFieldOfView(90.0f / 180.0f * (float)Math.PI, Engine.RenderWindow.AspectRatio, 0.1f, 10000.0f);
+				Engine.Camera.SetPosition(new Vector3(0, 0, -100));
+
 				ModuleBase Client = ModuleLoader.LoadModule(Engine.GameFolder, "Client");
-				Client?.Open(null, Engine.Server, null);
+				Client?.Open();
 				Engine.Client = Client;
 
 				ModuleBase UI = ModuleLoader.LoadModule(Engine.GameFolder, "UI");
-				UI?.Open(Engine.Client, Engine.Server, null);
+				UI?.Open();
 				Engine.UI = UI;
 				
-				Clock RenderClk = new Clock();
-				while (Engine.RenderWindow.IsOpen)
-					RenderClk.AtLeast(RenderRate, (Dt) => Render(Dt));
-
-				Running = false;
-				Engine.RenderWindow.Close();
+				Engine.RenderWindow.OnUpdate += Update;
+				Engine.RenderWindow.OnRender += Render;
+				Engine.RenderWindow.Run(60);
+				Engine.Running = false;
 			} else {
 				// TODO: Spawn console
 			}
 
-			while (Running)
+			while (Engine.Running)
 				Thread.Sleep(10);
 
 			ModuleLoader.UnloadModule(Engine.Server);
@@ -127,51 +148,58 @@ namespace LibTech {
 				W = PrefW;
 			if (PrefH != -1)
 				H = PrefH;
-
-			Console.WriteLine("Running at {0}x{1}", W, H);
+			
+			Console.WriteLine(Console.Cyan + "Running at {0}x{1}", W, H);
 
 			Engine.RenderWindow = new RenderWindow("LibTech", W, H, false);
-			Engine.RenderWindow.Init();
-			Engine.RenderWindow.OnMouseMove += OnMouseMove;
-			Engine.RenderWindow.OnMouseButton += OnMouseButton;
-			Engine.RenderWindow.OnMouseWheel += OnMouseWheel;
-			Engine.RenderWindow.OnKey += OnKey;
-			Engine.RenderWindow.OnTextInput += OnTextInput;
+			Engine.RenderWindow.MouseMove += (S, E) => OnMouseMove(E);
+			Engine.RenderWindow.MouseDown += (S, E) => OnMouseButton(E, true);
+			Engine.RenderWindow.MouseUp += (S, E) => OnMouseButton(E, false);
+			Engine.RenderWindow.MouseWheel += (S, E) => OnMouseWheel(E);
+			Engine.RenderWindow.KeyDown += (S, E) => OnKey(E, true);
+			Engine.RenderWindow.KeyUp += (S, E) => OnKey(E, false);
+			Engine.RenderWindow.KeyPress += (S, E) => OnTextInput(E.KeyChar.ToString());
 
-			Console.WriteLine("Vendor: {0}", GL.GetString(StringName.Vendor));
-			Console.WriteLine("Renderer: {0}", GL.GetString(StringName.Renderer));
-			Console.WriteLine("Version: {0}", GL.GetString(StringName.Version));
-			Console.WriteLine("Shading language version: {0}", GL.GetString(StringName.ShadingLanguageVersion));
+			Input.Init();
+
+			Console.WriteLine(Console.Cyan + "Vendor: {0}", GL.GetString(StringName.Vendor));
+			Console.WriteLine(Console.Cyan + "Renderer: {0}", GL.GetString(StringName.Renderer));
+			Console.WriteLine(Console.Cyan + "Version: {0}", GL.GetString(StringName.Version));
+			Console.WriteLine(Console.Cyan + "Shading language version: {0}", GL.GetString(StringName.ShadingLanguageVersion));
+
+			GraphicsMode GMode = Engine.RenderWindow.Context.GraphicsMode;
+			Console.WriteLine(Console.Cyan + "Color/Depth/Stencil: {0}/{1}/{2} bpp", GMode.ColorFormat.BitsPerPixel, GMode.Depth, GMode.Stencil);
 		}
 
-		static void OnMouseMove(int X, int Y, int RelX, int RelY) {
+		static void OnMouseMove(MouseMoveEventArgs E) {
 			if (Console.IsOpen)
 				return;
 
-			if (!(Engine.UI?.OnMouseMove(X, Y, RelX, RelY) ?? false))
-				Engine.Client?.OnMouseMove(X, Y, RelX, RelY);
+			if (!(Engine.UI?.OnMouseMove(E) ?? false))
+				if (Engine.Client?.OnMouseMove(E) == false)
+					Engine.Camera.MouseRotate(Engine.UpdateDelta, -E.XDelta, -E.YDelta); // TODO: Add delta time
 		}
 
-		static void OnMouseButton(int Clicks, int Button, int X, int Y, bool Pressed) {
+		static void OnMouseButton(MouseButtonEventArgs E, bool Pressed) {
 			if (Console.IsOpen)
 				return;
 
-			if (!(Engine.UI?.OnMouseButton(Clicks, Button, X, Y, Pressed) ?? false))
-				Engine.Client?.OnMouseButton(Clicks, Button, X, Y, Pressed);
+			if (!(Engine.UI?.OnMouseButton(E, Pressed) ?? false))
+				Engine.Client?.OnMouseButton(E, Pressed);
 		}
 
-		static void OnMouseWheel(int X, int Y) {
+		static void OnMouseWheel(MouseWheelEventArgs E) {
 			if (Console.IsOpen) {
-				Console.Scroll(Y);
+				Console.Scroll(E.Value);
 				return;
 			}
 
-			if (!(Engine.UI?.OnMouseWheel(X, Y) ?? false))
-				Engine.Client?.OnMouseWheel(X, Y);
+			if (!(Engine.UI?.OnMouseWheel(E) ?? false))
+				Engine.Client?.OnMouseWheel(E);
 		}
 
-		static void OnKey(int Repeat, Scancodes Scancode, int Keycode, int Mod, bool Pressed) {
-			if (Pressed && Scancode == Scancodes.F1) {
+		static void OnKey(KeyboardKeyEventArgs E, bool Pressed) {
+			if (Pressed && E.Key == Key.F1) {
 				Console.IsOpen = !Console.IsOpen;
 				Console.Scroll(0, true);
 				return;
@@ -179,16 +207,16 @@ namespace LibTech {
 
 			if (Console.IsOpen) {
 				if (Pressed) {
-					if ((Scancode == Scancodes.Backspace || Scancode == Scancodes.Kp_Backspace) && (Console.Input.Length > 0))
+					if (E.Key == Key.BackSpace && Console.Input.Length > 0)
 						Console.Input = Console.Input.Substring(0, Console.Input.Length - 1);
-					else if (Scancode == Scancodes.Kp_Enter || Scancode == Scancodes.Return)
+					else if (E.Key == Key.Enter || E.Key == Key.KeypadEnter)
 						Console.ParseInput();
 				}
 				return;
 			}
 
-			if (!(Engine.UI?.OnKey(Repeat, Scancode, Keycode, Mod, Pressed) ?? false))
-				Engine.Client?.OnKey(Repeat, Scancode, Keycode, Mod, Pressed);
+			if (!(Engine.UI?.OnKey(E, Pressed) ?? false))
+				Engine.Client?.OnKey(E, Pressed);
 		}
 
 		static void OnTextInput(string Txt) {
@@ -202,17 +230,17 @@ namespace LibTech {
 		}
 
 		static void Update(float Dt) {
+			Engine.UpdateDelta = Dt;
 			Engine.Server?.Update(Dt);
 			Engine.Client?.Update(Dt);
 			Engine.UI?.Update(Dt);
 		}
 
 		static void Render(float Dt) {
-			if (!Engine.RenderWindow.PollEvents())
+			if (!Engine.Running) {
+				Engine.RenderWindow.Close();
 				return;
-
-			Engine.RenderWindow.Reset();
-			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
+			}
 
 			Engine.Client?.Render(Dt);
 			Engine.UI?.Render(Dt);
@@ -222,8 +250,6 @@ namespace LibTech {
 				NanoVG.DrawText("clacon", 12, TextAlign.TopLeft, Color.White, 0, 0, string.Format("FPS: {0} - {1} ms", 1.0f / Dt, Dt));
 				NanoVG.EndFrame();
 			}
-
-			Engine.RenderWindow.Swap();
 		}
 
 		[DllImport("user32")]

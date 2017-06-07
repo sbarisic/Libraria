@@ -24,13 +24,18 @@ namespace Libraria.Rendering {
 			Translation *= Matrix4.CreateTranslation(-Delta);
 		}
 
-		public void SetPos(Vector3 Pos) {
+		public void SetPosition(Vector3 Pos) {
 			Translation = Matrix4.CreateTranslation(Pos);
 		}
 
 		public Vector3 GetForward() {
 			Matrix4 M = Matrix4.CreateFromQuaternion(Rotation);
 			return Vector3.TransformNormalInverse(new Vector3(0, 0, -1), M);
+		}
+
+		public Vector3 GetRight() {
+			Matrix4 M = Matrix4.CreateFromQuaternion(Rotation);
+			return Vector3.TransformNormalInverse(new Vector3(1, 0, 0), M);
 		}
 
 		public Vector3 GetPosition() {

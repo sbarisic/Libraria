@@ -12,7 +12,7 @@ namespace ClientLib {
 	public class Entry : ModuleBase {
 		Client NetClient;
 
-		public override void Open(ModuleBase ClientLib, ModuleBase ServerLib, ModuleBase UILib) {
+		public override void Open() {
 			NetClient = new Client();
 			NetClient.Connect("127.0.0.1");
 		}
