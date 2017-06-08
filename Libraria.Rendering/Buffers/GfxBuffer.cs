@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics.OpenGL;
+﻿using OpenTK;
+using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -69,14 +70,26 @@ namespace Libraria.Rendering {
 	}
 
 	public abstract class GfxBuffer : OpenGLBuffer<GfxBuffer> {
-		public int Stride;
+		public Type DataType;
+		public int Size;
 		public BufferTarget Tgt;
+
+		public VertexAttribPointerType AttribType {
+			get {
+				if (DataType == typeof(float))
+					return VertexAttribPointerType.Float;
+				else if (DataType == typeof(uint))
+					return VertexAttribPointerType.UnsignedInt;
+				else throw new NotImplementedException();
+			}
+		}
 
 		int Length;
 
-		public GfxBuffer(BufferTarget Tgt, int Stride) {
+		public GfxBuffer(BufferTarget Tgt, int Size, Type DataType) {
 			this.Tgt = Tgt;
-			this.Stride = Stride;
+			this.Size = Size;
+			this.DataType = DataType;
 			ID = GL.GenBuffer();
 			Bind();
 		}
@@ -96,13 +109,16 @@ namespace Libraria.Rendering {
 		}
 
 		public virtual GfxBuffer SetData<T>(T[] Data, VertexUsageHint Hint = VertexUsageHint.StaticDraw) where T : struct {
-			return SetData<T>(Data.Length * Marshal.SizeOf<T>(), Data, Hint);
+			return SetData(Data.Length * Marshal.SizeOf<T>(), Data, Hint);
 		}
 
 		public virtual GfxBuffer SetData<T>(int Size, T[] Data, VertexUsageHint Hint = VertexUsageHint.StaticDraw) where T : struct {
 			Length = Data.Length;
+
 			Bind();
-			GL.BufferData<T>(Tgt, Size, Data, (BufferUsageHint)Hint);
+			GL.BufferData(Tgt, Size, Data, (BufferUsageHint)Hint);
+
+			// GL.NamedBufferData(ID, Size, Data, (BufferUsageHint)Hint); // crashes, what
 			return this;
 		}
 

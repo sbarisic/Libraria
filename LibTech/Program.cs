@@ -26,8 +26,8 @@ namespace LibTech {
 		public static bool DedicatedServer;
 		public static Stopwatch TimeSinceLaunch;
 
-		public static float UpdateDelta;
 		public static Camera Camera;
+		public static float UpdateDelta;
 		public static RenderWindow RenderWindow;
 		public static bool DrawFPSCounter;
 
@@ -64,6 +64,7 @@ namespace LibTech {
 
 		static void Main(string[] args) {
 			SetProcessDPIAware();
+			//Thread.Sleep(2000);
 
 			Files.Initialize("basegame");
 
@@ -108,13 +109,14 @@ namespace LibTech {
 			if (!Engine.DedicatedServer) {
 				RenderWindow.InitRenderer();
 				SpawnWindow();
-
+				
 				NanoVG.Initialize();
 				Engine.RenderWindow.SetWindowSize(-1, -1);
 
 				Engine.Camera = new Camera();
-				Engine.Camera.Projection = Matrix4.CreatePerspectiveFieldOfView(90.0f / 180.0f * (float)Math.PI, Engine.RenderWindow.AspectRatio, 0.1f, 10000.0f);
+				Engine.Camera.Projection = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 2, Engine.RenderWindow.AspectRatio, 0.01f, 5000.0f);
 				Engine.Camera.SetPosition(new Vector3(0, 0, -100));
+				Camera.Push(Engine.Camera);
 
 				ModuleBase Client = ModuleLoader.LoadModule(Engine.GameFolder, "Client");
 				Client?.Open();
@@ -123,7 +125,7 @@ namespace LibTech {
 				ModuleBase UI = ModuleLoader.LoadModule(Engine.GameFolder, "UI");
 				UI?.Open();
 				Engine.UI = UI;
-				
+
 				Engine.RenderWindow.OnUpdate += Update;
 				Engine.RenderWindow.OnRender += Render;
 				Engine.RenderWindow.Run(60);
@@ -148,7 +150,7 @@ namespace LibTech {
 				W = PrefW;
 			if (PrefH != -1)
 				H = PrefH;
-			
+
 			Console.WriteLine(Console.Cyan + "Running at {0}x{1}", W, H);
 
 			Engine.RenderWindow = new RenderWindow("LibTech", W, H, false);

@@ -50,12 +50,15 @@ namespace LibTech {
 
 		static void AppendString(string Str) {
 			ConsoleLines.Push(ConsoleLines.Pop() + Str);
+			System.Console.Write(Str);
 		}
 
 		static void AppendLine(string Str) {
 			ConsoleLines.Push(Str);
 			while (ConsoleLines.Count > MaxLines)
 				ConsoleLines.PopBottom();
+
+			System.Console.WriteLine(Str);
 		}
 
 		public static void Clear() {

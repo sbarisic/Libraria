@@ -386,6 +386,7 @@ static void glnvg__checkError(GLNVGcontext* gl, const char* str) {
 	GLenum err;
 	if ((gl->flags & NVG_DEBUG) == 0) return;
 	err = glGetError();
+
 	if (err != GL_NO_ERROR) {
 		printf("Error %08x after %s\n", err, str);
 		return;

@@ -6,16 +6,43 @@ using OpenTK;
 
 namespace Libraria.Rendering {
 	public class Camera {
-		public Matrix4 Translation, Zoom, Projection;
+		static Stack<Camera> Cameras = new Stack<Camera>();
+
+		public static void Push(Camera C) {
+			Cameras.Push(C);
+		}
+
+		public static Camera Pop() {
+			return Cameras.Pop();
+		}
+
+		public static void Use(Camera C, Action A) {
+			Push(C);
+			A();
+			Pop();
+		}
+
+		public static Camera GetCurrent() {
+			if (Cameras.Count == 0)
+				return null;
+			return Cameras.Peek();
+		}
+
+		public Matrix4 Translation, Projection;
 		public float MouseSensitivity;
 
 		public Quaternion Rotation;
+		public Matrix4 RotationMat {
+			get {
+				return Matrix4.CreateFromQuaternion(Rotation);
+			}
+		}
 
 		public float RotationX;
 		public float RotationY;
 
 		public Camera() {
-			Translation = Zoom = Projection = Matrix4.Identity;
+			Translation = Projection = Matrix4.Identity;
 			Rotation = Quaternion.FromAxisAngle(Vector3.UnitY, 0);
 			MouseSensitivity = 1.0f;
 		}
@@ -29,13 +56,11 @@ namespace Libraria.Rendering {
 		}
 
 		public Vector3 GetForward() {
-			Matrix4 M = Matrix4.CreateFromQuaternion(Rotation);
-			return Vector3.TransformNormalInverse(new Vector3(0, 0, -1), M);
+			return Vector3.TransformNormalInverse(new Vector3(0, 0, -1), RotationMat);
 		}
 
 		public Vector3 GetRight() {
-			Matrix4 M = Matrix4.CreateFromQuaternion(Rotation);
-			return Vector3.TransformNormalInverse(new Vector3(1, 0, 0), M);
+			return Vector3.TransformNormalInverse(new Vector3(1, 0, 0), RotationMat);
 		}
 
 		public Vector3 GetPosition() {
@@ -53,12 +78,11 @@ namespace Libraria.Rendering {
 			RotationX += DX;
 			RotationY += DY;
 			RotationY = (float)MathHelper.Clamp(RotationY, -MathHelper.PiOver2, MathHelper.PiOver2);
-			Rotation = Quaternion.FromAxisAngle(Vector3.UnitX, -RotationY) *
-				Quaternion.FromAxisAngle(Vector3.UnitY, -RotationX);
+			Rotation = Quaternion.FromAxisAngle(Vector3.UnitX, -RotationY) * Quaternion.FromAxisAngle(Vector3.UnitY, -RotationX);
 		}
 
 		public Matrix4 Collapse() {
-			return Translation * Matrix4.CreateFromQuaternion(Rotation) * Zoom * Projection;
+			return Translation * RotationMat * Projection;
 		}
 	}
 }

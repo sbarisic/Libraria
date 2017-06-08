@@ -4,6 +4,7 @@ using System.Text;
 using System.IO;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
+using System.Linq;
 
 namespace Libraria.Rendering {
 	public enum ShaderKind {
@@ -18,6 +19,9 @@ namespace Libraria.Rendering {
 
 	public class ShaderProgram {
 		static int CreateShader(string FilePath, ShaderKind Kind) {
+			if (Kind == ShaderKind.GeometryShader && !File.Exists(FilePath))
+				return -1;
+
 			string Src = File.ReadAllText(FilePath);
 
 			int ID = GL.CreateShader((ShaderType)Kind);
@@ -69,7 +73,7 @@ namespace Libraria.Rendering {
 		}
 
 		public static ShaderProgram CreateProgram(string Name) {
-			return new ShaderProgram(Name + ".frag", Name + ".vert");
+			return new ShaderProgram(Name + ".frag", Name + ".vert", Name + ".geom");
 		}
 
 		public int ID;
@@ -77,15 +81,16 @@ namespace Libraria.Rendering {
 		public ShaderProgram(params string[] ShaderPaths) {
 			int[] Shaders = new int[ShaderPaths.Length];
 
-			for (int i = 0; i < ShaderPaths.Length; i++)
+			for (int i = 0; i < ShaderPaths.Length; i++) 
 				Shaders[i] = CreateShader(ShaderPaths[i]);
-
-			ID = CreateProgram(Shaders);
+	
+			ID = CreateProgram(Shaders.Where((I) => I != -1).ToArray());
 			Bind();
 		}
 
 		public void Bind() {
 			GL.UseProgram(ID);
+			BindCamera(Camera.GetCurrent());
 		}
 
 		public void Unbind() {
@@ -98,6 +103,15 @@ namespace Libraria.Rendering {
 
 		public int GetUniformLocation(string Name) {
 			return GL.GetUniformLocation(ID, Name);
+		}
+
+		public void BindCamera(Camera C) {
+			if (C == null)
+				throw new Exception("Invalid camera");
+
+			SetUniform("MatTranslation", C.Translation);
+			SetUniform("MatRotation", C.RotationMat);
+			SetUniform("MatProjection", C.Projection);
 		}
 
 		public void SetUniform(string Name, Matrix4 Mtx) {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using OpenTK.Graphics.OpenGL;
+using System.Runtime.InteropServices;
 
 namespace Libraria.Rendering {
 	public class RenderObject {
@@ -48,7 +49,7 @@ namespace Libraria.Rendering {
 			return Shader.GetAttribLocation(AttributeName);
 		}
 
-		public bool BindBuffer(string AttributeName, Func<GfxBuffer> BufferBuilder, int Stride = -1, int Offset = 0) {
+		public bool BindBuffer(string AttributeName, Func<GfxBuffer> BufferBuilder, int Stride = 0, int Offset = 0) {
 			int Attrib = GetAttribLocation(AttributeName);
 			if (Attrib == -1)
 				return false;
@@ -57,7 +58,7 @@ namespace Libraria.Rendering {
 			return true;
 		}
 
-		public void BindBuffer(string AttributeName, GfxBuffer Array, int Stride = -1, int Offset = 0) {
+		public void BindBuffer(string AttributeName, GfxBuffer Array, int Stride = 0, int Offset = 0) {
 			int AttribLocation = GetAttribLocation(AttributeName);
 
 			if (AttribLocation == -1)
@@ -66,13 +67,14 @@ namespace Libraria.Rendering {
 			BindBuffer(AttribLocation, Array, Stride, Offset);
 		}
 
-		public void BindBuffer(int AttributeName, GfxBuffer Array, int Stride = -1, int Offset = 0) {
-			if (Stride == -1)
-				Stride = Array.Stride;
-
-			Array.Bind();
+		public void BindBuffer(int AttributeName, GfxBuffer Array, int Stride = 0, int Offset = 0) {
 			GL.EnableVertexAttribArray(AttributeName);
-			GL.BindVertexBuffer(AttributeName, Array.ID, (IntPtr)Offset, Stride);
+			Array.Bind();
+
+			GL.VertexAttribPointer(AttributeName, Array.Size, Array.AttribType, false, Stride, Offset);
+			GL.BindVertexBuffer(AttributeName, Array.ID, (IntPtr)Offset, Array.Size * Marshal.SizeOf(Array.DataType));
+
+			//GL.VertexArrayVertexBuffer(ID, AttributeName, Array.ID, (IntPtr)Offset, Stride);
 		}
 
 		public void SetTexture(Texture2D Tex, int Idx = 0) {

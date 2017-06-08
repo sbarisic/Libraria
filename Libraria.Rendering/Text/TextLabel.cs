@@ -19,14 +19,11 @@ namespace Libraria.Rendering {
 		IndexBuffer IndsBuffer;
 
 		GfxFont _Font;
-		public GfxFont Font
-		{
-			get
-			{
+		public GfxFont Font {
+			get {
 				return _Font;
 			}
-			set
-			{
+			set {
 				_Font = value;
 				Dirty = true;
 			}
@@ -44,8 +41,8 @@ namespace Libraria.Rendering {
 			Characters = new List<char>();
 
 			VertsBuffer = new VertexBuffer();
-			ColorsBuffer = new DataBuffer(Vector3.SizeInBytes);
-			UVsBuffer = new DataBuffer(Vector2.SizeInBytes);
+			ColorsBuffer = new DataBuffer(3, typeof(float));
+			UVsBuffer = new DataBuffer(2, typeof(float));
 			IndsBuffer = new IndexBuffer();
 		}
 
@@ -82,7 +79,7 @@ namespace Libraria.Rendering {
 			float dPosX = 0;
 			char C = (char)0;
 			char CNext = (char)0;
-			
+
 			for (int i = 0; i < Text.Length; i++) {
 				C = Text[i];
 				if (i < Text.Length - 1)

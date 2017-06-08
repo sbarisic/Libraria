@@ -29,9 +29,7 @@ namespace Libraria.Rendering {
 
 		public RenderWindow(string Title, int W, int H, bool NoBorder = false) :
 			base(W, H, new GraphicsMode(new ColorFormat(32), 24, 8, 0, ColorFormat.Empty, 2, false), Title,
-				GameWindowFlags.FixedWindow, DisplayDevice.Default, 3, 2, GraphicsContextFlags.Debug) {
-
-			GL.Enable(EnableCap.DepthTest);
+				GameWindowFlags.FixedWindow, DisplayDevice.Default, 4, 5, GraphicsContextFlags.Debug) {
 		}
 
 		public void SetWindowSize(int W, int H) {
@@ -51,9 +49,24 @@ namespace Libraria.Rendering {
 
 		protected override void OnRenderFrame(FrameEventArgs E) {
 			MakeCurrent();
+
+			GL.Disable(EnableCap.ScissorTest);
+			GL.Disable(EnableCap.StencilTest);
+
+			GL.Enable(EnableCap.CullFace);
+			GL.CullFace(CullFaceMode.Back);
+			//GL.Disable(EnableCap.CullFace);
+			GL.FrontFace(FrontFaceDirection.Ccw);
+
+			GL.Enable(EnableCap.Blend);
+			GL.Enable(EnableCap.DepthTest);
+			GL.DepthFunc(DepthFunction.Lequal);
+
 			GL.Viewport(0, 0, Width, Height);
 			GL.ClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
+			GL.Clear(ClearBufferMask.ColorBufferBit);
+			GL.Clear(ClearBufferMask.DepthBufferBit);
+			GL.Clear(ClearBufferMask.StencilBufferBit);
 
 			OnRender?.Invoke((float)E.Time);
 
