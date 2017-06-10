@@ -22,7 +22,7 @@ namespace Libraria.Rendering {
 			return CreateFromData(Data.ToArray(), Hint);
 		}
 
-		public DataBuffer(int Size, Type T) : base(BufferTarget.ArrayBuffer, Size, T) {
+		public DataBuffer(int Size, Type T) : base(Size, T) {
 		}
 
 		public DataBuffer(Type T) : this(Marshal.SizeOf(T) / Marshal.SizeOf(GetTypePrimitiveType(T)), GetTypePrimitiveType(T)) {

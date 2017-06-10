@@ -41,7 +41,7 @@ namespace ClientLib {
 		RenderObject RObj;
 
 		public Chunk() {
-			Size = 16;
+			Size = 64;
 			Blocks = new int[Size * Size * Size];
 
 			List<Vector3> Vertices = new List<Vector3>();
@@ -49,20 +49,27 @@ namespace ClientLib {
 			List<Vector2> UVs = new List<Vector2>();
 			List<uint> Indices = new List<uint>();
 
-			/*Random R = new Random();
+			Random R = new Random();
 			for (int i = 0; i < Blocks.Length; i++)
 				if (R.Next(0, 100) > 60)
 					Blocks[i] = 1;
 
+
+			int C = 0;
+			for (int i = 0; i < Blocks.Length; i++) {
+				if (Blocks[i] != 0) C++;
+			}
+			LibTech.Console.WriteLine("{0} blocks {1} vertices {2} normals", C, 6 * 6 * C, 4 * 6 * C);
+
 			for (int x = 0; x < Size; x++)
 				for (int y = 0; y < Size; y++)
 					for (int z = 0; z < Size; z++)
-						GenerateBlock(Vertices, Normals, UVs, new Vector3(x, y, z));*/
+						GenerateBlock(Vertices, Normals, UVs, new Vector3(x, y, z));
 
 			//ObjTriangle[] Triangles = ObjLoader.Load("basegame\\objmdl\\dragon\\dragon.objmdl"); float Scale = 100;
 			//ObjTriangle[] Triangles = ObjLoader.Load("basegame\\objmdl\\rugholt\\house.objmdl");
 			//ObjTriangle[] Triangles = ObjLoader.Load("basegame\\objmdl\\lostempire\\lost_empire.objmdl"); float Scale = 10;
-			ObjTriangle[] Triangles = ObjLoader.Load("basegame\\objmdl\\cube\\cube.objmdl"); float Scale = 50;
+			/*ObjTriangle[] Triangles = ObjLoader.Load("basegame\\objmdl\\cube\\cube.objmdl"); float Scale = 50;
 			
 			foreach (var T in Triangles) {
 				Vertices.Add(T.A * Scale);
@@ -72,7 +79,7 @@ namespace ClientLib {
 				UVs.Add(T.A_UV);
 				UVs.Add(T.B_UV);
 				UVs.Add(T.C_UV);
-			}
+			}*/
 
 			ChunkShader = ShaderProgram.CreateProgram("basegame\\shaders\\chunk");
 
@@ -87,7 +94,7 @@ namespace ClientLib {
 
 			if (UVs.Count > 0)
 				RObj.BindBuffer("vert_UV", () => DataBuffer.CreateFromData(UVs));
-			
+
 			if (Indices.Count > 0)
 				RObj.BindIndexBuffer(new IndexBuffer().SetData(Indices.ToArray()));
 			else

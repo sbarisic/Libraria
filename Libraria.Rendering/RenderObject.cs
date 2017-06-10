@@ -36,7 +36,7 @@ namespace Libraria.Rendering {
 
 		public void BindIndexBuffer(GfxBuffer IndexBuffer) {
 			IBuf = (IndexBuffer)IndexBuffer;
-			IBuf.Bind();
+			GL.VertexArrayElementBuffer(ID, IndexBuffer.ID);
 		}
 
 		public void BindShader(ShaderProgram Shader) {
@@ -68,13 +68,9 @@ namespace Libraria.Rendering {
 		}
 
 		public void BindBuffer(int AttributeName, GfxBuffer Array, int Stride = 0, int Offset = 0) {
-			GL.EnableVertexAttribArray(AttributeName);
-			Array.Bind();
-
-			GL.VertexAttribPointer(AttributeName, Array.Size, Array.AttribType, false, Stride, Offset);
-			GL.BindVertexBuffer(AttributeName, Array.ID, (IntPtr)Offset, Array.Size * Marshal.SizeOf(Array.DataType));
-
-			//GL.VertexArrayVertexBuffer(ID, AttributeName, Array.ID, (IntPtr)Offset, Stride);
+			GL.EnableVertexArrayAttrib(ID, AttributeName);
+			GL.VertexArrayVertexBuffer(ID, AttributeName, Array.ID, (IntPtr)Offset, Array.Size * Marshal.SizeOf(Array.DataType));
+			GL.VertexArrayAttribFormat(ID, AttributeName, Array.Size, Array.AttribType, false, Stride);
 		}
 
 		public void SetTexture(Texture2D Tex, int Idx = 0) {

@@ -64,44 +64,37 @@ namespace Libraria.Rendering {
 	public abstract class OpenGLBuffer<T> {
 		public int ID;
 
-		public abstract T Bind();
-		public abstract T Unbind();
+		public virtual T Bind() {
+			throw new NotImplementedException();
+		}
+
+		public virtual T Unbind() {
+			throw new NotImplementedException();
+		}
+
 		public abstract void Destroy();
 	}
 
 	public abstract class GfxBuffer : OpenGLBuffer<GfxBuffer> {
 		public Type DataType;
 		public int Size;
-		public BufferTarget Tgt;
 
-		public VertexAttribPointerType AttribType {
+		public VertexAttribType AttribType {
 			get {
 				if (DataType == typeof(float))
-					return VertexAttribPointerType.Float;
+					return VertexAttribType.Float;
 				else if (DataType == typeof(uint))
-					return VertexAttribPointerType.UnsignedInt;
+					return VertexAttribType.UnsignedInt;
 				else throw new NotImplementedException();
 			}
 		}
 
 		int Length;
 
-		public GfxBuffer(BufferTarget Tgt, int Size, Type DataType) {
-			this.Tgt = Tgt;
+		public GfxBuffer(int Size, Type DataType) {
 			this.Size = Size;
 			this.DataType = DataType;
-			ID = GL.GenBuffer();
-			Bind();
-		}
-
-		public override GfxBuffer Bind() {
-			GL.BindBuffer(Tgt, ID);
-			return this;
-		}
-
-		public override GfxBuffer Unbind() {
-			GL.BindBuffer(Tgt, 0);
-			return this;
+			GL.CreateBuffers(1, out ID);
 		}
 
 		public override void Destroy() {
@@ -114,11 +107,7 @@ namespace Libraria.Rendering {
 
 		public virtual GfxBuffer SetData<T>(int Size, T[] Data, VertexUsageHint Hint = VertexUsageHint.StaticDraw) where T : struct {
 			Length = Data.Length;
-
-			Bind();
-			GL.BufferData(Tgt, Size, Data, (BufferUsageHint)Hint);
-
-			// GL.NamedBufferData(ID, Size, Data, (BufferUsageHint)Hint); // crashes, what
+			GL.NamedBufferData(ID, Size, Data, (BufferUsageHint)Hint);
 			return this;
 		}
 

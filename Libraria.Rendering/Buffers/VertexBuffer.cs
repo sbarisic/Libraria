@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace Libraria.Rendering {
 	public class VertexBuffer : GfxBuffer {
-		public VertexBuffer() : base(BufferTarget.ArrayBuffer, 3, typeof(float)) {
+		public VertexBuffer() : base(3, typeof(float)) {
 		}
 
 		public override void Draw(int First, int Count, DrawPrimitiveType PType = DrawPrimitiveType.Triangles) {

@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace Libraria.Rendering {
 	public class IndexBuffer : GfxBuffer {
-		public IndexBuffer() : base(BufferTarget.ElementArrayBuffer, 1, typeof(uint)) {
+		public IndexBuffer() : base(1, typeof(uint)) {
 		}
 
 		public GfxBuffer SetSequence(uint Len, VertexUsageHint Hint = VertexUsageHint.StaticDraw) {
