@@ -109,7 +109,7 @@ namespace LibTech {
 			if (!Engine.DedicatedServer) {
 				RenderWindow.InitRenderer();
 				SpawnWindow();
-				
+
 				NanoVG.Initialize();
 				Engine.RenderWindow.SetWindowSize(-1, -1);
 
@@ -168,6 +168,7 @@ namespace LibTech {
 			Console.WriteLine(Console.Cyan + "Renderer: {0}", GL.GetString(StringName.Renderer));
 			Console.WriteLine(Console.Cyan + "Version: {0}", GL.GetString(StringName.Version));
 			Console.WriteLine(Console.Cyan + "Shading language version: {0}", GL.GetString(StringName.ShadingLanguageVersion));
+			//Console.WriteLine(Console.Yellow + "Extensions: {0}", GL.GetString(StringName.Extensions));
 
 			GraphicsMode GMode = Engine.RenderWindow.Context.GraphicsMode;
 			Console.WriteLine(Console.Cyan + "Color/Depth/Stencil: {0}/{1}/{2} bpp", GMode.ColorFormat.BitsPerPixel, GMode.Depth, GMode.Stencil);

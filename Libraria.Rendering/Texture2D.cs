@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using IPixelFormat = System.Drawing.Imaging.PixelFormat;
 using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
+using System.Runtime.InteropServices;
 
 namespace Libraria.Rendering {
 	public enum TexParam {
@@ -37,6 +38,8 @@ namespace Libraria.Rendering {
 	}
 
 	public class Texture2D {
+		const long TextureHandleNotCreated = -2;
+
 		public static Texture2D Mask_Tex0, Mask_Tex1, Mask_Tex2, Mask_Tex3;
 
 		static Texture2D() {
@@ -68,17 +71,39 @@ namespace Libraria.Rendering {
 			if (GenerateMipmap)
 				Tex.GenerateMipmap();
 
+			Tex.Unbind();
 			return Tex;
 		}
 
+		public long TextureHandle;
 		public int ID;
 		public int TexUnit;
 		public int Width, Height;
 		public TextureTarget Target { get; private set; } = TextureTarget.Texture2D;
 		public Vector2 Size { get { return new Vector2(Width, Height); } }
 
+		public bool Resident {
+			get {
+				if (TextureHandle == TextureHandleNotCreated)
+					return false;
+				return GL.Arb.IsTextureHandleResident(TextureHandle);
+			}
+
+			set {
+				if (TextureHandle == TextureHandleNotCreated)
+					TextureHandle = GL.Arb.GetTextureHandle(ID);
+
+				if (value && !Resident)
+					GL.Arb.MakeTextureHandleResident(TextureHandle);
+				else if (!value && Resident)
+					GL.Arb.MakeTextureHandleNonResident(TextureHandle);
+			}
+		}
+
 		public Texture2D(TexFilterMode FilterMode, TexWrapMode WrapMode = TexWrapMode.ClampToEdge) {
-			ID = GL.GenTexture();
+			TextureHandle = TextureHandleNotCreated;
+			GL.CreateTextures(Target, 1, out ID);
+
 			Bind();
 
 			SetParam(TexParam.WrapS, WrapMode);
@@ -97,8 +122,9 @@ namespace Libraria.Rendering {
 
 			this.TexUnit = TexUnit;
 
-			GL.ActiveTexture(TextureUnit.Texture0 + TexUnit);
-			GL.BindTexture(Target, ID);
+			//GL.ActiveTexture(TextureUnit.Texture0 + TexUnit);
+			//GL.BindTexture(Target, ID);
+			GL.BindTextureUnit(TexUnit, ID);
 		}
 
 		public void Unbind() {
@@ -106,8 +132,9 @@ namespace Libraria.Rendering {
 		}
 
 		public void Unbind(int TexUnit) {
-			GL.ActiveTexture(TextureUnit.Texture0 + TexUnit);
-			GL.BindTexture(Target, 0);
+			//GL.ActiveTexture(TextureUnit.Texture0 + TexUnit);
+			//GL.BindTexture(Target, 0);
+			GL.BindTextureUnit(TexUnit, 0);
 		}
 
 		public void GenerateMipmap() {
@@ -156,6 +183,8 @@ namespace Libraria.Rendering {
 		}
 
 		public void Destroy() {
+			if (Resident)
+				Resident = false;
 			GL.DeleteTexture(ID);
 		}
 	}

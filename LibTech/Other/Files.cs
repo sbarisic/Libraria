@@ -94,7 +94,7 @@ namespace LibTech {
 		}
 
 		public static string[] GetFilesInDirectory(string RelativePath, bool IncludeDirectories = false, string SearchPattern = "*", bool IncludeChildDirectories = true) {
-			string[] BaseEntries, GameEntries;
+			string[] BaseEntries = new string[0], GameEntries = new string[0];
 			SearchOption SearchOption = SearchOption.TopDirectoryOnly;
 			if (IncludeChildDirectories)
 				SearchOption = SearchOption.AllDirectories;
@@ -103,8 +103,13 @@ namespace LibTech {
 				BaseEntries = Directory.GetFileSystemEntries(GetFullPath(CombinePath(GetBaseFolder(), RelativePath)), SearchPattern, SearchOption);
 				GameEntries = Directory.GetFileSystemEntries(GetFullPath(CombinePath(GetGameFolder(), RelativePath)), SearchPattern, SearchOption);
 			} else {
-				BaseEntries = Directory.GetFiles(GetBaseFolder(), SearchPattern, SearchOption);
-				GameEntries = Directory.GetFiles(GetGameFolder(), SearchPattern, SearchOption);
+				string FullBaseFolder = GetFullPath(CombinePath(GetBaseFolder(), RelativePath));
+				if (Directory.Exists(FullBaseFolder))
+					BaseEntries = Directory.GetFiles(FullBaseFolder, SearchPattern, SearchOption);
+
+				string FullGameFolder = GetFullPath(CombinePath(GetGameFolder(), RelativePath));
+				if (Directory.Exists(FullGameFolder))
+					GameEntries = Directory.GetFiles(FullGameFolder, SearchPattern, SearchOption);
 			}
 
 			// Normalize names

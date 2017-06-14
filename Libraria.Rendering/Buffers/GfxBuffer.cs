@@ -85,11 +85,13 @@ namespace Libraria.Rendering {
 					return VertexAttribType.Float;
 				else if (DataType == typeof(uint))
 					return VertexAttribType.UnsignedInt;
+				else if (DataType == typeof(int))
+					return VertexAttribType.Int;
 				else throw new NotImplementedException();
 			}
 		}
 
-		int Length;
+		public int Length { get; private set; }
 
 		public GfxBuffer(int Size, Type DataType) {
 			this.Size = Size;
@@ -115,6 +117,8 @@ namespace Libraria.Rendering {
 			Draw(First, Length, PType);
 		}
 
-		public abstract void Draw(int First, int Count, DrawPrimitiveType PType = DrawPrimitiveType.Triangles);
+		public virtual void Draw(int First, int Count, DrawPrimitiveType PType = DrawPrimitiveType.Triangles) {
+			throw new NotImplementedException();
+		}
 	}
 }

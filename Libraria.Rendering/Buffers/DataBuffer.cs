@@ -27,9 +27,5 @@ namespace Libraria.Rendering {
 
 		public DataBuffer(Type T) : this(Marshal.SizeOf(T) / Marshal.SizeOf(GetTypePrimitiveType(T)), GetTypePrimitiveType(T)) {
 		}
-
-		public override void Draw(int First, int Count, DrawPrimitiveType PType = DrawPrimitiveType.Triangles) {
-			throw new InvalidOperationException();
-		}
 	}
 }

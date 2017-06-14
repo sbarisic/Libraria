@@ -5,6 +5,7 @@ using System.IO;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace Libraria.Rendering {
 	public enum ShaderKind {
@@ -81,16 +82,17 @@ namespace Libraria.Rendering {
 		public ShaderProgram(params string[] ShaderPaths) {
 			int[] Shaders = new int[ShaderPaths.Length];
 
-			for (int i = 0; i < ShaderPaths.Length; i++) 
+			for (int i = 0; i < ShaderPaths.Length; i++)
 				Shaders[i] = CreateShader(ShaderPaths[i]);
-	
+
 			ID = CreateProgram(Shaders.Where((I) => I != -1).ToArray());
 			Bind();
 		}
 
-		public void Bind() {
+		public void Bind(bool DoBindCamera = true) {
 			GL.UseProgram(ID);
-			BindCamera(Camera.GetCurrent());
+			if (DoBindCamera)
+				BindCamera(Camera.GetCurrent());
 		}
 
 		public void Unbind() {
@@ -102,7 +104,17 @@ namespace Libraria.Rendering {
 		}
 
 		public int GetUniformLocation(string Name) {
-			return GL.GetUniformLocation(ID, Name);
+			int Idx = GL.GetUniformLocation(ID, Name);
+			if (Idx < 0)
+				throw new Exception("Invalid index");
+			return Idx;
+		}
+
+		public int GetUniformBlockIndex(string Name) {
+			int Idx = GL.GetUniformBlockIndex(ID, Name);
+			if (Idx < 0)
+				throw new Exception("Invalid index");
+			return Idx;
 		}
 
 		public void BindCamera(Camera C) {
@@ -144,6 +156,25 @@ namespace Libraria.Rendering {
 
 		public void SetUniform(string Name, Texture2D Tex) {
 			GL.ProgramUniform1(ID, GetUniformLocation(Name), Tex.TexUnit);
+		}
+
+		public void SetUniform(string Name, long Handle) {
+			GL.Arb.ProgramUniformHandle(ID, GetUniformLocation(Name), Handle);
+		}
+
+		public void SetUniform(string Name, int Index, long Handle) {
+			SetUniform(Name + "[" + Index + "]", Handle);
+		}
+
+		public void SetUniform(string BlockName, UniformBuffer UBO) {
+			//int BlockIdx = GetUniformBlockIndex(BlockName);
+			int BlockIdx = GetUniformLocation(BlockName);
+
+			Bind();
+			GL.BindBufferBase(BufferRangeTarget.UniformBuffer, BlockIdx, UBO.ID);
+			Unbind();
+
+			//GL.BindBufferRange(BufferRangeTarget.ShaderStorageBuffer, BlockIndex, UBO.ID, IntPtr.Zero, UBO.Length * Marshal.SizeOf(UBO.DataType));
 		}
 	}
 }

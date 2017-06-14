@@ -14,6 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\DataBuffer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\IndexBuffer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\RenderBuffer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Buffers\UniformBuffer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\VertexBuffer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Camera.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RenderObject.cs" />
@@ -22,6 +23,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Scancodes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ShaderProgram.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Texture2D.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TextureAtlas.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Text\GfxFont.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Text\TextLabel.cs" />
   </ItemGroup>

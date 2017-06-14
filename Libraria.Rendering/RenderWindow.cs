@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Linq;
-//using SDL2;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
 using OpenTK.Graphics;
@@ -47,6 +46,12 @@ namespace Libraria.Rendering {
 			OnUpdate?.Invoke((float)E.Time);
 		}
 
+		public void CheckError() {
+			ErrorCode EC = GL.GetError();
+			if (EC != ErrorCode.NoError)
+				Console.WriteLine(">> {0}", EC);
+		}
+
 		protected override void OnRenderFrame(FrameEventArgs E) {
 			MakeCurrent();
 
@@ -58,7 +63,9 @@ namespace Libraria.Rendering {
 			//GL.Disable(EnableCap.CullFace);
 			GL.FrontFace(FrontFaceDirection.Ccw);
 
-			GL.Enable(EnableCap.Blend);
+			//GL.Enable(EnableCap.Blend);
+			GL.Disable(EnableCap.Blend);
+
 			GL.Enable(EnableCap.DepthTest);
 			GL.DepthFunc(DepthFunction.Lequal);
 
