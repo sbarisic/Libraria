@@ -17,6 +17,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\UniformBuffer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\VertexBuffer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Camera.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OpenGLGC.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RenderObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RenderTexture.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RenderWindow.cs" />

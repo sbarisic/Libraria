@@ -18,7 +18,7 @@ namespace Libraria.Rendering {
 		ComputeShader = 37305
 	}
 
-	public class ShaderProgram {
+	public unsafe class ShaderProgram {
 		static int CreateShader(string FilePath, ShaderKind Kind) {
 			if (Kind == ShaderKind.GeometryShader && !File.Exists(FilePath))
 				return -1;
@@ -86,7 +86,7 @@ namespace Libraria.Rendering {
 				Shaders[i] = CreateShader(ShaderPaths[i]);
 
 			ID = CreateProgram(Shaders.Where((I) => I != -1).ToArray());
-			Bind();
+			//Bind();
 		}
 
 		public void Bind(bool DoBindCamera = true) {
@@ -103,9 +103,9 @@ namespace Libraria.Rendering {
 			return GL.GetAttribLocation(ID, Name);
 		}
 
-		public int GetUniformLocation(string Name) {
+		public int GetUniformLocation(string Name, bool ThrowOnFail = true) {
 			int Idx = GL.GetUniformLocation(ID, Name);
-			if (Idx < 0)
+			if (Idx < 0 && ThrowOnFail)
 				throw new Exception("Invalid index");
 			return Idx;
 		}
@@ -121,33 +121,41 @@ namespace Libraria.Rendering {
 			if (C == null)
 				throw new Exception("Invalid camera");
 
-			SetUniform("MatTranslation", C.Translation);
-			SetUniform("MatRotation", C.RotationMat);
-			SetUniform("MatProjection", C.Projection);
+			SetUniform("MatTranslation", C.Translation, false);
+			SetUniform("MatRotation", C.RotationMat, false);
+			SetUniform("MatProjection", C.Projection, false);
 		}
 
-		public void SetUniform(string Name, Matrix4 Mtx) {
-			SetUniform(Name, ref Mtx);
+		public void SetUniform(string Name, Matrix4 Mtx, bool ThrowOnFail = true) {
+			SetUniform(Name, ref Mtx, ThrowOnFail);
+
 		}
 
-		public void SetUniform(string Name, ref Matrix4 Mtx) {
-			GL.ProgramUniformMatrix4(ID, GetUniformLocation(Name), false, ref Mtx);
+		public void SetUniform(string Name, ref Matrix4 Mtx, bool ThrowOnFail = true) {
+			int Idx = GetUniformLocation(Name, ThrowOnFail);
+			if (Idx >= 0)
+				GL.ProgramUniformMatrix4(ID, Idx, false, ref Mtx);
 		}
 
 		public void SetUniform(string Name, Vector3 Vec) {
 			SetUniform(Name, ref Vec);
 		}
 
+		public void SetUniform(string Name, Vector3[] Vecs) {
+			fixed (Vector3* VecsPtr = Vecs)
+				GL.ProgramUniform3(ID, GetUniformLocation(Name), Vecs.Length, (float*)VecsPtr);
+		}
+
 		public void SetUniform(string Name, ref Vector3 Vec) {
 			GL.ProgramUniform3(ID, GetUniformLocation(Name), ref Vec);
 		}
 
-		public void SetUniform(string Name, Vector2 Vec) {
-			SetUniform(Name, ref Vec);
+		public void SetUniform(string Name, Vector2 Vec, bool ThrowOnFail = true) {
+			SetUniform(Name, ref Vec, ThrowOnFail);
 		}
 
-		public void SetUniform(string Name, ref Vector2 Vec) {
-			GL.ProgramUniform2(ID, GetUniformLocation(Name), ref Vec);
+		public void SetUniform(string Name, ref Vector2 Vec, bool ThrowOnFail = true) {
+			GL.ProgramUniform2(ID, GetUniformLocation(Name, ThrowOnFail), ref Vec);
 		}
 
 		public void SetUniform(string Name, float Val) {
@@ -158,12 +166,16 @@ namespace Libraria.Rendering {
 			GL.ProgramUniform1(ID, GetUniformLocation(Name), Tex.TexUnit);
 		}
 
-		public void SetUniform(string Name, long Handle) {
-			GL.Arb.ProgramUniformHandle(ID, GetUniformLocation(Name), Handle);
+		public void SetUniform(string Name, long Handle, bool ThrowOnFail = true) {
+			GL.Arb.ProgramUniformHandle(ID, GetUniformLocation(Name, ThrowOnFail), Handle);
 		}
 
-		public void SetUniform(string Name, int Index, long Handle) {
-			SetUniform(Name + "[" + Index + "]", Handle);
+		public void SetUniform(string Name, long[] Handles) {
+			GL.Arb.ProgramUniformHandle(ID, GetUniformLocation(Name), Handles.Length, Handles);
+		}
+
+		public void SetUniform(string Name, int Index, long Handle, bool ThrowOnFail = true) {
+			SetUniform(Name + "[" + Index + "]", Handle, ThrowOnFail);
 		}
 
 		public void SetUniform(string BlockName, UniformBuffer UBO) {

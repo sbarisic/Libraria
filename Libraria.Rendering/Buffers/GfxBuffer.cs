@@ -61,8 +61,13 @@ namespace Libraria.Rendering {
 		PatchesExt = 14
 	}
 
-	public abstract class OpenGLBuffer<T> {
+	public abstract class OpenGLBuffer<T> : OpenGLGC.Destructable {
 		public int ID;
+
+		bool WasFinalized;
+		~OpenGLBuffer() {
+			OpenGLGC.Enqueue(this, ref WasFinalized);
+		}
 
 		public virtual T Bind() {
 			throw new NotImplementedException();

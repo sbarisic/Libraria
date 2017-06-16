@@ -7,8 +7,7 @@ using System.Text;
 namespace Libraria.Rendering {
 	public class RenderTexture : OpenGLBuffer<RenderTexture> {
 		public static RenderTexture Current {
-			get
-			{
+			get {
 				if (RTStack.Count == 0)
 					return null;
 				return RTStack.Peek();
@@ -20,8 +19,7 @@ namespace Libraria.Rendering {
 		public FrameBuffer FrameBuffer;
 		public RenderBuffer DepthBuffer;
 		public Texture2D Texture {
-			get
-			{
+			get {
 				if (IsDoubleBuffered)
 					return OldBuffer;
 				return NewBuffer;
@@ -93,13 +91,6 @@ namespace Libraria.Rendering {
 		}
 
 		public override void Destroy() {
-			FrameBuffer.Destroy();
-			DepthBuffer.Destroy();
-			if (NewBuffer != null)
-				NewBuffer.Destroy();
-			if (OldBuffer != null)
-				OldBuffer.Destroy();
 		}
-
 	}
 }

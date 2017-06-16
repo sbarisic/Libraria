@@ -5,7 +5,7 @@ using OpenTK.Graphics.OpenGL;
 using System.Runtime.InteropServices;
 
 namespace Libraria.Rendering {
-	public class RenderObject {
+	public class RenderObject : OpenGLGC.Destructable {
 		public int ID;
 		public DrawPrimitiveType PrimitiveType;
 
@@ -14,11 +14,17 @@ namespace Libraria.Rendering {
 
 		Dictionary<int, Texture2D> Textures;
 
+		bool WasFinalized;
+		~RenderObject() {
+			OpenGLGC.Enqueue(this, ref WasFinalized);
+		}
+
 		public RenderObject(DrawPrimitiveType PrimitiveType = DrawPrimitiveType.Triangles) {
 			this.PrimitiveType = PrimitiveType;
 			Textures = new Dictionary<int, Texture2D>();
 
-			ID = GL.GenVertexArray();
+			//ID = GL.GenVertexArray();
+			GL.CreateVertexArrays(1, out ID);
 			Bind();
 		}
 
@@ -79,14 +85,17 @@ namespace Libraria.Rendering {
 			Textures.Add(Idx, Tex);
 		}
 
-		public void Draw() {
+		public void Draw(ShaderProgram DrawShader = null) {
 			if (IBuf == null)
 				throw new Exception("No index buffer found");
-			if (Shader == null)
+			if (Shader == null && DrawShader == null)
 				throw new Exception("No shader found");
 
 			Bind();
-			Shader.Bind();
+			if (DrawShader != null)
+				DrawShader.Bind();
+			else
+				Shader.Bind();
 
 			foreach (var Tex in Textures) {
 				Tex.Value.Bind(Tex.Key);
@@ -94,7 +103,11 @@ namespace Libraria.Rendering {
 			}
 
 			IBuf.Draw(0, PrimitiveType);
-			Shader.Unbind();
+
+			if (DrawShader != null)
+				DrawShader.Unbind();
+			else
+				Shader.Unbind();
 			Unbind();
 		}
 	}

@@ -23,10 +23,15 @@ namespace Libraria.Maths {
 			float Y = *(float*)&I;
 			return Y * (1.5f - (Num * .5f * Y * Y));
 		}
-		
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static float FastSqrt(float Num) {
 			return 1.0f / FastInvSqrt(Num);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float Lerp(float A, float B, float F) {
+			return A + F * (B - A);
 		}
 	}
 }
