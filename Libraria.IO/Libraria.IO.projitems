@@ -25,6 +25,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Compression\SevenZip\RangeCoder\RangeCoderBit.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Compression\SevenZip\RangeCoder\RangeCoderBitTree.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Compression\SevenZip\ICoder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Filedog.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FilePath.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Tube.cs" />
   </ItemGroup>

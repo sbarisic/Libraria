@@ -7,10 +7,6 @@ using System.Drawing;
 
 namespace Libraria {
 	public static partial class Lib {
-		public static string GetProcessExePath() {
-			return Assembly.GetEntryAssembly().Location;
-		}
-
 		public static void GetScreenResolution(out int W, out int H, float Mult = 1) {
 			Rectangle Sz = Screen.PrimaryScreen.Bounds;
 			W = Sz.Width;

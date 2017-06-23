@@ -59,7 +59,7 @@ namespace UILib {
 			else
 				ExitColor = Color.White;
 
-			return base.OnMouseMove(E);
+			return true;
 		}
 	}
 

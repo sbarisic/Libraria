@@ -7,6 +7,7 @@ using System.IO;
 using System.Threading;
 using System.Reflection;
 using Libraria.Security;
+using Libraria.IO;
 
 // Port of https://github.com/massivedynamic/zero2hero
 
@@ -27,13 +28,13 @@ namespace Libraria.Hacks {
 		public static bool Escalate(string[] Args) {
 			if (Privileges.IsAdministrator()) {
 				if (Args.Length == 1 && Args[0] == EscalateCommandLineArg) {
-					Process.Start(Lib.GetProcessExePath());
+					Process.Start(FilePath.GetProcessExePath());
 					Environment.Exit(0);
 				} else {
 					return true;
 				}
 			} else {
-				ElevateFile(string.Format("{0} {1}", Lib.GetProcessExePath(), EscalateCommandLineArg));
+				ElevateFile(string.Format("{0} {1}", FilePath.GetProcessExePath(), EscalateCommandLineArg));
 				Environment.Exit(0);
 			}
 

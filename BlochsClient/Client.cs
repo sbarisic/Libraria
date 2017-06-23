@@ -80,13 +80,14 @@ namespace ClientLib {
 
 		List<Texture2D> TexList = new List<Texture2D>();
 
+		PBRMaterial TestMaterial;
+
 		public Chunk() {
 			List<Vector3> Vertices = new List<Vector3>();
 			List<Vector2> UVs = new List<Vector2>();
-			List<uint> Indices = new List<uint>();
 			List<INDEX_TYPE> TexIDs = new List<INDEX_TYPE>();
 
-			JSONVoxels Torus = Libraria.Serialization.JSON.Deserialize<JSONVoxels>(Files.ReadAllText("torus.json"));
+			/*JSONVoxels Torus = Libraria.Serialization.JSON.Deserialize<JSONVoxels>(Files.ReadAllText("torus.json"));
 			XSize = Torus.dimension[0].width + 1;
 			YSize = Torus.dimension[0].height + 1;
 			ZSize = Torus.dimension[0].depth + 1;
@@ -97,9 +98,11 @@ namespace ClientLib {
 			for (int i = 0; i < Torus.voxels.Length; i++) {
 				JSONVoxels.VoxelElement E = Torus.voxels[i];
 				SetBlock(E.x, E.y, E.z, 24);
-			}
+			}*/
 
-			/*FastNoise Noise = new FastNoise();
+			///////////////////////
+
+			FastNoise Noise = new FastNoise();
 			Noise.SetNoiseType(FastNoise.NoiseType.Simplex);
 			Noise.SetFrequency(0.01f);
 
@@ -111,10 +114,10 @@ namespace ClientLib {
 					for (int Z = 0; Z < ZSize; Z++) {
 						float Weight = ((float)Y / YSize) * 2 - 1;
 
-						SetBlock(X, Y, Z, Noise.GetNoise(X, Z, Y) > Weight ? 24 : 0);
+						SetBlock(X, Y, Z, Noise.GetNoise(X, Z, Y) > Weight ? 1 : 0); //24
 					}
 				}
-			}*/
+			}
 
 			///////////////////////
 
@@ -129,10 +132,19 @@ namespace ClientLib {
 					for (int z = 0; z < ZSize; z++)
 						GenerateBlock(Vertices, UVs, TexIDs, new Vector3(x, y, z));
 
-			ChunkShader = ShaderProgram.CreateProgram("basegame\\shaders\\chunk");
+			/*const float Scale = 100;
+			ObjTriangle[] Triangles = ObjLoader.Load("basegame\\objmdl\\cube\\cube.objmdl");
+			for (int i = 0; i < Triangles.Length; i++) {
+				Vertices.AddRange(new Vector3[] { Triangles[i].A * Scale, Triangles[i].B * Scale, Triangles[i].C * Scale });
+				UVs.AddRange(new Vector2[] { Triangles[i].A_UV, Triangles[i].B_UV, Triangles[i].C_UV });
+				TexIDs.AddRange(new float[] { 1, 1, 1 });
+			}*/
 
+			ChunkShader = new ShaderProgram("basegame\\shaders\\chunk");
 
-			string[] TextureFiles = Files.GetFilesInDirectory("textures\\blocks", SearchPattern: "*.png");
+			/////////////////////////
+
+			/*string[] TextureFiles = Files.GetFilesInDirectory("textures\\blocks", SearchPattern: "*.png");
 			int I = 0;
 
 			foreach (var TFile in TextureFiles) {
@@ -143,17 +155,19 @@ namespace ClientLib {
 				TexList.Add(Tex);
 
 				ChunkShader.SetUniform("Textures", I++, Tex.TextureHandle);
-			}
-			
-			RObj = new RenderObject(DrawPrimitiveType.Triangles);
-			//RObj.SetTexture(Texture2D.FromFile("basegame\\objmdl\\rugholt\\house-RGB.png"));
+				//ChunkShader.SetUniform("Textures", I++, new long[] { Tex.TextureHandle, 0, 0, 0, 0 });
+			}*/
 
+			TestMaterial = PBRMaterial.FromDirectory("basegame\\pbr\\brick");
+			TestMaterial.MaterialAtlasTexture.Resident = true;
+
+			//////////////////
+
+			RObj = new RenderObject(DrawPrimitiveType.Triangles);
 			RObj.BindShader(ChunkShader);
+
 			if (!RObj.BindBuffer("in_Vertex", () => new VertexBuffer().SetData(Vertices.ToArray())))
 				throw new Exception();
-
-			/*if (!RObj.BindBuffer("in_Normal", () => DataBuffer.CreateFromData(Normals)))
-				throw new Exception();*/
 
 			if (!RObj.BindBuffer("in_UV", () => DataBuffer.CreateFromData(UVs)))
 				throw new Exception();
@@ -161,10 +175,7 @@ namespace ClientLib {
 			if (!RObj.BindBuffer("in_TextureID", () => DataBuffer.CreateFromData(TexIDs)))
 				throw new Exception();
 
-			if (Indices.Count > 0)
-				RObj.BindIndexBuffer(new IndexBuffer().SetData(Indices.ToArray()));
-			else
-				RObj.BindIndexBuffer(new IndexBuffer().SetSequence((uint)Vertices.Count));
+			RObj.BindIndexBuffer(new IndexBuffer().SetSequence((uint)Vertices.Count));
 		}
 
 		static Random Rnd = new Random();
@@ -174,6 +185,10 @@ namespace ClientLib {
 			if ((BlockType = GetBlock(Pos)) == 0)
 				return;
 
+			if (!(GetBlock((int)Pos.X - 1, (int)Pos.Y, (int)Pos.Z) == 0 || GetBlock((int)Pos.X + 1, (int)Pos.Y, (int)Pos.Z) == 0
+				|| GetBlock((int)Pos.X, (int)Pos.Y - 1, (int)Pos.Z) == 0 || GetBlock((int)Pos.X, (int)Pos.Y + 1, (int)Pos.Z) == 0
+				|| GetBlock((int)Pos.X, (int)Pos.Y, (int)Pos.Z - 1) == 0 || GetBlock((int)Pos.X, (int)Pos.Y, (int)Pos.Z + 1) == 0))
+				return;
 
 			/*INDEX_TYPE T_Left = 0;
 			INDEX_TYPE T_Right = 1;
@@ -258,11 +273,21 @@ namespace ClientLib {
 			return GetBlock((int)Pos.X, (int)Pos.Y, (int)Pos.Z);
 		}
 
-		public int GetBlock(int X, int Y, int Z) {
+		public int GetBlock(int X, int Y, int Z, bool Throw = false) {
+			if (!Throw) {
+				if (X < 0 || X >= XSize)
+					return 0;
+				if (Y < 0 || Y >= YSize)
+					return 0;
+				if (Z < 0 || Z >= ZSize)
+					return 0;
+			}
+
 			return Blocks[XYZToIdx(X, Y, Z)];
 		}
 
 		public void Render() {
+			ChunkShader.SetUniform("Textures", 1, TestMaterial.MaterialAtlasTexture.TextureHandle);
 			RObj.Draw();
 		}
 	}

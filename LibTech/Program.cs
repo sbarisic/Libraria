@@ -107,6 +107,10 @@ namespace LibTech {
 
 			// Render loop
 			if (!Engine.DedicatedServer) {
+				ShaderProgram.OnProgramError += (Program, ErrorMsg) => {
+					Console.WriteLine(Console.DarkYellow + "Shader program error: \n{0}", ErrorMsg);
+				};
+
 				RenderWindow.InitRenderer();
 				SpawnWindow();
 
@@ -114,7 +118,7 @@ namespace LibTech {
 				Engine.RenderWindow.SetWindowSize(-1, -1);
 
 				Engine.Camera = new Camera();
-				Engine.Camera.Projection = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 2, Engine.RenderWindow.AspectRatio, 0.1f, 2500.0f);
+				Engine.Camera.Projection = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 2, Engine.RenderWindow.AspectRatio, 0.1f, 6000.0f);
 				Engine.Camera.SetPosition(new Vector3(0, 0, -100));
 				Camera.Push(Engine.Camera);
 
@@ -261,6 +265,10 @@ namespace LibTech {
 			if (Engine.DrawFPSCounter) {
 				NanoVG.BeginFrame();
 				NanoVG.DrawText("clacon", 12, TextAlign.TopLeft, Color.White, 0, 0, string.Format("FPS: {0} - {1} ms", 1.0f / Dt, Dt));
+				NanoVG.DrawText("clacon", 12, TextAlign.TopLeft, Color.White, 0, 12, Camera.GetCurrent().ToString());
+
+				//Camera.GetCurrent().rot
+
 				NanoVG.EndFrame();
 			}
 		}

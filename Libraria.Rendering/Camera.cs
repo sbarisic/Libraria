@@ -67,6 +67,10 @@ namespace Libraria.Rendering {
 			return -Translation.ExtractTranslation();
 		}
 
+		/*public Quaternion GetRotation() {
+			return 
+		}*/
+
 		public void MouseRotate(float T, float MouseDX, float MouseDY) {
 			float Accel = MouseSensitivity * T;
 			float DX = MouseDX * Accel;
@@ -83,6 +87,10 @@ namespace Libraria.Rendering {
 
 		public Matrix4 Collapse() {
 			return Translation * RotationMat * Projection;
+		}
+
+		public override string ToString() {
+			return "Pos: " + GetPosition() + " Rot: " + Rotation;
 		}
 	}
 }

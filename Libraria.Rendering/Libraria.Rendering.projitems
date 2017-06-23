@@ -23,6 +23,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)RenderWindow.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scancodes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ShaderProgram.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PBRMaterial.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Texture2D.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TextureAtlas.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Text\GfxFont.cs" />

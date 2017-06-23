@@ -6,90 +6,204 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Libraria.IO;
 
 namespace Libraria.Rendering {
-	public enum ShaderKind {
-		FragmentShader = 35632,
-		VertexShader = 35633,
-		GeometryShader = 36313,
-		GeometryShaderExt = 36313,
-		TessEvaluationShader = 36487,
-		TessControlShader = 36488,
-		ComputeShader = 37305
-	}
+	public delegate void OnShaderUpdateAction(ShaderProgram Program, string ErrorMsg);
 
-	public unsafe class ShaderProgram {
-		static int CreateShader(string FilePath, ShaderKind Kind) {
-			if (Kind == ShaderKind.GeometryShader && !File.Exists(FilePath))
-				return -1;
+	public unsafe class ShaderProgram : OpenGLGC.Destructable {
+		public unsafe class Shader : OpenGLGC.Destructable {
+			bool Dirty;
+			public int ID;
+			public string SourceFile { get; private set; }
 
-			string Src = File.ReadAllText(FilePath);
+			public static Shader CreateShader(string FilePath) {
+				string Ext = Path.GetExtension(FilePath).ToLower().Substring(1);
+				ShaderType Kind = ShaderType.FragmentShader;
 
-			int ID = GL.CreateShader((ShaderType)Kind);
-			GL.ShaderSource(ID, Src);
-			GL.CompileShader(ID);
+				if (Ext == "frag")
+					Kind = ShaderType.FragmentShader;
+				else if (Ext == "vert")
+					Kind = ShaderType.VertexShader;
+				else if (Ext == "geom")
+					Kind = ShaderType.GeometryShader;
+				else if (Ext == "comp")
+					Kind = ShaderType.ComputeShader;
+				else
+					throw new Exception("Unknown extension: " + Ext);
 
-			string Log = GL.GetShaderInfoLog(ID);
-			if (Log.Length > 0)
-				throw new Exception(Log);
+				if ((Kind == ShaderType.GeometryShader || Kind == ShaderType.ComputeShader) && !File.Exists(FilePath))
+					return null;
 
-			return ID;
+				Shader S = new Shader(Kind);
+				S.Source(FilePath);
+				return S;
+			}
+
+			public void MarkDirty() {
+				Dirty = true;
+			}
+
+			public Shader(ShaderType SType) {
+				ID = GL.CreateShader(SType);
+			}
+
+			public void Source(string SourceFile) {
+				this.SourceFile = FilePath.Normalize(SourceFile);
+				MarkDirty();
+			}
+
+			public void Compile() {
+				if (!TryCompile(out string ErrorMsg))
+					throw new Exception(ErrorMsg);
+			}
+
+			public bool TryCompile(out string ErrorMsg) {
+				if (!Dirty) {
+					ErrorMsg = "";
+					return true;
+				}
+
+				if (string.IsNullOrEmpty(SourceFile)) {
+					ErrorMsg = "Source file not specified for shader";
+					return false;
+				}
+
+				while (!FilePath.TryOpenFile(SourceFile, FileAccess.Read))
+					;
+
+				string Src = File.ReadAllText(SourceFile);
+				GL.ShaderSource(ID, Src);
+				GL.CompileShader(ID);
+
+				ErrorMsg = GL.GetShaderInfoLog(ID);
+				if (ErrorMsg.Length > 0) {
+					ErrorMsg = string.Format("Error in: {0}\n{1}", SourceFile, ErrorMsg);
+					return false;
+				}
+
+				Dirty = false;
+				return true;
+			}
+
+			public void Attach(int ProgramID) {
+				GL.AttachShader(ProgramID, ID);
+			}
+
+			public void Detach(int ProgramID) {
+				GL.DetachShader(ProgramID, ID);
+			}
+
+			bool WasFinalized;
+			~Shader() {
+				OpenGLGC.Enqueue(this, ref WasFinalized);
+			}
+
+			public void Destroy() {
+				GL.DeleteShader(ID);
+			}
 		}
 
-		static int CreateShader(string FilePath) {
-			string Ext = Path.GetExtension(FilePath).ToLower().Substring(1);
-			ShaderKind Kind = ShaderKind.FragmentShader;
+		public static event OnShaderUpdateAction OnProgramError;
+		static Filedog ShaderWatcher = new Filedog(FilePath.GetProcessExeDirectory());
 
-			if (Ext == "frag")
-				Kind = ShaderKind.FragmentShader;
-			else if (Ext == "vert")
-				Kind = ShaderKind.VertexShader;
-			else if (Ext == "geom")
-				Kind = ShaderKind.GeometryShader;
-			else if (Ext == "comp")
-				Kind = ShaderKind.ComputeShader;
-			else
-				throw new Exception("Unknown extension: " + Ext);
-
-			return CreateShader(FilePath, Kind);
-		}
-
-		static int CreateProgram(int[] Shaders) {
-			int ID = GL.CreateProgram();
-
-			for (int i = 0; i < Shaders.Length; i++)
-				GL.AttachShader(ID, Shaders[i]);
-
-			//GL.BindFragDataLocation(ID, 0, "Color");
-			GL.LinkProgram(ID);
-
-			string Log = GL.GetProgramInfoLog(ID);
-			if (Log.Length > 0)
-				throw new Exception(Log);
-
-			for (int i = 0; i < Shaders.Length; i++)
-				GL.DetachShader(ID, Shaders[i]);
-
-			return ID;
-		}
-
-		public static ShaderProgram CreateProgram(string Name) {
-			return new ShaderProgram(Name + ".frag", Name + ".vert", Name + ".geom");
-		}
-
+		bool Dirty;
 		public int ID;
+		Shader[] Shaders;
 
-		public ShaderProgram(params string[] ShaderPaths) {
-			int[] Shaders = new int[ShaderPaths.Length];
+		public ShaderProgram(string[] ShaderPaths) {
+			List<Shader> ShaderList = new List<Shader>();
 
-			for (int i = 0; i < ShaderPaths.Length; i++)
-				Shaders[i] = CreateShader(ShaderPaths[i]);
+			for (int i = 0; i < ShaderPaths.Length; i++) {
+				Shader S = Shader.CreateShader(ShaderPaths[i]);
 
-			ID = CreateProgram(Shaders.Where((I) => I != -1).ToArray());
+				if (S != null) {
+					ShaderWatcher.OnFileChanged(S.SourceFile, (Ext, SourceFile, Name, Type) => {
+						Dirty = true;
+						S.MarkDirty();
+					});
+
+					S.Compile();
+					ShaderList.Add(S);
+				}
+			}
+
+			Shaders = ShaderList.ToArray();
+
+			ID = GL.CreateProgram();
+			Dirty = true;
+			Reload();
 			//Bind();
 		}
 
+		public ShaderProgram(string Name) : this(new string[] { Name + ".frag", Name + ".vert", Name + ".geom", Name + ".comp" }) {
+		}
+
+		bool WasFinalized;
+		~ShaderProgram() {
+			OpenGLGC.Enqueue(this, ref WasFinalized);
+		}
+
+		public void Reload() {
+			if (!TryReload(out string ErrorMsg))
+				throw new Exception(ErrorMsg);
+		}
+
+		public bool TryReload(out string ErrorMsg) {
+			ErrorMsg = "";
+			if (!Dirty)
+				return true;
+			Dirty = false;
+
+			for (int i = 0; i < Shaders.Length; i++)
+				if (!Shaders[i].TryCompile(out ErrorMsg))
+					return false;
+
+			for (int i = 0; i < Shaders.Length; i++)
+				Shaders[i].Attach(ID);
+
+			bool Status = true;
+			if (!TryLink(out ErrorMsg))
+				Status = false;
+
+			for (int i = 0; i < Shaders.Length; i++)
+				Shaders[i].Detach(ID);
+
+			return Status;
+		}
+
+		public void Link() {
+			if (!TryLink(out string ErrorMsg))
+				throw new Exception(ErrorMsg);
+		}
+
+		public bool TryLink(out string ErrorMsg) {
+			int ProgramLen = 0;
+			BinaryFormat BinFormat;
+			int Len = 1024 * 512;
+			byte* BufferPtr = stackalloc byte[Len];
+			IntPtr Buffer = new IntPtr(BufferPtr);
+			GL.GetProgramBinary(ID, Len, out ProgramLen, out BinFormat, Buffer);
+
+			GL.LinkProgram(ID);
+
+			ErrorMsg = GL.GetProgramInfoLog(ID);
+			if (ErrorMsg.Length > 0) {
+				GL.ProgramBinary(ID, BinFormat, Buffer, ProgramLen);
+				return false;
+			}
+
+			return true;
+		}
+
+		public void Destroy() {
+			GL.DeleteProgram(ID);
+		}
+
 		public void Bind(bool DoBindCamera = true) {
+			if (!TryReload(out string ErrorMsg))
+				OnProgramError?.Invoke(this, ErrorMsg);
+
 			GL.UseProgram(ID);
 			if (DoBindCamera)
 				BindCamera(Camera.GetCurrent());
@@ -100,10 +214,16 @@ namespace Libraria.Rendering {
 		}
 
 		public int GetAttribLocation(string Name) {
+			/*if (!TryReload(out string ErrorMsg))
+				OnProgramError?.Invoke(this, ErrorMsg);*/
+
 			return GL.GetAttribLocation(ID, Name);
 		}
 
 		public int GetUniformLocation(string Name, bool ThrowOnFail = true) {
+			/*if (!TryReload(out string ErrorMsg))
+				OnProgramError?.Invoke(this, ErrorMsg);*/
+
 			int Idx = GL.GetUniformLocation(ID, Name);
 			if (Idx < 0 && ThrowOnFail)
 				throw new Exception("Invalid index");
@@ -128,7 +248,6 @@ namespace Libraria.Rendering {
 
 		public void SetUniform(string Name, Matrix4 Mtx, bool ThrowOnFail = true) {
 			SetUniform(Name, ref Mtx, ThrowOnFail);
-
 		}
 
 		public void SetUniform(string Name, ref Matrix4 Mtx, bool ThrowOnFail = true) {
@@ -137,8 +256,8 @@ namespace Libraria.Rendering {
 				GL.ProgramUniformMatrix4(ID, Idx, false, ref Mtx);
 		}
 
-		public void SetUniform(string Name, Vector3 Vec) {
-			SetUniform(Name, ref Vec);
+		public void SetUniform(string Name, Vector3 Vec, bool ThrowOnFail = true) {
+			SetUniform(Name, ref Vec, ThrowOnFail);
 		}
 
 		public void SetUniform(string Name, Vector3[] Vecs) {
@@ -146,8 +265,8 @@ namespace Libraria.Rendering {
 				GL.ProgramUniform3(ID, GetUniformLocation(Name), Vecs.Length, (float*)VecsPtr);
 		}
 
-		public void SetUniform(string Name, ref Vector3 Vec) {
-			GL.ProgramUniform3(ID, GetUniformLocation(Name), ref Vec);
+		public void SetUniform(string Name, ref Vector3 Vec, bool ThrowOnFail = true) {
+			GL.ProgramUniform3(ID, GetUniformLocation(Name, ThrowOnFail), ref Vec);
 		}
 
 		public void SetUniform(string Name, Vector2 Vec, bool ThrowOnFail = true) {
@@ -170,12 +289,16 @@ namespace Libraria.Rendering {
 			GL.Arb.ProgramUniformHandle(ID, GetUniformLocation(Name, ThrowOnFail), Handle);
 		}
 
-		public void SetUniform(string Name, long[] Handles) {
-			GL.Arb.ProgramUniformHandle(ID, GetUniformLocation(Name), Handles.Length, Handles);
+		public void SetUniform(string Name, long[] Handles, bool ThrowOnFail = true) {
+			GL.Arb.ProgramUniformHandle(ID, GetUniformLocation(Name, ThrowOnFail), Handles.Length, Handles);
 		}
 
 		public void SetUniform(string Name, int Index, long Handle, bool ThrowOnFail = true) {
 			SetUniform(Name + "[" + Index + "]", Handle, ThrowOnFail);
+		}
+
+		public void SetUniform(string Name, int Index, long[] Handles, bool ThrowOnFail = true) {
+			SetUniform(Name + "[" + Index + "]", Handles, ThrowOnFail);
 		}
 
 		public void SetUniform(string BlockName, UniformBuffer UBO) {

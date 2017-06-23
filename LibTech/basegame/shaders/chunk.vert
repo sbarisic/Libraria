@@ -1,4 +1,4 @@
-﻿#version 420 core
+﻿#version 450 core
 
 uniform mat4 MatTranslation;
 uniform mat4 MatRotation;
@@ -18,8 +18,9 @@ float rand(vec2 co) {
 }
 
 void main() {
-	float RndOffset = rand(in_Vertex.xz) * 2;
-	vec3 Vertex = vec3(in_Vertex.x, in_Vertex.y + RndOffset, in_Vertex.z);
+	//float RndOffset = rand(in_Vertex.xz) * 2;
+	//vec3 Vertex = vec3(in_Vertex.x, in_Vertex.y + RndOffset, in_Vertex.z);
+	vec3 Vertex = in_Vertex;
 
 	mat4 ViewMat = MatRotation * MatTranslation;
 	vec4 Pos = ViewMat * vec4(Vertex, 1);

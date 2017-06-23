@@ -13,11 +13,14 @@ using System.Runtime.InteropServices;
 using OpenTK.Input;
 using Libraria;
 using Libraria.Rendering;
+using System.Diagnostics;
 
 namespace Libraria.Rendering {
 	public delegate void OnUpdateAction(float Dt);
 
 	public class RenderWindow : GameWindow {
+		const int GL_CONSERVATIVE_RASTERIZATION_NV = 0x9346;
+
 		public event OnUpdateAction OnUpdate;
 		public event OnUpdateAction OnRenderClient;
 		public event OnUpdateAction OnRenderUI;
@@ -27,12 +30,15 @@ namespace Libraria.Rendering {
 
 		FrameBuffer GFrameBuffer;
 		Texture2D PositionBuffer;
-		Texture2D NormalBuffer;
 		Texture2D ColorBuffer;
+		Texture2D MetallicRoughnessAOHeightBuffer;
+		Texture2D NormalBuffer;
+		Texture2D EmissiveBuffer;
 		RenderBuffer DepthBuffer;
 
 		FrameBuffer SSAOFrameBuffer;
 		Texture2D SSAOBuffer;
+		Vector3[] SSAOKernel;
 
 		ShaderProgram SSAOShader;
 		ShaderProgram PostShader;
@@ -48,16 +54,18 @@ namespace Libraria.Rendering {
 
 		public RenderWindow(string Title, int W, int H, bool NoBorder = false) :
 			base(W, H, new GraphicsMode(new ColorFormat(32), 24, 8, 4, ColorFormat.Empty, 2, false), Title,
-				GameWindowFlags.FixedWindow, DisplayDevice.Default, 4, 5, GraphicsContextFlags.Debug) {
+				GameWindowFlags.FixedWindow, DisplayDevice.Default, 4, 5, GraphicsContextFlags.Debug | GraphicsContextFlags.ForwardCompatible) {
 
 			GL.Enable(EnableCap.FramebufferSrgb);
+			//GL.ClampColor(ClampColorTarget.ClampReadColor, ClampColorMode.FixedOnly);
+			//GL.Enable((EnableCap)GL_CONSERVATIVE_RASTERIZATION_NV);
+			CheckError();
 
 			UICam = new Camera();
 			UICam.Projection = Matrix4.CreateOrthographicOffCenter(0, 1, 0, 1, -2, 2);
 
-			SSAOShader = ShaderProgram.CreateProgram("basegame\\shaders\\ssao");
-			PostShader = ShaderProgram.CreateProgram("basegame\\shaders\\post");
-			PostShader.SetUniform("Resolution", new Vector2(W, H), false);
+			SSAOShader = new ShaderProgram("basegame\\shaders\\ssao");
+			PostShader = new ShaderProgram("basegame\\shaders\\post");
 
 			ScreenQuad = new RenderObject(DrawPrimitiveType.Triangles);
 
@@ -84,23 +92,39 @@ namespace Libraria.Rendering {
 			GFrameBuffer = new FrameBuffer();
 			{
 				PositionBuffer = new Texture2D(TexFilterMode.Nearest);
-				PositionBuffer.LoadData(W, H, IntPtr.Zero, PixelInternalFormat.Rgb16f, PixelFormat.Rgb, PixelType.Float);
+				PositionBuffer.LoadData(W, H, IntPtr.Zero, PixelInternalFormat.Rgb32f, PixelFormat.Rgb, PixelType.Float);
 				PositionBuffer.Resident = true;
 				GFrameBuffer.BindTexture(PositionBuffer, FramebufferAttachment.ColorAttachment0);
-
-				NormalBuffer = new Texture2D(TexFilterMode.Nearest);
-				NormalBuffer.LoadData(W, H, IntPtr.Zero, PixelInternalFormat.Rgb16f, PixelFormat.Rgb, PixelType.Float);
-				NormalBuffer.Resident = true;
-				GFrameBuffer.BindTexture(NormalBuffer, FramebufferAttachment.ColorAttachment1);
 
 				ColorBuffer = new Texture2D(TexFilterMode.Nearest);
 				ColorBuffer.LoadData(W, H, IntPtr.Zero);
 				ColorBuffer.Resident = true;
-				GFrameBuffer.BindTexture(ColorBuffer, FramebufferAttachment.ColorAttachment2);
+				GFrameBuffer.BindTexture(ColorBuffer, FramebufferAttachment.ColorAttachment1);
+
+				MetallicRoughnessAOHeightBuffer = new Texture2D(TexFilterMode.Nearest);
+				MetallicRoughnessAOHeightBuffer.LoadData(W, H, IntPtr.Zero, PixelInternalFormat.Rgba32f, PixelFormat.Rgba, PixelType.Float);
+				MetallicRoughnessAOHeightBuffer.Resident = true;
+				GFrameBuffer.BindTexture(MetallicRoughnessAOHeightBuffer, FramebufferAttachment.ColorAttachment2);
+
+				NormalBuffer = new Texture2D(TexFilterMode.Nearest);
+				NormalBuffer.LoadData(W, H, IntPtr.Zero, PixelInternalFormat.Rgb16f, PixelFormat.Rgb, PixelType.Float);
+				NormalBuffer.Resident = true;
+				GFrameBuffer.BindTexture(NormalBuffer, FramebufferAttachment.ColorAttachment3);
+				
+				EmissiveBuffer = new Texture2D(TexFilterMode.Nearest);
+				EmissiveBuffer.LoadData(W, H, IntPtr.Zero, PixelInternalFormat.Rgb, PixelFormat.Rgb);
+				EmissiveBuffer.Resident = true;
+				GFrameBuffer.BindTexture(EmissiveBuffer, FramebufferAttachment.ColorAttachment4);
+
+				/*HeightBuffer = new Texture2D(TexFilterMode.Nearest);
+				HeightBuffer.LoadData(W, H, IntPtr.Zero, PixelInternalFormat.R16f, PixelFormat.Red, PixelType.Float);
+				HeightBuffer.Resident = true;
+				GFrameBuffer.BindTexture(HeightBuffer, FramebufferAttachment.ColorAttachment7);*/
 
 				DepthBuffer = new RenderBuffer(RenderbufferStorage.DepthComponent, W, H);
 				GFrameBuffer.BindRenderBuffer(DepthBuffer, FramebufferAttachment.DepthAttachment);
-				GFrameBuffer.DrawBuffer(DrawBuffersEnum.ColorAttachment0, DrawBuffersEnum.ColorAttachment1, DrawBuffersEnum.ColorAttachment2);
+				GFrameBuffer.DrawBuffer(DrawBuffersEnum.ColorAttachment0, DrawBuffersEnum.ColorAttachment1, DrawBuffersEnum.ColorAttachment2, DrawBuffersEnum.ColorAttachment3,
+					DrawBuffersEnum.ColorAttachment4);
 			}
 
 			SSAOFrameBuffer = new FrameBuffer();
@@ -111,12 +135,8 @@ namespace Libraria.Rendering {
 				SSAOFrameBuffer.BindTexture(SSAOBuffer, FramebufferAttachment.ColorAttachment0);
 			}
 
-			SSAOShader.SetUniform("Textures", 0, PositionBuffer.TextureHandle);
-			SSAOShader.SetUniform("Textures", 1, NormalBuffer.TextureHandle);
-			SSAOShader.SetUniform("Textures", 2, ColorBuffer.TextureHandle);
-
 			Random Rnd = new Random();
-			Vector3[] SSAOKernel = new Vector3[64];
+			SSAOKernel = new Vector3[64];
 			for (int i = 0; i < SSAOKernel.Length; i++) {
 				Vector3 Sample = new Vector3((float)Rnd.NextDouble() * 2 - 1, (float)Rnd.NextDouble() * 2 - 1, (float)Rnd.NextDouble());
 				Sample.Normalize();
@@ -128,13 +148,11 @@ namespace Libraria.Rendering {
 
 				SSAOKernel[i] = Sample;
 			}
-			SSAOShader.SetUniform("SSAOKernel", SSAOKernel);
-
-			PostShader.SetUniform("Textures", 0, ColorBuffer.TextureHandle, false);
-			PostShader.SetUniform("Textures", 1, SSAOBuffer.TextureHandle, false);
 
 			CheckError();
 		}
+
+		Stopwatch SWatch = Stopwatch.StartNew();
 
 		public void SetWindowSize(int W, int H) {
 			if (W == -1)
@@ -159,12 +177,30 @@ namespace Libraria.Rendering {
 
 		void ClearBuffers() {
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
+		}
+		
+		void SetShaderUniforms() {
+			SSAOShader.SetUniform("Textures", 0, PositionBuffer.TextureHandle);
+			SSAOShader.SetUniform("Textures", 1, NormalBuffer.TextureHandle);
+			SSAOShader.SetUniform("Textures", 2, ColorBuffer.TextureHandle);
+			SSAOShader.SetUniform("SSAOKernel", SSAOKernel);
 
+			PostShader.SetUniform("Resolution", new Vector2(Width, Height), false);
+			PostShader.SetUniform("SSAOBuffer", SSAOBuffer.TextureHandle, false);
+			PostShader.SetUniform("PositionBuffer", PositionBuffer.TextureHandle, false);
+			PostShader.SetUniform("ColorBuffer", ColorBuffer.TextureHandle, false);
+			PostShader.SetUniform("MetallicRoughnessAOHeightBuffer", MetallicRoughnessAOHeightBuffer.TextureHandle, false);
+			PostShader.SetUniform("NormalBuffer", NormalBuffer.TextureHandle, false);
+			//PostShader.SetUniform("RoughnessBuffer", RoughnessBuffer.TextureHandle, false);
+			//PostShader.SetUniform("AOBuffer", AOBuffer.TextureHandle, false);
+			PostShader.SetUniform("EmissiveBuffer", EmissiveBuffer.TextureHandle, false);
+			//PostShader.SetUniform("HeightBuffer", HeightBuffer.TextureHandle, false);
 		}
 
 		protected override void OnRenderFrame(FrameEventArgs E) {
 			MakeCurrent();
 			OpenGLGC.CollectAll();
+			SetShaderUniforms();
 
 			GL.Disable(EnableCap.ScissorTest);
 			GL.Disable(EnableCap.StencilTest);
@@ -192,19 +228,25 @@ namespace Libraria.Rendering {
 
 			// Screen quad
 			{
-				Matrix4 ClientProjection = Camera.GetCurrent().Projection;
+				Camera CurCam = Camera.GetCurrent();
 				Camera.Push(UICam);
 				GL.FrontFace(FrontFaceDirection.Cw);
 
 				SSAOFrameBuffer.Bind();
 				//GL.Viewport(0, 0, Width / 2, Height / 2);
 				{
-					SSAOShader.SetUniform("MatProjection2", ClientProjection);
+					SSAOShader.SetUniform("MatProjection2", CurCam.Projection, false);
 					ScreenQuad.Draw(SSAOShader);
 				}
 				//GL.Viewport(0, 0, Width, Height);
 				SSAOFrameBuffer.Unbind();
 
+				float T = (float)SWatch.ElapsedMilliseconds / 1000;
+				PostShader.SetUniform("LightDir[0]", new Vector3((float)Math.Cos(T), 1, (float)Math.Sin(T)).Normalized(), false);
+
+				PostShader.SetUniform("MatTranslation2", CurCam.Translation, false);
+				PostShader.SetUniform("MatRotation2", CurCam.RotationMat, false);
+				PostShader.SetUniform("MatProjection2", CurCam.Projection, false);
 				ScreenQuad.Draw(PostShader);
 				Camera.Pop();
 				CheckError();
