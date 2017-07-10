@@ -10,6 +10,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Binary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FormatSerializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\BSP.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)JSON.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ValueSerializer.cs" />
   </ItemGroup>

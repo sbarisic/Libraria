@@ -16,5 +16,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)MF_Vector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RectanglePacking.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Vectors.cs" />
   </ItemGroup>
 </Project>

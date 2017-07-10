@@ -27,6 +27,9 @@ namespace Test {
 		static float Highest, Lowest, Middle, DataFrequency;
 
 		static void Main(string[] Args) {
+			Main2(Args);
+			return;
+
 			Data = new float[800];
 
 			Thread T = new Thread(Update);
@@ -147,6 +150,32 @@ namespace Test {
 			}
 		}
 
+		[StructLayout(LayoutKind.Explicit)]
+		struct Hax {
+			[FieldOffset(0)]
+			IntPtr Address;
 
+			[FieldOffset(0)]
+			object Object;
+
+			public Hax(object Object) {
+				Address = IntPtr.Zero;
+				this.Object = Object;
+			}
+		}
+
+		class HaxClass {
+			public int A = 0x42;
+			public int B = 0x43;
+		}
+
+		static void Main2(string[] Args) {
+			HaxClass Objecte = new HaxClass();
+
+			GCHandle ObjecteHandle = GCHandle.Alloc(Objecte, GCHandleType.Pinned);
+			Hax ObjecteHax = new Hax(Objecte);
+
+			RuntimeMethodHandle RMH;
+		}
 	}
 }

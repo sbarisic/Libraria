@@ -6,23 +6,56 @@ using System.Reflection;
 using Libraria.IO.Compression;
 
 namespace Libraria.Serialization {
-	public static class ValueSerializer {
-		static Encoding TextEncoding = Encoding.UTF8;
+	public enum EncodingType {
+		ASCII,
+		UTF8
+	}
 
-		static bool LengthRequired(Type T) {
-			if (T == typeof(string))
+	[AttributeUsage(AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
+	public sealed class StringEncodingAttribute : Attribute {
+		public Encoding Encoding;
+		public int Length;
+
+		public StringEncodingAttribute(EncodingType E, int Length = -1) {
+			switch (E) {
+				case EncodingType.ASCII:
+					this.Encoding = Encoding.ASCII;
+					break;
+
+				case EncodingType.UTF8:
+					this.Encoding = Encoding.UTF8;
+					break;
+
+				default:
+					throw new NotImplementedException("Unknown encoding type " + E);
+			}
+
+			this.Length = Length;
+		}
+	}
+
+	public static class ValueSerializer {
+		public static Encoding TextEncoding = Encoding.UTF8;
+
+		static bool LengthRequired(FieldInfo FInfo) {
+			if (FInfo.FieldType == typeof(string)) {
+				if (FInfo.GetCustomAttribute<StringEncodingAttribute>() != null)
+					return false;
 				return true;
+			}
+
 			return false;
 		}
 
-		public static byte[] SerializeStruct<T>(T Structure, bool Compress = true) where T : struct {
-			FieldInfo[] Fields = typeof(T).GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+		public static byte[] SerializeStruct(object Structure, bool Compress = true)  {
+			Type T = Structure.GetType();
+			FieldInfo[] Fields = T.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 			List<byte> Bytes = new List<byte>();
 
 			for (int i = 0; i < Fields.Length; i++) {
 				byte[] FieldBytes = Serialize(Fields[i].GetValue(Structure));
 
-				if (LengthRequired(Fields[i].FieldType))
+				if (LengthRequired(Fields[i]))
 					Bytes.AddRange(Serialize(FieldBytes.Length));
 				Bytes.AddRange(FieldBytes);
 			}
@@ -33,29 +66,30 @@ namespace Libraria.Serialization {
 			return BytesArray;
 		}
 
-		public static void DeserializeStruct<T>(ref T Structure, byte[] Bytes, bool Compressed = true) where T : struct {
-			FieldInfo[] Fields = typeof(T).GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+		public static void DeserializeStruct(Type T, ref object Structure, byte[] Bytes, bool Compressed = true)  {
+			FieldInfo[] Fields = T.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 			int Idx = 0;
-			object Obj = Structure;
 
 			if (Compressed)
 				Bytes = Lib.Decompress(Bytes);
 
 			for (int i = 0; i < Fields.Length; i++) {
 				int Len = -1;
-				if (LengthRequired(Fields[i].FieldType))
+				if (LengthRequired(Fields[i]))
 					Len = Deserialize<int>(Bytes, ref Idx);
 
-				Fields[i].SetValue(Obj, Deserialize(Bytes, Fields[i].FieldType, ref Idx, Len));
+				Fields[i].SetValue(Structure, Deserialize(Bytes, Fields[i], ref Idx, Len));
 			}
+		}
 
-			Structure = (T)Obj;
+		public static object DeserializeStruct(Type T, byte[] Bytes, bool Compressed = true) {
+			object Instance = Activator.CreateInstance(T);
+			DeserializeStruct(T, ref Instance, Bytes, Compressed);
+			return Instance;
 		}
 
 		public static T DeserializeStruct<T>(byte[] Bytes, bool Compressed = true) where T : struct {
-			T Ret = new T();
-			DeserializeStruct<T>(ref Ret, Bytes, Compressed);
-			return Ret;
+			return (T)DeserializeStruct(typeof(T), Bytes, Compressed);
 		}
 
 		public static byte[] Serialize(object Value) {
@@ -122,6 +156,14 @@ namespace Libraria.Serialization {
 			if (T.IsValueType)
 				Idx += Marshal.SizeOf(T);
 			return Ret;
+		}
+
+		public static object Deserialize(byte[] Bytes, FieldInfo Field, ref int Idx, int Len = -1) {
+			StringEncodingAttribute StringEncoding = Field.GetCustomAttribute<StringEncodingAttribute>();
+			if (StringEncoding != null)
+				Len = StringEncoding.Length;
+
+			return Deserialize(Bytes, Field.FieldType, ref Idx, Len);
 		}
 
 		public static T Deserialize<T>(byte[] Bytes, ref int Idx, int Len = -1) {
