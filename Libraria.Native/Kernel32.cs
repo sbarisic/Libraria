@@ -42,6 +42,9 @@ namespace Libraria.Native {
 		[DllImport("kernel32", SetLastError = true, CallingConvention = CallingConvention.Winapi)]
 		public static extern bool VirtualProtect(IntPtr Addr, uint Size, MemProtection NewProtect, out MemProtection OldProtect);
 
+		[DllImport("kernel32", SetLastError = true, CallingConvention = CallingConvention.Winapi)]
+		public static extern IntPtr LoadLibrary(string Name);
+
 		public static bool VirtualProtect(IntPtr Addr, int Size, MemProtection NewProtect, out MemProtection OldProtect) {
 			return VirtualProtect(Addr, (uint)Size, NewProtect, out OldProtect);
 		}

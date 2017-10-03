@@ -9,7 +9,7 @@
     <Import_RootNamespace>Libraria</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)ArrayExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ArrayListExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EventPool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FastNoise.cs" />

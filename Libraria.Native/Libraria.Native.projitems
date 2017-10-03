@@ -15,5 +15,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Kernel32.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MachineCode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MemoryManagement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NativeUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VTables\Attributes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VTables\InteropHelp.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VTables\JITEngine.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VTables\JITInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VTables\VTable.cs" />
   </ItemGroup>
 </Project>
