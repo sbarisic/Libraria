@@ -71,34 +71,56 @@ namespace Test {
 		void FuncB();
 	}
 
-	public interface B {
-		void FuncC();
+	public interface B : A {
+		void PrintTypeInfo(IntPtr Ptr);
 	}
 
-	public interface Test : A, B {
+	public interface Test : B {
 		void SetOtherInt(int I);
-		void FuncE();
+		void FuncE(IntPtr Ptr);
 	}
 
+	delegate void Func(IntPtr This);
+	delegate void FuncIntPtr(IntPtr This, IntPtr Ptr);
 	delegate void FuncInt(IntPtr This, int I);
 
-	class Program {
+	unsafe class Program {
 		[DllImport("NativeTest")]
 		static extern IntPtr GetPointer();
 
 		static void Main(string[] Args) {
 			IntPtr ClassInstancePtr = GetPointer();
-			NativeClassInfo Info = VTable.CalculateClassLayout(typeof(Test));
+			//NativeClassInfo Info = NativeClass.CalculateClassLayout(typeof(Test));
 
-			IntPtr SomeOtherIntPtr = Info.FindVariable(typeof(A).GetProperty("SomeOtherInt")).GetAddress(ClassInstancePtr);
+			NativeTypeInfo TypeInf = NativeClass.GetTypeInfo(ClassInstancePtr);
+			Console.WriteLine(TypeInf.MangledName);
+
+			/*for (int i = 0; i < Desc.NumBaseClasses; i++) {
+				RTTIBaseClassDescriptor* BCD = Desc.BaseClassArray->Bases[i];
+			}*/
+
+			//FuncIntPtr F = Info.Find(typeof(B).GetMethod(nameof(B.PrintTypeInfo))).GetDelegate<FuncIntPtr>(ClassInstancePtr);
+			//F(ClassInstancePtr, (IntPtr)TypeDesc);
+
+
+
+			/*IntPtr SomeOtherIntPtr = Info.FindVariable(typeof(A).GetProperty("SomeOtherInt")).GetAddress(ClassInstancePtr);
 			Console.WriteLine("SomeOtherInt = {0}", Marshal.ReadInt32(SomeOtherIntPtr));
 
 			Info.Find(typeof(Test).GetMethod("SetOtherInt")).GetDelegate<FuncInt>(ClassInstancePtr)(ClassInstancePtr, 42);
-			
-			Console.WriteLine("SomeOtherInt = {0}", Marshal.ReadInt32(SomeOtherIntPtr));
+
+			Console.WriteLine("SomeOtherInt = {0}", Marshal.ReadInt32(SomeOtherIntPtr));*/
 
 			//Console.WriteLine("Done!");
 			Console.ReadLine();
+		}
+
+		static void PrintStr(IntPtr Str) {
+			Console.WriteLine(Encoding.UTF8.GetString((byte*)Str, 32));
+
+			//Console.WriteLine(Encoding.ASCII.GetString((byte*)Str, 40));
+			//Console.WriteLine(Encoding.Unicode.GetString((byte*)Str, 40));
+			//Console.WriteLine(Encoding.UTF8.GetString((byte*)Str, 40));
 		}
 	}
 }

@@ -18,8 +18,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)NativeUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VTables\Attributes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VTables\InteropHelp.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)VTables\JITEngine.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)VTables\JITInfo.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)VTables\VTable.cs" />
+    <None Include="$(MSBuildThisFileDirectory)VTables\JITEngine.cs" />
+    <None Include="$(MSBuildThisFileDirectory)VTables\JITInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VTables\NativeClasses.cs" />
   </ItemGroup>
 </Project>

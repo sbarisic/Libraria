@@ -10,5 +10,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)AdvancedStack.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tree.cs" />
   </ItemGroup>
 </Project>
