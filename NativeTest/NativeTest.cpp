@@ -14,25 +14,29 @@ public:
 	}
 };
 
-class Mammal : public  Animal {
+class Mammal : public Animal {
 public:
 	virtual void Breathe() {
 		printf("Mammal breathing\n");
 	}
 };
 
-class WingedAnimal : public  Animal {
+class WingedAnimal {
 public:
 	virtual void Flap() {
 		printf("WingedAnimal flapping\n");
 	}
 };
 
-class Bat : public Mammal, public WingedAnimal {
+class Test : public Mammal, public WingedAnimal {
+public:
+	virtual void DoBatShit() {
+		printf("Bat shit\n");
+	}
 };
 
 extern "C" {
-	NATIVETEST_API Bat* GetPointer() {
-		return new Bat();
+	NATIVETEST_API Test* GetPointer() {
+		return new Test();
 	}
 }

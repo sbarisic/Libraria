@@ -71,25 +71,29 @@ namespace Test {
 		void Breathe();
 	}
 
-	public interface WingedAnimal : Animal {
+	public interface WingedAnimal {
 		void Flap();
 	}
 
-	public interface Bat : Mammal, WingedAnimal {
+	public interface Test : Mammal, WingedAnimal {
+		void DoBatShit();
 	}
 
 
 	unsafe class Program {
 		[DllImport("NativeTest")]
-		[return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(NativeClassMarshal<Bat>))]
-		static extern Bat GetPointer();
+		[return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(NativeClassMarshal<Test>))]
+		static extern Test GetPointer();
 
 		static void Main(string[] Args) {
 			//IntPtr ClassInstancePtr = GetPointer();
 
-			Bat B = GetPointer();
+			Test B = GetPointer();
+			NativeClassImpl BB = (NativeClassImpl)B;
+
 			B.Eat();
 			B.Breathe();
+			B.DoBatShit();
 			B.Flap();
 
 			//Console.WriteLine("Done!");
