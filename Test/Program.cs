@@ -63,53 +63,34 @@ namespace Test {
 		void Test_A();
 	}*/
 
-	public interface A {
-		int SomeInt { get; set; }
-		int SomeOtherInt { get; set; }
-
-		void FuncA();
-		void FuncB();
+	public interface Animal {
+		void Eat();
 	}
 
-	public interface B : A {
-		void PrintTypeInfo(IntPtr Ptr);
+	public interface Mammal : Animal {
+		void Breathe();
 	}
 
-	public interface Test : B {
-		void SetOtherInt(int I);
-		void FuncE(IntPtr Ptr);
+	public interface WingedAnimal : Animal {
+		void Flap();
 	}
 
-	delegate void Func(IntPtr This);
-	delegate void FuncIntPtr(IntPtr This, IntPtr Ptr);
-	delegate void FuncInt(IntPtr This, int I);
+	public interface Bat : Mammal, WingedAnimal {
+	}
+
 
 	unsafe class Program {
 		[DllImport("NativeTest")]
-		static extern IntPtr GetPointer();
+		[return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(NativeClassMarshal<Bat>))]
+		static extern Bat GetPointer();
 
 		static void Main(string[] Args) {
-			IntPtr ClassInstancePtr = GetPointer();
-			//NativeClassInfo Info = NativeClass.CalculateClassLayout(typeof(Test));
+			//IntPtr ClassInstancePtr = GetPointer();
 
-			NativeTypeInfo TypeInf = NativeClass.GetTypeInfo(ClassInstancePtr);
-			Console.WriteLine(TypeInf.MangledName);
-
-			/*for (int i = 0; i < Desc.NumBaseClasses; i++) {
-				RTTIBaseClassDescriptor* BCD = Desc.BaseClassArray->Bases[i];
-			}*/
-
-			//FuncIntPtr F = Info.Find(typeof(B).GetMethod(nameof(B.PrintTypeInfo))).GetDelegate<FuncIntPtr>(ClassInstancePtr);
-			//F(ClassInstancePtr, (IntPtr)TypeDesc);
-
-
-
-			/*IntPtr SomeOtherIntPtr = Info.FindVariable(typeof(A).GetProperty("SomeOtherInt")).GetAddress(ClassInstancePtr);
-			Console.WriteLine("SomeOtherInt = {0}", Marshal.ReadInt32(SomeOtherIntPtr));
-
-			Info.Find(typeof(Test).GetMethod("SetOtherInt")).GetDelegate<FuncInt>(ClassInstancePtr)(ClassInstancePtr, 42);
-
-			Console.WriteLine("SomeOtherInt = {0}", Marshal.ReadInt32(SomeOtherIntPtr));*/
+			Bat B = GetPointer();
+			B.Eat();
+			B.Breathe();
+			B.Flap();
 
 			//Console.WriteLine("Done!");
 			Console.ReadLine();
@@ -121,6 +102,30 @@ namespace Test {
 			//Console.WriteLine(Encoding.ASCII.GetString((byte*)Str, 40));
 			//Console.WriteLine(Encoding.Unicode.GetString((byte*)Str, 40));
 			//Console.WriteLine(Encoding.UTF8.GetString((byte*)Str, 40));
+		}
+	}
+
+	struct STRUCTE {
+		public int val;
+	}
+
+	unsafe class TESTTEST {
+		IntPtr Instance;
+
+		IntPtr OffsetThisPtr(int Offset) {
+			return Instance + Offset;
+		}
+
+		public STRUCTE TestInt {
+			get {
+				STRUCTE* P = (STRUCTE*)OffsetThisPtr(42);
+				return *P;
+			}
+
+			set {
+				STRUCTE* P = (STRUCTE*)OffsetThisPtr(42);
+				*P = value;
+			}
 		}
 	}
 }

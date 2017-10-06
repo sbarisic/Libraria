@@ -94,6 +94,7 @@ namespace Libraria.Native {
 		public bool DoesOverride;
 		public int VTableOffset;
 		public int MethodIndex;
+		public int ThisOffset;
 
 		public MethodInfo Method;
 		public MethodInfo BaseMethod;
@@ -103,8 +104,7 @@ namespace Libraria.Native {
 		}
 
 		public object GetDelegate(Type DelegateType, IntPtr Instance) {
-			IntPtr VTablePtr = Marshal.ReadIntPtr(Instance, VTableOffset);
-			IntPtr F = ReadVTableSlot(VTablePtr, MethodIndex);
+			IntPtr F = ReadVTableSlot(NativeClass.GetVTable(Instance, VTableOffset), MethodIndex);
 			return Marshal.GetDelegateForFunctionPointer(F, DelegateType);
 		}
 
@@ -159,6 +159,10 @@ namespace Libraria.Native {
 
 	public unsafe class NativeClass {
 		static int VTablePointerSize = IntPtr.Size;
+
+		public static IntPtr GetVTable(IntPtr Instance, int VTableOffset = 0) {
+			return Marshal.ReadIntPtr(Instance, VTableOffset);
+		}
 
 		static int SizeOfVariables(Type T) {
 			return T.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Select((PI) => Marshal.SizeOf(PI.PropertyType)).Sum();
@@ -324,7 +328,7 @@ namespace Libraria.Native {
 		}
 
 		public static NativeClassHierarchyDescriptor GetClassHierarchy(IntPtr Instance) {
-			// TODO: x86
+			// TODO: FEEEEEEEEEEEEEEX
 			RTTICompleteObjectLocator2* Locator = GetLocator(Instance);
 			RTTIClassHierarchyDescriptor* Hierarchy = (RTTIClassHierarchyDescriptor*)GetOffset(Locator, (IntPtr)Locator->TypeHierarchy);
 			IntPtr BaseClassArray = GetOffset(Locator, Hierarchy->BaseClassArray);
